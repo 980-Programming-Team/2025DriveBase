@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftCageBL"
+            "pathName": "MidCageBL"
           }
         },
         {
@@ -21,11 +21,23 @@
           "data": {
             "pathName": "SourceLToBL"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLToSourceL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceLToBack"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "LeftCage",
+  "folder": "MidCage",
   "choreoAuto": false
 }

@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidCageFront"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FrontToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToBR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BRToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToBR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BRToSourceR"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "MidCage",
+  "choreoAuto": false
+}
