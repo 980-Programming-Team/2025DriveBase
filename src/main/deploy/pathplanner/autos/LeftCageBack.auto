@@ -7,31 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftCageBL"
+            "pathName": "LeftCageBack"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLToSourceL"
+            "pathName": "BackToSourceR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceLToBL"
+            "pathName": "SourceRToBR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLToSourceL"
+            "pathName": "BRToSourceR"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceLToBack"
+            "pathName": "SourceRToBR"
           }
         }
       ]

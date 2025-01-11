@@ -9,6 +9,30 @@
           "data": {
             "pathName": "LeftCageFL"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FLToSourceL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceLToBL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BLToSourceL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceLToBL"
+          }
         }
       ]
     }

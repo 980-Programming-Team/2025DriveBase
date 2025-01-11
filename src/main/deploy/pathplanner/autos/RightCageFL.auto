@@ -7,25 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftCageBL"
+            "pathName": "RightCageFL"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "BLToSourceL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SourceLToBL"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BLToSourceL"
+            "pathName": "FLToSourceL"
           }
         },
         {
@@ -33,11 +21,23 @@
           "data": {
             "pathName": "SourceLToBack"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BackToSourceR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceRToBR"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "LeftCage",
+  "folder": "RightCage",
   "choreoAuto": false
 }

@@ -5,11 +5,13 @@
   "pathFolders": [
     "LeftCage",
     "MidCage",
+    "RightCage",
     "ReefPaths"
   ],
   "autoFolders": [
     "LeftCage",
-    "MidCage"
+    "MidCage",
+    "RightCage"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
