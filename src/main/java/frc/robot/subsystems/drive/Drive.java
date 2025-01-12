@@ -43,17 +43,23 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.vision.VisionConstants;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOInputsAutoLogged;
 import frc.robot.util.LocalADStarAK;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
@@ -91,8 +97,13 @@ public class Drive extends SubsystemBase {
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
+  private LoggedNetworkBoolean useVisionDashboard = new LoggedNetworkBoolean("UseVision", true);
+  public static final boolean useVision = true;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+
+  private final VisionIO visionIO;
+  private final VisionIOInputsAutoLogged visionInputs = new VisionIOInputsAutoLogged();
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private Rotation2d rawGyroRotation = new Rotation2d();
@@ -111,12 +122,14 @@ public class Drive extends SubsystemBase {
       ModuleIO flModuleIO,
       ModuleIO frModuleIO,
       ModuleIO blModuleIO,
-      ModuleIO brModuleIO) {
+      ModuleIO brModuleIO,
+      VisionIO visionIO) {
     this.gyroIO = gyroIO;
     modules[0] = new Module(flModuleIO, 0, TunerConstants.FrontLeft);
     modules[1] = new Module(frModuleIO, 1, TunerConstants.FrontRight);
     modules[2] = new Module(blModuleIO, 2, TunerConstants.BackLeft);
     modules[3] = new Module(brModuleIO, 3, TunerConstants.BackRight);
+    this.visionIO = visionIO;
 
     // Usage reporting for swerve template
     HAL.report(tResourceType.kResourceType_RobotDrive, tInstances.kRobotDriveSwerve_AdvantageKit);
@@ -156,6 +169,8 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    useVisionDashboard.set(useVision);
   }
 
   @Override
@@ -167,6 +182,27 @@ public class Drive extends SubsystemBase {
       module.periodic();
     }
     odometryLock.unlock();
+    if (useVisionDashboard.get()) {
+      visionIO.updateInputs(visionInputs, getPose());
+      Logger.processInputs("Vision", visionInputs);
+      if (visionInputs.hasEstimate) {
+        List<Matrix<N3, N1>> stdDeviations = visionIO.getStdArray(visionInputs, getPose());
+
+        for (int i = 0; i < visionInputs.estimate.length; i++) {
+          if (stdDeviations.size() <= i) {
+            poseEstimator.addVisionMeasurement(
+                visionInputs.estimate[i],
+                Timer.getFPGATimestamp(),
+                VisionConstants.kSingleTagStdDevs);
+            // System.out.println("Ignoring");
+          } else {
+            poseEstimator.addVisionMeasurement(
+                visionInputs.estimate[i], Timer.getFPGATimestamp(), stdDeviations.get(i));
+            // System.out.println(stdDeviations.get(i));
+          }
+        }
+      }
+    }
 
     // Stop moving when disabled
     if (DriverStation.isDisabled()) {
