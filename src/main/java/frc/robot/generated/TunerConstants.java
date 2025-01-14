@@ -26,7 +26,7 @@ public class TunerConstants {
           .withKI(0)
           .withKD(0.5)
           .withKS(0.1)
-          .withKV(1.91)
+          .withKV(1.59)
           .withKA(0)
           .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
   // When using closed-loop control, the drive motor uses the control
@@ -78,7 +78,7 @@ public class TunerConstants {
 
   // Theoretical free speed (m/s) at 12 V applied output;
   // This needs to be tuned to your individual robot
-  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.69);
+  public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(4.57);
 
   // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
   // This may need to be tuned to your individual robot
