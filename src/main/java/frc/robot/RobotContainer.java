@@ -22,11 +22,18 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Reef.LevelFour;
+import frc.robot.commands.Reef.LevelOne;
+import frc.robot.commands.Reef.LevelThree;
+import frc.robot.commands.Reef.LevelTwo;
+import frc.robot.commands.Reef.ResetElevator;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -44,6 +51,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
+  private final Elevator elevator;
 
   // Controllers
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -98,6 +106,8 @@ public class RobotContainer {
                 new ModuleIO() {});
         break;
     }
+
+    elevator = new Elevator(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -162,8 +172,43 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
+    controller.y().onTrue(new ResetElevator(elevator));
 
     // gamePad
+
+    lL1.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            new LevelOne(elevator)));
+    lL2.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            new LevelTwo(elevator)));
+    lL3.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            new LevelThree(elevator)));
+    lL4.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            new LevelFour(elevator)));
+
+    rL1.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            new LevelOne(elevator)));
+    rl2.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            new LevelTwo(elevator)));
+    rl3.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            new LevelThree(elevator)));
+    rl4.onTrue(
+        new SequentialCommandGroup(
+            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            new LevelFour(elevator)));
   }
 
   /**
