@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -11,32 +12,33 @@ import frc.robot.subsystems.drive.Drive;
 
 public class Elevator extends SubsystemBase {
   private SparkMax ElevatorSpark;
+  private RelativeEncoder ElevatorEncoder;
+  private SparkBaseConfig Config;
+
   private Drive Drivebase;
-  private double Position;
 
   public Elevator(Drive drive) {
     ElevatorSpark = new SparkMax(12, MotorType.kBrushless);
-    SparkBaseConfig config = new SparkFlexConfig();
-
-    config.idleMode(IdleMode.kBrake);
+    ElevatorEncoder = ElevatorSpark.getEncoder();
+    Config = new SparkFlexConfig();
+    Config.idleMode(IdleMode.kBrake);
+    ElevatorEncoder.setPosition(0);
 
     Drivebase = drive;
   }
 
   @Override
   public void periodic() {
-    Position = ElevatorSpark.getEncoder().getPosition();
-
-    SmartDashboard.putNumber("elevatorPos", Position);
+    SmartDashboard.putNumber("pos", ElevatorEncoder.getPosition());
   }
 
   public void ManualUntilPos(double position) {
-    if (Position <= position) ElevatorSpark.set(.3);
+    if (ElevatorEncoder.getPosition() <= position) ElevatorSpark.set(.3);
     else ElevatorSpark.set(0);
   }
 
   public void Reset() {
-    if (Position >= 5) ElevatorSpark.set(-.3);
+    if (ElevatorEncoder.getPosition() >= 5) ElevatorSpark.set(.3);
     else ElevatorSpark.set(0);
   }
 
@@ -55,5 +57,9 @@ public class Elevator extends SubsystemBase {
         ManualUntilPos(80);
         break;
     }
+  }
+
+  public double GetEncPosition() {
+    return ElevatorEncoder.getPosition();
   }
 }

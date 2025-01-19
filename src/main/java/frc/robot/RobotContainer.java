@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -175,39 +176,54 @@ public class RobotContainer {
     controller.y().onTrue(new ResetElevator(elevator));
 
     // gamePad
-
     lL1.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)),
             new LevelOne(elevator)));
     lL2.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)),
             new LevelTwo(elevator)));
     lL3.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)),
             new LevelThree(elevator)));
     lL4.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> 10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)),
             new LevelFour(elevator)));
 
     rL1.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)),
             new LevelOne(elevator)));
     rl2.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)),
             new LevelTwo(elevator)));
     rl3.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)),
             new LevelThree(elevator)));
     rl4.onTrue(
         new SequentialCommandGroup(
-            // DriveCommands.joystickDrive(drive, () -> 0, () -> -10, () -> 0),
+            Commands.deadline(
+                new WaitCommand(.8),
+                DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)),
             new LevelFour(elevator)));
   }
 

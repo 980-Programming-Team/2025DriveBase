@@ -33,6 +33,7 @@ public class LevelThree extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Elevator.GetEncPosition() >= 60) return true;
     return false;
   }
 }

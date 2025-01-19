@@ -33,6 +33,7 @@ public class LevelOne extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Elevator.GetEncPosition() >= 20) return true;
     return false;
   }
 }
