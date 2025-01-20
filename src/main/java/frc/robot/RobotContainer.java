@@ -57,16 +57,29 @@ public class RobotContainer {
   // Controllers
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  // Haute M42
   private final Joystick gamePad = new Joystick(1);
-  private JoystickButton lL1 = new JoystickButton(gamePad, 9);
-  private JoystickButton lL2 = new JoystickButton(gamePad, 10);
-  private JoystickButton lL3 = new JoystickButton(gamePad, 11);
-  private JoystickButton lL4 = new JoystickButton(gamePad, 12);
+
+  private JoystickButton up = new JoystickButton(gamePad, 8);
+  private JoystickButton down = new JoystickButton(gamePad, 7);
+
+  private JoystickButton lL1 = new JoystickButton(gamePad, 2);
+  private JoystickButton lL2 = new JoystickButton(gamePad, 3);
+  private JoystickButton lL3 = new JoystickButton(gamePad, 1);
+  private JoystickButton lL4 = new JoystickButton(gamePad, 4);
 
   private JoystickButton rL1 = new JoystickButton(gamePad, 5);
   private JoystickButton rl2 = new JoystickButton(gamePad, 6);
-  private JoystickButton rl3 = new JoystickButton(gamePad, 7);
-  private JoystickButton rl4 = new JoystickButton(gamePad, 8);
+  private JoystickButton rl3 = new JoystickButton(gamePad, 9);
+  private JoystickButton rl4 = new JoystickButton(gamePad, 10);
+
+  private JoystickButton reset = new JoystickButton(gamePad, 13);
+
+  private JoystickButton button11 = new JoystickButton(gamePad, 11);
+  private JoystickButton button12 = new JoystickButton(gamePad, 12);
+  private JoystickButton button14 = new JoystickButton(gamePad, 14);
+
+  // 15 16
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -128,6 +141,8 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+    elevator.setDefaultCommand(Commands.run(() -> elevator.Manual(gamePad.getZ()), elevator));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -225,6 +240,18 @@ public class RobotContainer {
                 new WaitCommand(.8),
                 DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)),
             new LevelFour(elevator)));
+
+    reset.onTrue(new ResetElevator(elevator));
+
+    // up.onTrue(getAutonomousCommand());
+    // down.onTrue(getAutonomousCommand());
+
+    // gamePad.povUp(null);
+    // gamePad.povDown(null);
+    // gamePad.povLeft(null);
+    // gamePad.povUpRight(null);
+
+    // gamePad.trigger(null);
   }
 
   /**

@@ -32,13 +32,18 @@ public class Elevator extends SubsystemBase {
     SmartDashboard.putNumber("pos", ElevatorEncoder.getPosition());
   }
 
+  public void Manual(double speed) {
+    if (speed > .1 && ElevatorEncoder.getPosition() <= 80) ElevatorSpark.set(speed);
+    else ElevatorSpark.set(0);
+  }
+
   public void ManualUntilPos(double position) {
     if (ElevatorEncoder.getPosition() <= position) ElevatorSpark.set(.3);
     else ElevatorSpark.set(0);
   }
 
   public void Reset() {
-    if (ElevatorEncoder.getPosition() >= 5) ElevatorSpark.set(.3);
+    if (ElevatorEncoder.getPosition() >= 5) ElevatorSpark.set(-.7);
     else ElevatorSpark.set(0);
   }
 
