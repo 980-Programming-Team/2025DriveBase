@@ -47,6 +47,31 @@ public class Elevator extends SubsystemBase {
     else ElevatorSpark.set(0);
   }
 
+  // public void Stowed() {
+  //   final double kTolerance = 2.0;
+  //   double targetPosition = 40;
+
+  //   // Set output range for closed-loop controller
+  //   Config.closedLoop.outputRange(-0.3, 0.3);
+
+  //   // Set target position for the elevator in the closed-loop controller
+  //   ElevatorSpark.getClosedLoopController()
+  //       .setReference(targetPosition, SparkMax.ControlType.kPosition);
+
+  //   // Get current position of the elevator
+  //   double currentPosition = ElevatorEncoder.getPosition();
+
+  //   // Check if we are within tolerance
+  //   if (Math.abs(currentPosition - targetPosition) <= kTolerance) {
+  //     // Stop the elevator if within tolerance
+  //     ElevatorSpark.set(0);
+  //   }
+  // }
+
+  // public double getCurrentPosition() {
+  //   return ElevatorEncoder.getPosition();
+  // }
+
   public void Auto(int level) {
     switch (level) {
       case 1:
