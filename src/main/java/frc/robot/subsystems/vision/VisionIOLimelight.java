@@ -1,16 +1,3 @@
-// Copyright 2021-2025 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
@@ -141,6 +128,12 @@ public class VisionIOLimelight implements VisionIO {
       inputs.tagIds[i++] = id;
     }
   }
+  // Debugging: Print the tag IDs and pose observations
+  //   System.out.println("Tag IDs: " + tagIds);
+  //   for (PoseObservation observation : poseObservations) {
+  //     System.out.println("Pose Observation: " + observation);
+  //   }
+  // }
 
   /** Parses the 3D pose from a Limelight botpose array. */
   private static Pose3d parsePose(double[] rawLLArray) {

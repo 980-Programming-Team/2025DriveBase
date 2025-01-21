@@ -1,16 +1,3 @@
-// Copyright 2021-2025 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
@@ -27,6 +14,7 @@ import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -86,6 +74,9 @@ public class Drive extends SubsystemBase {
               1),
           getModuleTranslations());
 
+  private final PIDController xController;
+  private final PIDController yController;
+  private final PIDController thetaController;
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
@@ -156,6 +147,11 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+
+    xController = new PIDController(0.6, 0.0, 0.1); // Tune these PID values
+    yController = new PIDController(0.6, 0.0, 0.1); // Tune these PID values
+    thetaController = new PIDController(0.6, 0.0, 0.1); // Tune these PID values
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   @Override
@@ -248,9 +244,40 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  private void setModuleStates(SwerveModuleState[] moduleStates) {
+    for (int i = 0; i < modules.length; i++) {
+      modules[i].runSetpoint(moduleStates[i]);
+    }
+  }
+
   /** Stops the drive. */
   public void stop() {
     runVelocity(new ChassisSpeeds());
+  }
+
+  public void driveToPose(Pose2d targetPose) {
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
+    System.out.println("Current Pose: " + currentPose);
+
+    double xSpeed = xController.calculate(currentPose.getX(), targetPose.getX());
+    double ySpeed = yController.calculate(currentPose.getY(), targetPose.getY());
+
+    // Calculate the angle to face the target
+    Translation2d targetTranslation = targetPose.getTranslation();
+    Rotation2d targetRotation =
+        new Rotation2d(
+            targetTranslation.getX() - currentPose.getX(),
+            targetTranslation.getY() - currentPose.getY());
+    double thetaSpeed =
+        thetaController.calculate(
+            currentPose.getRotation().getRadians(), targetRotation.getRadians());
+
+    System.out.println("Speeds - X: " + xSpeed + ", Y: " + ySpeed + ", Theta: " + thetaSpeed);
+
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, thetaSpeed);
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+
+    setModuleStates(moduleStates);
   }
 
   /**

@@ -1,16 +1,3 @@
-// Copyright 2021-2025 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -28,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToTag;
 import frc.robot.commands.Reef.LevelFour;
 import frc.robot.commands.Reef.LevelOne;
 import frc.robot.commands.Reef.LevelThree;
@@ -57,9 +45,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-
   private final Elevator elevator;
-
   private final Vision vision;
 
   // Controllers
@@ -108,9 +94,7 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(VisionConstants.camera0Name, drive::getRotation),
-                new VisionIOLimelight(VisionConstants.camera1Name, drive::getRotation));
-
+                new VisionIOLimelight("limelight", drive::getRotation));
         break;
 
       case SIM:
@@ -143,7 +127,6 @@ public class RobotContainer {
                 new ModuleIO() {});
 
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
         break;
     }
 
@@ -202,7 +185,7 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-    //controller.a().onTrue(new LevelTwoPID());
+    // controller.a().onTrue(new LevelTwoPID());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -216,6 +199,9 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.y().onTrue(new ResetElevator(elevator));
+
+    // Bind the DriveToTag command to the left bumper
+    controller.leftBumper().whileTrue(new DriveToTag(drive, vision, 16, 2.0));
 
     // gamePad
     lL1.onTrue(

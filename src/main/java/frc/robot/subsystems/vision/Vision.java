@@ -1,16 +1,3 @@
-// Copyright 2021-2025 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// version 3 as published by the Free Software Foundation or
-// available in the root directory of this project.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
 package frc.robot.subsystems.vision;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
@@ -146,7 +133,7 @@ public class Vision extends SubsystemBase {
             VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
       }
 
-      // Log camera datadata
+      // Log camera data
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
@@ -176,6 +163,37 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput(
         "Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+  }
+
+  // public Pose2d getBestPose() {
+  //   for (int i = 0; i < io.length; i++) {
+  //     for (var observation : inputs[i].poseObservations) {
+  //       if (observation.type() == PoseObservationType.MEGATAG_1
+  //           || observation.type() == PoseObservationType.MEGATAG_2) {
+  //         return observation.pose().toPose2d();
+  //       }
+  //     }
+  //   }
+  //   return null;
+  // }
+
+  /**
+   * Returns the pose of the specified tag.
+   *
+   * @param tagID The ID of the tag to get the pose of.
+   * @return The pose of the specified tag, or null if not found.
+   */
+  public Pose2d getTagPose(int tagID) {
+    for (int i = 0; i < io.length; i++) {
+      for (var observation : inputs[i].poseObservations) {
+        if (observation.tagID() == tagID) {
+          System.out.println("Found tag with ID: " + tagID);
+          return observation.pose().toPose2d();
+        }
+      }
+    }
+    System.out.println("Tag with ID " + tagID + " not found");
+    return null;
   }
 
   @FunctionalInterface
