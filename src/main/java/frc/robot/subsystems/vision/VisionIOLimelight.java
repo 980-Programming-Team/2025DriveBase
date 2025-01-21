@@ -128,12 +128,6 @@ public class VisionIOLimelight implements VisionIO {
       inputs.tagIds[i++] = id;
     }
   }
-  // Debugging: Print the tag IDs and pose observations
-  //   System.out.println("Tag IDs: " + tagIds);
-  //   for (PoseObservation observation : poseObservations) {
-  //     System.out.println("Pose Observation: " + observation);
-  //   }
-  // }
 
   /** Parses the 3D pose from a Limelight botpose array. */
   private static Pose3d parsePose(double[] rawLLArray) {

@@ -201,7 +201,7 @@ public class RobotContainer {
     controller.y().onTrue(new ResetElevator(elevator));
 
     // Bind the DriveToTag command to the left bumper
-    controller.leftBumper().whileTrue(new DriveToTag(drive, vision, 16, 2.0));
+    controller.leftBumper().whileTrue(new DriveToTag(drive, vision, 16, drive::getPose));
 
     // gamePad
     lL1.onTrue(

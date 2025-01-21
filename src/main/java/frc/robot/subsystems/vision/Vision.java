@@ -7,6 +7,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
@@ -165,18 +166,6 @@ public class Vision extends SubsystemBase {
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
   }
 
-  // public Pose2d getBestPose() {
-  //   for (int i = 0; i < io.length; i++) {
-  //     for (var observation : inputs[i].poseObservations) {
-  //       if (observation.type() == PoseObservationType.MEGATAG_1
-  //           || observation.type() == PoseObservationType.MEGATAG_2) {
-  //         return observation.pose().toPose2d();
-  //       }
-  //     }
-  //   }
-  //   return null;
-  // }
-
   /**
    * Returns the pose of the specified tag.
    *
@@ -187,13 +176,19 @@ public class Vision extends SubsystemBase {
     for (int i = 0; i < io.length; i++) {
       for (var observation : inputs[i].poseObservations) {
         if (observation.tagID() == tagID) {
-          System.out.println("Found tag with ID: " + tagID);
           return observation.pose().toPose2d();
         }
       }
     }
-    System.out.println("Tag with ID " + tagID + " not found");
     return null;
+  }
+
+  public VisionIOInputsAutoLogged getInputs() {
+    return inputs[0]; // Assuming single camera setup
+  }
+
+  public Transform3d getRobotToCamera() {
+    return robotToCamera0; // Assuming single camera setup
   }
 
   @FunctionalInterface
