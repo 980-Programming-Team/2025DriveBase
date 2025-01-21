@@ -34,6 +34,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import java.util.Set;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -200,8 +201,12 @@ public class RobotContainer {
 
     controller.y().onTrue(new ResetElevator(elevator));
 
-    // Bind the DriveToTag command to the left bumper
-    controller.leftBumper().whileTrue(new DriveToTag(drive, vision, 16, drive::getPose));
+    // Bind the DriveToTag command to the left bumper with a desired distance of 2 meters and target
+    // tag IDs
+    Set<Integer> targetTagIds = Set.of(1, 2, 3); // Example target tag IDs
+    controller
+        .leftBumper()
+        .whileTrue(new DriveToTag(drive, vision, drive::getPose, 2.0, targetTagIds));
 
     // gamePad
     lL1.onTrue(

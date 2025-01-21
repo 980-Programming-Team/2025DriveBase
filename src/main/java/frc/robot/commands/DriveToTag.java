@@ -2,42 +2,51 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO.PoseObservation;
+import frc.robot.subsystems.vision.VisionIO.TargetObservation;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class DriveToTag extends Command {
-  private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
-  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
-  private static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS = new TrapezoidProfile.Constraints(8, 8);
-
-  private static final Transform3d TAG_TO_GOAL = new Transform3d(new Translation3d(1.5, 0.0, 0.0), new Rotation3d(0.0, 0.0, Math.PI));
+  private static final TrapezoidProfile.Constraints X_CONSTRAINTS =
+      new TrapezoidProfile.Constraints(3, 2);
+  private static final TrapezoidProfile.Constraints Y_CONSTRAINTS =
+      new TrapezoidProfile.Constraints(3, 2);
+  private static final TrapezoidProfile.Constraints OMEGA_CONSTRAINTS =
+      new TrapezoidProfile.Constraints(8, 8);
 
   private final Vision vision;
   private final Drive drive;
-  private final int tagID;
   private final Supplier<Pose2d> poseProvider;
+  private final double desiredDistance; // New field for desired distance
+  private final Set<Integer> targetTagIds; // New field for target tag IDs
 
-  private final ProfiledPIDController xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
-  private final ProfiledPIDController yController = new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
-  private final ProfiledPIDController omegaController = new ProfiledPIDController(2, 0, 0, OMEGA_CONSTRAINTS);
+  private final ProfiledPIDController xController =
+      new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
+  private final ProfiledPIDController yController =
+      new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
+  private final ProfiledPIDController omegaController =
+      new ProfiledPIDController(2, 0, 0, OMEGA_CONSTRAINTS);
 
-  private PoseObservation lastTarget;
+  private TargetObservation lastTarget;
 
-  public DriveToTag(Drive drive, Vision vision, int tagID, Supplier<Pose2d> poseProvider) {
+  public DriveToTag(
+      Drive drive,
+      Vision vision,
+      Supplier<Pose2d> poseProvider,
+      double desiredDistance,
+      Set<Integer> targetTagIds) {
     this.vision = vision;
     this.drive = drive;
-    this.tagID = tagID;
     this.poseProvider = poseProvider;
+    this.desiredDistance = desiredDistance; // Initialize desired distance
+    this.targetTagIds = targetTagIds; // Initialize target tag IDs
 
     xController.setTolerance(0.2);
     yController.setTolerance(0.2);
@@ -54,39 +63,32 @@ public class DriveToTag extends Command {
     omegaController.reset(robotPose.getRotation().getRadians());
     xController.reset(robotPose.getX());
     yController.reset(robotPose.getY());
+    vision.setTargetTagIds(targetTagIds); // Set the target tag IDs
   }
 
   @Override
   public void execute() {
-    var robotPose2d = poseProvider.get();
-    var robotPose = new Pose3d(robotPose2d.getX(), robotPose2d.getY(), 0.0, new Rotation3d(0.0, 0.0, robotPose2d.getRotation().getRadians()));
+    var robotPose = poseProvider.get();
 
     var inputs = vision.getInputs();
     if (inputs.connected) {
-      // Find the tag we want to chase
-      var targetOpt = inputs.poseObservations.stream()
-          .filter(t -> t.tagID() == tagID)
-          .findFirst();
-      if (targetOpt.isPresent()) {
-        var target = targetOpt.get();
-        // This is new target data, so recalculate the goal
-        lastTarget = target;
+      // Use the latest target observation
+      lastTarget = inputs.latestTargetObservation;
 
-        // Transform the robot's pose to find the camera's pose
-        var cameraPose = robotPose.transformBy(vision.getRobotToCamera());
+      // Calculate the goal pose based on the target observation and desired distance
+      double currentDistance =
+          Math.hypot(lastTarget.tx().getRadians(), lastTarget.ty().getRadians());
+      double distanceError = currentDistance - desiredDistance;
+      double goalX = robotPose.getX() + distanceError * Math.cos(lastTarget.tx().getRadians());
+      double goalY = robotPose.getY() + distanceError * Math.sin(lastTarget.ty().getRadians());
 
-        // Transform the camera's pose to the target's pose
-        var camToTarget = target.pose();
-        var targetPose = cameraPose.transformBy(new Transform3d(camToTarget.getTranslation(), camToTarget.getRotation()));
+      var goalPose =
+          new Pose2d(goalX, goalY, Rotation2d.fromDegrees(0)); // Assuming we want to face forward
 
-        // Transform the tag's pose to set our goal
-        var goalPose = targetPose.transformBy(TAG_TO_GOAL).toPose2d();
-
-        // Drive
-        xController.setGoal(goalPose.getX());
-        yController.setGoal(goalPose.getY());
-        omegaController.setGoal(goalPose.getRotation().getRadians());
-      }
+      // Drive
+      xController.setGoal(goalPose.getX());
+      yController.setGoal(goalPose.getY());
+      omegaController.setGoal(goalPose.getRotation().getRadians());
     }
 
     if (lastTarget == null) {
@@ -104,12 +106,14 @@ public class DriveToTag extends Command {
         ySpeed = 0;
       }
 
-      var omegaSpeed = omegaController.calculate(robotPose2d.getRotation().getRadians());
+      var omegaSpeed = omegaController.calculate(robotPose.getRotation().getRadians());
       if (omegaController.atGoal()) {
         omegaSpeed = 0;
       }
 
-      drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, omegaSpeed, robotPose2d.getRotation()));
+      drive.runVelocity(
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              xSpeed, ySpeed, omegaSpeed, robotPose.getRotation()));
     }
   }
 
