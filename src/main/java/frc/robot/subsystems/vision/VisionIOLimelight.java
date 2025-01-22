@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.DoubleArraySubscriber;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -129,6 +130,15 @@ public class VisionIOLimelight implements VisionIO {
     }
   }
 
+  public boolean areTagsVisible(VisionIOInputs inputs, Set<Integer> targetTagIds) {
+    for (int id : targetTagIds) {
+      if (Arrays.stream(inputs.tagIds).anyMatch(tagId -> tagId == id)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /** Parses the 3D pose from a Limelight botpose array. */
   private static Pose3d parsePose(double[] rawLLArray) {
     return new Pose3d(
@@ -139,5 +149,13 @@ public class VisionIOLimelight implements VisionIO {
             Units.degreesToRadians(rawLLArray[3]),
             Units.degreesToRadians(rawLLArray[4]),
             Units.degreesToRadians(rawLLArray[5])));
+  }
+
+  public double getTX() {
+    return txSubscriber.get();
+  }
+
+  public double getTY() {
+    return tySubscriber.get();
   }
 }

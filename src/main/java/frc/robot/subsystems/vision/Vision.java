@@ -64,6 +64,24 @@ public class Vision extends SubsystemBase {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
 
+  /**
+   * Gets the horizontal offset from crosshair to target.
+   *
+   * @return The tx value from the Limelight.
+   */
+  public double getTX() {
+    return inputs[0].latestTargetObservation.tx().getDegrees();
+  }
+
+  /**
+   * Gets the vertical offset from crosshair to target.
+   *
+   * @return The ty value from the Limelight.
+   */
+  public double getTY() {
+    return inputs[0].latestTargetObservation.ty().getDegrees();
+  }
+
   @Override
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
@@ -170,6 +188,23 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput(
         "Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+  }
+
+  /**
+   * Checks if the specified tags are visible.
+   *
+   * @param targetTagIds The set of tag IDs to check for visibility.
+   * @return True if any of the specified tags are visible, false otherwise.
+   */
+  public boolean areTagsVisible(Set<Integer> targetTagIds) {
+    for (int i = 0; i < io.length; i++) {
+      if (io[i] instanceof VisionIOLimelight) {
+        if (((VisionIOLimelight) io[i]).areTagsVisible(inputs[i], targetTagIds)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**

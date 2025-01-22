@@ -228,6 +228,22 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
+  /**
+   * Runs the drive at the desired velocity.
+   *
+   * @param xSpeed Speed in the x direction (meters/sec)
+   * @param ySpeed Speed in the y direction (meters/sec)
+   * @param rot Angular speed (radians/sec)
+   * @param fieldRelative Whether the speeds are field-relative
+   */
+  public void runVelocity(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    ChassisSpeeds speeds = new ChassisSpeeds(xSpeed, ySpeed, rot);
+    if (fieldRelative) {
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getRotation());
+    }
+    runVelocity(speeds);
+  }
+
   /** Runs the drive in a straight line with the specified drive output. */
   public void runCharacterization(double output) {
     for (int i = 0; i < 4; i++) {
@@ -334,12 +350,12 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the maximum linear speed in meters per sec. */
-  public double getMaxLinearSpeedMetersPerSec() {
+  public static double getMaxLinearSpeedMetersPerSec() {
     return TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
   }
 
   /** Returns the maximum angular speed in radians per sec. */
-  public double getMaxAngularSpeedRadPerSec() {
+  public static double getMaxAngularSpeedRadPerSec() {
     return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS;
   }
 
