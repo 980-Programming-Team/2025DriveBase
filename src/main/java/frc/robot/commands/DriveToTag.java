@@ -2,6 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.LimelightHelpers;
@@ -24,7 +27,8 @@ public class DriveToTag extends Command {
   public void execute() {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    var xSpeed =
+
+    /*var xSpeed =
         -xSpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
             * Drive.getMaxLinearSpeedMetersPerSec();
 
@@ -56,7 +60,9 @@ public class DriveToTag extends Command {
       drive.runVelocity(xSpeed, ySpeed, rot, false);
     } else {
       drive.runVelocity(xSpeed, ySpeed, rot, true);
-    }
+    }*/
+
+    drive(false);
   }
 
   // Proportional control for aiming with Limelight
@@ -75,6 +81,78 @@ public class DriveToTag extends Command {
     targetingForwardSpeed *= Drive.getMaxLinearSpeedMetersPerSec();
     targetingForwardSpeed *= -1.0;
     return targetingForwardSpeed;
+  }
+
+  private float EstimateDistance() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry ty = table.getEntry("ty");
+    double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    // put your robot at a known distance (measuring from the lens of your camera)
+    // and solve the same equation for a1.
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    double limelightMountAngleDegrees = 25.0;
+
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 20.0;
+
+    // distance from the target to the floor
+    double goalHeightInches = 60.0;
+
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+    // calculate distance
+    double distanceFromLimelightToGoalInches =
+        (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+    return (float) distanceFromLimelightToGoalInches;
+  }
+
+  private void drive(boolean fieldRelative) {
+
+    var xSpeed =
+        -xSpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+            * Drive.getMaxLinearSpeedMetersPerSec();
+
+    var ySpeed =
+        -ySpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+            * Drive.getMaxLinearSpeedMetersPerSec();
+
+    var rot =
+        -rotLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+            * Drive.getMaxAngularSpeedRadPerSec();
+    float desiredDistance = 0.2f; // 1 meter
+    float range = 0.05f;
+    float currentDistance = EstimateDistance(); // see the 'Case Study: Estimating Distance'
+    if (LimelightHelpers.getTV("limelight")) {
+      // Proportional control for distance
+      double distanceError = desiredDistance - currentDistance;
+      float kPDistance = 0.5f; // Proportional gain for distance control
+      double forwardSpeed = kPDistance * distanceError;
+
+      // Limit the forward speed to the maximum speed
+      forwardSpeed =
+          MathUtil.clamp(
+              forwardSpeed,
+              -Drive.getMaxLinearSpeedMetersPerSec(),
+              Drive.getMaxLinearSpeedMetersPerSec());
+
+      // Proportional control for aiming
+      final var rot_limelight = limelightAimProportional();
+      rot = rot_limelight;
+
+      xSpeed = forwardSpeed;
+
+      // If the robot is close enough to the target, stop
+      if (Math.abs(distanceError) < range) { // Threshold for stopping
+        xSpeed = 0;
+        ySpeed = 0;
+        rot = 0;
+      }
+
+      fieldRelative = false;
+    }
+
+    drive.runVelocity(xSpeed, ySpeed, rot, fieldRelative);
   }
 
   @Override
