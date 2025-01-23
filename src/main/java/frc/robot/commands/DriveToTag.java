@@ -108,49 +108,52 @@ public class DriveToTag extends Command {
   }
 
   private void drive(boolean fieldRelative) {
+    double xSpeed = 0;
+    double ySpeed = 0;
+    double rot = 0;
 
-    var xSpeed =
-        -xSpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-            * Drive.getMaxLinearSpeedMetersPerSec();
-
-    var ySpeed =
-        -ySpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-            * Drive.getMaxLinearSpeedMetersPerSec();
-
-    var rot =
-        -rotLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-            * Drive.getMaxAngularSpeedRadPerSec();
     float desiredDistance = 0.2f; // 1 meter
-    float range = 0.05f;
-    float currentDistance = EstimateDistance(); // see the 'Case Study: Estimating Distance'
+    float range = 0.1f;
+
+    double distanceError = 0;
+    float kPDistance = 0.05f;
+    double forwardSpeed = 0;
+
     if (LimelightHelpers.getTV("limelight")) {
       // Proportional control for distance
-      double distanceError = desiredDistance - currentDistance;
-      float kPDistance = 0.5f; // Proportional gain for distance control
-      double forwardSpeed = kPDistance * distanceError;
+      distanceError = desiredDistance - EstimateDistance();
+      forwardSpeed = kPDistance * distanceError;
 
-      // Limit the forward speed to the maximum speed
-      forwardSpeed =
+      if (Math.abs(distanceError) >= range) {
+        xSpeed =
+            -xSpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+                * Drive.getMaxLinearSpeedMetersPerSec();
+
+        ySpeed =
+            -ySpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+                * Drive.getMaxLinearSpeedMetersPerSec();
+
+        rot =
+            -rotLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
+                * Drive.getMaxAngularSpeedRadPerSec();
+      } else {
+        rot = limelightAimProportional();
+        rot = rot < 0 ? rot + 5 : rot - 2;
+        drive.runVelocity(0.02, 0.02, rot, fieldRelative);
+        return;
+      }
+
+      xSpeed =
           MathUtil.clamp(
               forwardSpeed,
               -Drive.getMaxLinearSpeedMetersPerSec(),
               Drive.getMaxLinearSpeedMetersPerSec());
 
-      // Proportional control for aiming
-      final var rot_limelight = limelightAimProportional();
-      rot = rot_limelight;
-
-      xSpeed = forwardSpeed;
-
-      // If the robot is close enough to the target, stop
-      if (Math.abs(distanceError) < range) { // Threshold for stopping
-        xSpeed = 0;
-        ySpeed = 0;
-        rot = 0;
-      }
+      rot = limelightAimProportional();
+      rot = rot < 0 ? rot + 5 : rot - 2;
 
       fieldRelative = false;
-    }
+    } else return;
 
     drive.runVelocity(xSpeed, ySpeed, rot, fieldRelative);
   }
