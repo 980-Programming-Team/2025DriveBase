@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -10,22 +9,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.LimelightHelpers;
-import frc.robot.subsystems.vision.Vision;
 
 public class DriveToTagRight extends Command {
-  private final Vision vision;
   private final Drive drive;
-  private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
   private final PIDController xSpeedPID = new PIDController(0.2, 0, 0.05);
   private final PIDController ySpeedPID = new PIDController(0.2, 0, 0.05);
   private final PIDController rotPID = new PIDController(0.045, 0, 0.1);
 
-  public DriveToTagRight(Drive drive, Vision vision) {
-    this.vision = vision;
+  public DriveToTagRight(Drive drive) {
     this.drive = drive;
-    addRequirements(drive, vision);
+    addRequirements(drive);
   }
 
   @Override

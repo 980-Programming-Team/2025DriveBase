@@ -204,8 +204,8 @@ public class RobotContainer {
     // tag IDs
     // controller.leftBumper().whileTrue(new DriveToTag(drive, vision));
 
-    controller.leftBumper().whileTrue(new DriveToTagLeft(drive, vision));
-    controller.rightBumper().whileTrue(new DriveToTagRight(drive, vision));
+    controller.leftBumper().whileTrue(new DriveToTagLeft(drive));
+    controller.rightBumper().whileTrue(new DriveToTagRight(drive));
 
     controller
         .povLeft()
