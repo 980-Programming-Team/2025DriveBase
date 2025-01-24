@@ -1,15 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.LimelightHelpers;
 import frc.robot.subsystems.vision.Vision;
-import edu.wpi.first.math.controller.PIDController;
 
 public class DriveToTagRight extends Command {
   private final Vision vision;
@@ -17,42 +18,19 @@ public class DriveToTagRight extends Command {
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
-  private final PIDController xSpeedPID = new PIDController(0.58, 0, 0.1);
-  private final PIDController ySpeedPID = new PIDController(0.58, 0, 0.1);
-  private final PIDController rotPID = new PIDController(0.035, 0, 0.05);
-
-  private boolean InRange;
-  private boolean SlideNow;
+  private final PIDController xSpeedPID = new PIDController(0.2, 0, 0.05);
+  private final PIDController ySpeedPID = new PIDController(0.2, 0, 0.05);
+  private final PIDController rotPID = new PIDController(0.045, 0, 0.1);
 
   public DriveToTagRight(Drive drive, Vision vision) {
     this.vision = vision;
     this.drive = drive;
     addRequirements(drive, vision);
-
-    SlideNow = false;
   }
 
   @Override
   public void execute() {
     drive(false);
-  }
-
-  // Proportional control for aiming with Limelight
-  private double limelightAimProportional() {
-    double kP = 0.035;
-    double targetingAngularVelocity = LimelightHelpers.getTX("limelight") * kP;
-    targetingAngularVelocity *= Drive.getMaxAngularSpeedRadPerSec();
-    targetingAngularVelocity *= -1.0;
-    return targetingAngularVelocity;
-  }
-
-  // Proportional control for ranging with Limelight
-  private double limelightRangeProportional() {
-    double kP = 0.1;
-    double targetingForwardSpeed = LimelightHelpers.getTY("limelight") * kP;
-    targetingForwardSpeed *= Drive.getMaxLinearSpeedMetersPerSec();
-    targetingForwardSpeed *= -1.0;
-    return targetingForwardSpeed;
   }
 
   private float EstimateDistance() {
@@ -71,7 +49,7 @@ public class DriveToTagRight extends Command {
     double goalHeightInches = 60.0;
 
     double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
 
     // calculate distance
     double distanceFromLimelightToGoalInches =
@@ -85,7 +63,7 @@ public class DriveToTagRight extends Command {
     double rot = 0;
 
     float desiredDistance = 0.2f; // 1 meter
-    float range = 0.1f;
+    double range = 105.0;
 
     double distanceError = 0;
     double forwardSpeed = 0;
@@ -95,22 +73,34 @@ public class DriveToTagRight extends Command {
       distanceError = desiredDistance - EstimateDistance();
       forwardSpeed = xSpeedPID.calculate(distanceError);
 
+      SmartDashboard.putNumber("distance", distanceError);
+
       rot = rotPID.calculate(LimelightHelpers.getTX("limelight"));
-      rot = MathUtil.clamp(rot, -Drive.getMaxAngularSpeedRadPerSec(), Drive.getMaxAngularSpeedRadPerSec());
+      rot =
+          MathUtil.clamp(
+              rot, Drive.getMaxAngularSpeedRadPerSec(), Drive.getMaxAngularSpeedRadPerSec());
 
-      if (Math.abs(distanceError) >= range) {
-        SlideNow = false;
-
+      if (Math.abs(distanceError) > range) {
         xSpeed = xSpeedPID.calculate(0);
         ySpeed = ySpeedPID.calculate(0);
-      } else if (distanceError > .2) return; // ! far from tag
-
-      xSpeed = MathUtil.clamp(forwardSpeed, -Drive.getMaxLinearSpeedMetersPerSec(), Drive.getMaxLinearSpeedMetersPerSec());
-
+      } else if (Math.abs(distanceError) <= range) // ! close to tag
+      {
+        xSpeed = 0;
+        ySpeed = .75;
+        rot = 0;
+      } else {
+        xSpeed =
+            MathUtil.clamp(
+                forwardSpeed,
+                -Drive.getMaxLinearSpeedMetersPerSec(),
+                Drive.getMaxLinearSpeedMetersPerSec());
+      }
       fieldRelative = false;
-    } else { // ! close to tag
+    } else // ! close to tag
+    {
       xSpeed = 0;
-      ySpeed = -.75;
+      ySpeed = .75;
+      rot = 0;
     }
 
     drive.runVelocity(xSpeed, ySpeed, rot, fieldRelative);
