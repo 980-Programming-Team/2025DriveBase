@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.LimelightHelpers;
 import frc.robot.subsystems.vision.Vision;
+import edu.wpi.first.math.controller.PIDController;
 
 public class DriveToTagLeft extends Command {
   private final Vision vision;
@@ -16,6 +17,9 @@ public class DriveToTagLeft extends Command {
   private final SlewRateLimiter xSpeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter ySpeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
+  private final PIDController xSpeedPID = new PIDController(0.58, 0, 0.1);
+  private final PIDController ySpeedPID = new PIDController(0.58, 0, 0.1);
+  private final PIDController rotPID = new PIDController(0.035, 0, 0.05);
 
   private boolean InRange;
   private boolean SlideNow;
@@ -92,37 +96,23 @@ public class DriveToTagLeft extends Command {
       distanceError = desiredDistance - EstimateDistance();
       forwardSpeed = kPDistance * distanceError;
 
-      rot =
-          -rotLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-              * Drive.getMaxAngularSpeedRadPerSec();
+      rot = rotPID.calculate(LimelightHelpers.getTX("limelight"));
+      rot = MathUtil.clamp(rot, -Drive.getMaxAngularSpeedRadPerSec(), Drive.getMaxAngularSpeedRadPerSec());
+
       if (Math.abs(distanceError) >= range) {
         SlideNow = false;
 
-        xSpeed =
-            -xSpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-                * Drive.getMaxLinearSpeedMetersPerSec();
-
-        ySpeed =
-            -ySpeedLimiter.calculate(MathUtil.applyDeadband(0, 0.02))
-                * Drive.getMaxLinearSpeedMetersPerSec();
+        xSpeed = xSpeedPID.calculate(0);
+        ySpeed = ySpeedPID.calculate(0);
       } else if (distanceError > .2) return; // ! far from tag
 
-      xSpeed =
-          MathUtil.clamp(
-              forwardSpeed,
-              -Drive.getMaxLinearSpeedMetersPerSec(),
-              Drive.getMaxLinearSpeedMetersPerSec());
-
-      rot = limelightAimProportional();
-      rot = rot < 0 ? rot + 5 : rot - 2;
+      xSpeed = MathUtil.clamp(forwardSpeed, -Drive.getMaxLinearSpeedMetersPerSec(), Drive.getMaxLinearSpeedMetersPerSec());
 
       fieldRelative = false;
     } else { // ! close to tag
       xSpeed = 0;
       ySpeed = .75;
     }
-
-    // InRange = Math.abs(distanceError) < range;
 
     drive.runVelocity(xSpeed, ySpeed, rot, fieldRelative);
   }
