@@ -88,13 +88,12 @@ public class DriveToTagRight extends Command {
     float range = 0.1f;
 
     double distanceError = 0;
-    float kPDistance = 0.05f;
     double forwardSpeed = 0;
 
     if (LimelightHelpers.getTV("limelight")) {
       // Proportional control for distance
       distanceError = desiredDistance - EstimateDistance();
-      forwardSpeed = kPDistance * distanceError;
+      forwardSpeed = xSpeedPID.calculate(distanceError);
 
       rot = rotPID.calculate(LimelightHelpers.getTX("limelight"));
       rot = MathUtil.clamp(rot, -Drive.getMaxAngularSpeedRadPerSec(), Drive.getMaxAngularSpeedRadPerSec());
