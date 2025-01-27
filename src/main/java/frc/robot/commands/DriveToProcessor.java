@@ -26,7 +26,8 @@ public class DriveToProcessor extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.goToPose(FieldConstants.Reef.centerFaces[3]);
+    // drive.goToPose(FieldConstants.Processor.centerFace); //semi works
+    drive.goToThePose(FieldConstants.Processor.centerFace);
   }
 
   // Called once the command ends or is interrupted.

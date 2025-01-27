@@ -396,6 +396,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Command goToPose(Pose2d target_pose) {
+    System.out.println("Going to pose");
     return AutoBuilder.pathfindToPose(target_pose, kPathConstraints, 0.0);
   }
 
