@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.DriveToProcessor;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
 import frc.robot.commands.Reef.LevelFour;
@@ -228,6 +229,8 @@ public class RobotContainer {
     l4.onTrue(new LevelFour(elevator));
 
     reset.onTrue(new ResetElevator(elevator));
+
+    controller.rightTrigger().whileTrue(new DriveToProcessor(drive));
 
     // up.onTrue(getAutonomousCommand());
     // down.onTrue(getAutonomousCommand());

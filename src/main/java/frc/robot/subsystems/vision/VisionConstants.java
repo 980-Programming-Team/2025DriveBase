@@ -20,17 +20,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 
 public class VisionConstants {
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout;
-
-  static {
-    try {
-      aprilTagLayout =
-          AprilTagFieldLayout.loadFromResource("frc/robot/subsystems/vision/reefscape.json");
-    } catch (Exception e) {
-      e.printStackTrace();
-      aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    }
-  }
+  public static AprilTagFieldLayout aprilTagLayout =
+      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
   public static String camera0Name = "camera_0";

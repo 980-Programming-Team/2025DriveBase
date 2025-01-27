@@ -8,6 +8,11 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.IdealStartingState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
@@ -37,12 +42,14 @@ import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY =
       new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
@@ -54,6 +61,20 @@ public class Drive extends SubsystemBase {
           Math.max(
               Math.hypot(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
               Math.hypot(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)));
+
+  // ! TODO ! These values need to be tuned to our robot
+  // Also you can probably rewrite these and implement them into TunerContants
+  public static final double kMaxSpeedMetersPerSecond = 4.69;
+  public static final double kMaxAccelerationMetersPerSecondSquared = 2.5;
+  public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 1.5;
+  public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI * 2;
+
+  public static final PathConstraints kPathConstraints =
+      new PathConstraints(
+          kMaxSpeedMetersPerSecond,
+          kMaxAccelerationMetersPerSecondSquared,
+          kMaxAngularSpeedRadiansPerSecond,
+          kMaxAngularSpeedRadiansPerSecondSquared);
 
   // PathPlanner config constants
   private static final double ROBOT_MASS_KG = 60;
@@ -367,5 +388,45 @@ public class Drive extends SubsystemBase {
       new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
       new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
     };
+  }
+
+  /* Configure trajectory following */
+  public Command goToPose(Pose2d target_pose, double end_velocity, double time_before_turn) {
+    return AutoBuilder.pathfindToPose(target_pose, kPathConstraints, end_velocity);
+  }
+
+  public Command goToPose(Pose2d target_pose) {
+    return AutoBuilder.pathfindToPose(target_pose, kPathConstraints, 0.0);
+  }
+
+  public Command getAuto(String nameString) {
+    return AutoBuilder.buildAuto(nameString);
+  }
+
+  public Command runTrajectory(PathPlannerPath path) {
+    return AutoBuilder.followPath(path);
+  }
+
+  public Command pathfindToTrajectory(PathPlannerPath path) {
+    return AutoBuilder.pathfindThenFollowPath(path, kPathConstraints);
+  }
+
+  public Command goToThePose(Pose2d endPose) {
+    List<Waypoint> bezierPoints = PathPlannerPath.waypointsFromPoses(getPose(), endPose);
+
+    // Create the path using the bezier points created above
+    PathPlannerPath path =
+        new PathPlannerPath(
+            bezierPoints,
+            kPathConstraints, // The constraints for this path. If using a differential drivetrain,
+            // the angular constraints have no effect.
+            new IdealStartingState(0.0, getPose().getRotation()),
+            new GoalEndState(
+                0.0,
+                Rotation2d.fromDegrees(
+                    -90)) // Goal end state. You can set a holonomic rotation here. If using a
+            // differential drivetrain, the rotation will have no effect.
+            );
+    return AutoBuilder.followPath(path);
   }
 }
