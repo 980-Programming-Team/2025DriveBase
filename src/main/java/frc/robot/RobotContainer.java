@@ -202,7 +202,6 @@ public class RobotContainer {
 
     // Bind the DriveToTag command to the left bumper with a desired distance of 2 meters and target
     // tag IDs
-    // controller.leftBumper().whileTrue(new DriveToTag(drive, vision));
 
     controller.leftBumper().whileTrue(new DriveToTagLeft(drive, vision));
     controller.rightBumper().whileTrue(new DriveToTagRight(drive, vision));

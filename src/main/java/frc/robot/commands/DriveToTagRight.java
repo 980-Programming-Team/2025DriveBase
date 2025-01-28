@@ -40,13 +40,13 @@ public class DriveToTagRight extends Command {
     // put your robot at a known distance (measuring from the lens of your camera)
     // and solve the same equation for a1.
     // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = 25.0;
+    double limelightMountAngleDegrees = 25.0; // ! made up for value consistency
 
     // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 20.0;
+    double limelightLensHeightInches = 20.0; // ! made up for value consistency
 
     // distance from the target to the floor
-    double goalHeightInches = 60.0;
+    double goalHeightInches = 60.0; // ! made up for value consistency
 
     double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
     double angleToGoalRadians = angleToGoalDegrees * (Math.PI / 180.0);
@@ -62,7 +62,7 @@ public class DriveToTagRight extends Command {
     double ySpeed = 0;
     double rot = 0;
 
-    float desiredDistance = 0.2f; // 1 meter
+    float desiredDistance = 0.2f;
     double range = 105.0;
 
     double distanceError = 0;
@@ -72,8 +72,6 @@ public class DriveToTagRight extends Command {
       // Proportional control for distance
       distanceError = desiredDistance - EstimateDistance();
       forwardSpeed = xSpeedPID.calculate(distanceError);
-
-      SmartDashboard.putNumber("distance", distanceError);
 
       rot = rotPID.calculate(LimelightHelpers.getTX("limelight"));
       rot =
@@ -96,12 +94,7 @@ public class DriveToTagRight extends Command {
                 Drive.getMaxLinearSpeedMetersPerSec());
       }
       fieldRelative = false;
-    } else // ! close to tag
-    {
-      xSpeed = 0;
-      ySpeed = .75;
-      rot = 0;
-    }
+    } else return; // ! april tag not in view
 
     drive.runVelocity(xSpeed, ySpeed, rot, fieldRelative);
   }
