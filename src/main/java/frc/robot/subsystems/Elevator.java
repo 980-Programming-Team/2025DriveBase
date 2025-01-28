@@ -6,8 +6,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.drive.Drive;
 
 public class Elevator extends SubsystemBase {
@@ -18,7 +18,7 @@ public class Elevator extends SubsystemBase {
   private Drive Drivebase;
 
   public Elevator(Drive drive) {
-    ElevatorSpark = new SparkMax(12, MotorType.kBrushless);
+    ElevatorSpark = new SparkMax(Constants.elevator, MotorType.kBrushless);
     ElevatorEncoder = ElevatorSpark.getEncoder();
     Config = new SparkFlexConfig();
     Config.idleMode(IdleMode.kBrake);
@@ -28,9 +28,7 @@ public class Elevator extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber("pos", ElevatorEncoder.getPosition());
-  }
+  public void periodic() {}
 
   public void Manual(double speed) {
     if (speed > .1 && ElevatorEncoder.getPosition() <= 80) ElevatorSpark.set(speed);

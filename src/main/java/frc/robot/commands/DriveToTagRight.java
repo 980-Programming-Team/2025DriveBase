@@ -74,9 +74,9 @@ public class DriveToTagRight extends Command {
       forwardSpeed = xSpeedPID.calculate(distanceError);
 
       rot = rotPID.calculate(LimelightHelpers.getTX("limelight"));
-      rot =
-          MathUtil.clamp(
-              rot, Drive.getMaxAngularSpeedRadPerSec(), Drive.getMaxAngularSpeedRadPerSec());
+
+      SmartDashboard.putNumber("rot", rot);
+      SmartDashboard.putNumber("distance", distanceError);
 
       if (Math.abs(distanceError) > range) {
         xSpeed = xSpeedPID.calculate(0);

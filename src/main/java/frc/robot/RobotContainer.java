@@ -16,12 +16,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
+import frc.robot.commands.IndexIntoElevator;
+import frc.robot.commands.IndexIntoShooter;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Outtake;
 import frc.robot.commands.Reef.LevelFour;
 import frc.robot.commands.Reef.LevelOne;
 import frc.robot.commands.Reef.LevelThree;
 import frc.robot.commands.Reef.LevelTwo;
 import frc.robot.commands.Reef.ResetElevator;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -46,6 +51,8 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private final Elevator elevator;
+  private final Collector collector;
+
   private final Vision vision;
 
   // Controllers
@@ -131,6 +138,7 @@ public class RobotContainer {
     }
 
     elevator = new Elevator(drive);
+    collector = new Collector(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -228,15 +236,13 @@ public class RobotContainer {
 
     reset.onTrue(new ResetElevator(elevator));
 
-    // up.onTrue(getAutonomousCommand());
-    // down.onTrue(getAutonomousCommand());
+    button5.whileTrue(new Intake(collector));
+    button6.whileTrue(new Outtake(collector));
 
-    // gamePad.povUp(null);
-    // gamePad.povDown(null);
-    // gamePad.povLeft(null);
-    // gamePad.povUpRight(null);
+    button9.whileTrue(new IndexIntoElevator(collector));
+    button10.whileTrue(new IndexIntoShooter(collector));
 
-    // gamePad.trigger(null);
+    button14.whileTrue(Commands.run(() -> collector.off(), collector));
   }
 
   /**
