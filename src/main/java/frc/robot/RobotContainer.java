@@ -17,7 +17,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
 import frc.robot.commands.IndexIntoElevator;
-import frc.robot.commands.IndexIntoShooter;
+import frc.robot.commands.IndexIntoShooterAndShoot;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Outtake;
 import frc.robot.commands.Reef.LevelFour;
@@ -28,6 +28,7 @@ import frc.robot.commands.Reef.ResetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -52,6 +53,7 @@ public class RobotContainer {
   private final Drive drive;
   private final Elevator elevator;
   private final Collector collector;
+  private final Shooter shooter;
 
   private final Vision vision;
 
@@ -139,6 +141,7 @@ public class RobotContainer {
 
     elevator = new Elevator(drive);
     collector = new Collector(drive);
+    shooter = new Shooter(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -240,7 +243,8 @@ public class RobotContainer {
     button6.whileTrue(new Outtake(collector));
 
     button9.whileTrue(new IndexIntoElevator(collector));
-    button10.whileTrue(new IndexIntoShooter(collector));
+    // button10.whileTrue(new IndexIntoShooter(collector));
+    button10.whileTrue(new IndexIntoShooterAndShoot(collector, shooter));
 
     button14.whileTrue(Commands.run(() -> collector.off(), collector));
   }

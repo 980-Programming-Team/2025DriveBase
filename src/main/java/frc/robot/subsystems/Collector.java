@@ -50,11 +50,11 @@ public class Collector extends SubsystemBase {
 
   public void indexIntoShooter() {
     CollectorSpark.set(.5);
-    IndexSpark.set(.3);
+    IndexSpark.set(-.3);
   }
 
   public void indexIntoElevator() {
-    CollectorSpark.set(-.5);
+    CollectorSpark.set(.5);
     IndexSpark.set(.3);
   }
 
