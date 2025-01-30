@@ -16,8 +16,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
-import frc.robot.commands.IndexIntoElevator;
-import frc.robot.commands.IndexIntoShooterAndShoot;
+import frc.robot.commands.IndexIntoShooter;
 import frc.robot.commands.Intake;
 import frc.robot.commands.Outtake;
 import frc.robot.commands.Reef.LevelFour;
@@ -25,6 +24,7 @@ import frc.robot.commands.Reef.LevelOne;
 import frc.robot.commands.Reef.LevelThree;
 import frc.robot.commands.Reef.LevelTwo;
 import frc.robot.commands.Reef.ResetElevator;
+import frc.robot.commands.ShooterCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Elevator;
@@ -242,9 +242,13 @@ public class RobotContainer {
     button5.whileTrue(new Intake(collector));
     button6.whileTrue(new Outtake(collector));
 
-    button9.whileTrue(new IndexIntoElevator(collector));
-    // button10.whileTrue(new IndexIntoShooter(collector));
-    button10.whileTrue(new IndexIntoShooterAndShoot(collector, shooter));
+    button9.whileTrue(new IndexIntoShooter(collector));
+    button10.whileTrue(new ShooterCommand(shooter));
+
+    // controller.rightTrigger().whileTrue(new IndexIntoShooter(collector));
+    // controller.leftTrigger().whileTrue(new ShooterCommand(shooter));
+
+    // button11.whileTrue(new IndexIntoShooterAndShoot(collector, shooter));
 
     button14.whileTrue(Commands.run(() -> collector.off(), collector));
   }

@@ -9,15 +9,14 @@ import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class IndexIntoShooterAndShoot extends Command {
+public class ShooterCommand extends Command {
   /** Creates a new Intake. */
   Collector Collector;
 
   Shooter Shooter;
 
-  public IndexIntoShooterAndShoot(Collector collect, Shooter shooter) {
+  public ShooterCommand(Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
-    Collector = collect;
     Shooter = shooter;
   }
 
@@ -28,14 +27,12 @@ public class IndexIntoShooterAndShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Collector.indexIntoShooter();
-    Shooter.fireNote(12, 0);
+    Shooter.fireNote(2000, 4000);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Collector.off();
     Shooter.off();
   }
 

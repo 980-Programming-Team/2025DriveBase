@@ -38,6 +38,7 @@ public class Collector extends SubsystemBase {
 
   public void outtake() {
     CollectorSpark.set(-.5);
+    IndexSpark.set(.3);
   }
 
   public void intake() {

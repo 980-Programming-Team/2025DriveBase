@@ -78,6 +78,11 @@ public class Shooter extends SubsystemBase {
     flywheelLeftTop.setVoltage(
         bottomControl.calculate(bottomShooterRowSpeed, setpoint2) + ff.calculate(setpoint2));
   }
+
+  public void off() {
+    flywheelLeftTop.setVoltage(0);
+    flywheelRightBot.setVoltage(0);
+  }
 }
 /*
   public void tiltShooter(double speed){
