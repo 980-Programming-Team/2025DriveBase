@@ -242,11 +242,13 @@ public class RobotContainer {
     button5.whileTrue(new Intake(collector));
     button6.whileTrue(new Outtake(collector));
 
-    button9.whileTrue(new IndexIntoShooter(collector));
-    button10.whileTrue(new ShooterCommand(shooter));
+    // button9.whileTrue(new IndexIntoShooter(collector));
+    // button10.whileTrue(new ShooterCommand(shooter));
 
-    // controller.rightTrigger().whileTrue(new IndexIntoShooter(collector));
-    // controller.leftTrigger().whileTrue(new ShooterCommand(shooter));
+    // make sure to add brownout protection in robot.java
+
+    controller.leftTrigger().whileTrue(new IndexIntoShooter(collector));
+    controller.rightTrigger().whileTrue(new ShooterCommand(shooter));
 
     // button11.whileTrue(new IndexIntoShooterAndShoot(collector, shooter));
 
