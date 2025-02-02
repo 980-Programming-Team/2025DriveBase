@@ -11,14 +11,29 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.IndexIntoShooter;
+import frc.robot.commands.Intake;
+import frc.robot.commands.Outtake;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.Reef.LevelFour;
+import frc.robot.commands.Reef.LevelOne;
+import frc.robot.commands.Reef.LevelThree;
+import frc.robot.commands.Reef.LevelTwo;
+import frc.robot.commands.Reef.ResetElevator;
+import frc.robot.subsystems.CollectorSub;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.stream.Collector;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -32,6 +47,10 @@ import swervelib.SwerveInputStream;
 public class RobotContainer
 {
 
+  private final Elevator elevator;
+  private final CollectorSub collector;
+  private final Shooter shooter;
+  
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
@@ -40,6 +59,28 @@ public class RobotContainer
                                                                                 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    // Haute M42
+  private final Joystick gamePad = new Joystick(1);
+
+  private JoystickButton up = new JoystickButton(gamePad, 8);
+  private JoystickButton down = new JoystickButton(gamePad, 7);
+
+  private JoystickButton l1 = new JoystickButton(gamePad, 2);
+  private JoystickButton l2 = new JoystickButton(gamePad, 3);
+  private JoystickButton l3 = new JoystickButton(gamePad, 1);
+  private JoystickButton l4 = new JoystickButton(gamePad, 4);
+
+  private JoystickButton button5 = new JoystickButton(gamePad, 5);
+  private JoystickButton button6 = new JoystickButton(gamePad, 6);
+  private JoystickButton button9 = new JoystickButton(gamePad, 9);
+  private JoystickButton button10 = new JoystickButton(gamePad, 10);
+
+  private JoystickButton reset = new JoystickButton(gamePad, 13);
+
+  private JoystickButton button11 = new JoystickButton(gamePad, 11);
+  private JoystickButton button12 = new JoystickButton(gamePad, 12);
+  private JoystickButton button14 = new JoystickButton(gamePad, 14);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -116,10 +157,8 @@ public class RobotContainer
     // Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
     //     driveDirectAngleKeyboard);
 
-    if (RobotBase.isSimulation())
-    {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-    } // else
+    // else
     // {
     //   drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     // }
@@ -152,7 +191,29 @@ public class RobotContainer
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+
+        // gamePad
+    l1.onTrue(new LevelOne(elevator));
+    l2.onTrue(new LevelTwo(elevator));
+    l3.onTrue(new LevelThree(elevator));
+    l4.onTrue(new LevelFour(elevator));
+
+    reset.onTrue(new ResetElevator(elevator));
+
+    button5.whileTrue(new Intake(collector));
+    button6.whileTrue(new Outtake(collector));
+
+    button9.whileTrue(new IndexIntoShooter(collector));
+    button10.whileTrue(new ShooterCommand(shooter));
+
+    // controller.rightTrigger().whileTrue(new IndexIntoShooter(collector));
+    // controller.leftTrigger().whileTrue(new ShooterCommand(shooter));
+
+    // button11.whileTrue(new IndexIntoShooterAndShoot(collector, shooter));
+    
     }
+
+    
 
   }
 

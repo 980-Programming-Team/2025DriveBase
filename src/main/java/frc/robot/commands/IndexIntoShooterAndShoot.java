@@ -5,17 +5,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Collector;
+import frc.robot.subsystems.CollectorSub;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IndexIntoShooterAndShoot extends Command {
   /** Creates a new Intake. */
-  Collector Collector;
+  CollectorSub Collector;
 
   Shooter Shooter;
 
-  public IndexIntoShooterAndShoot(Collector collect, Shooter shooter) {
+  public IndexIntoShooterAndShoot(CollectorSub collect, Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     Collector = collect;
     Shooter = shooter;

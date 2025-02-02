@@ -14,7 +14,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class Shooter extends SubsystemBase {
   private final double SHOOTER_RPM_MAX = 5800; // /60 to make rpm to rps,  TODO: get actual max RPM
@@ -37,7 +37,7 @@ public class Shooter extends SubsystemBase {
   private boolean reachedMaxSpeed;
 
   /** Creates a new Shooter. */
-  public Shooter(Drive drive) {
+  public Shooter(SwerveSubsystem drive) {
     flywheelRightBot = new SparkMax(Constants.flywheelRightBot, MotorType.kBrushless);
     RightBotConfig = new SparkFlexConfig();
     RightBotConfig.inverted(true);

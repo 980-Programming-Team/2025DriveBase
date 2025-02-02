@@ -8,16 +8,16 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class Elevator extends SubsystemBase {
   private SparkMax ElevatorSpark;
   private RelativeEncoder ElevatorEncoder;
   private SparkBaseConfig Config;
 
-  private Drive Drivebase;
+  private SwerveSubsystem Drivebase;
 
-  public Elevator(Drive drive) {
+  public Elevator(SwerveSubsystem drive) {
     ElevatorSpark = new SparkMax(Constants.elevator, MotorType.kBrushless);
     ElevatorEncoder = ElevatorSpark.getEncoder();
     Config = new SparkFlexConfig();

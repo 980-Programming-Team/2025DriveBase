@@ -8,9 +8,9 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
-public class Collector extends SubsystemBase {
+public class CollectorSub extends SubsystemBase {
   private SparkMax CollectorSpark;
   private RelativeEncoder CollectorEncoder;
   private SparkBaseConfig CollectorConfig;
@@ -19,7 +19,7 @@ public class Collector extends SubsystemBase {
   private RelativeEncoder IndexEncoder;
   private SparkBaseConfig IndexConfig;
 
-  public Collector(Drive drive) {
+  public CollectorSub(SwerveSubsystem drive) {
     CollectorSpark = new SparkMax(Constants.collect, MotorType.kBrushless);
     CollectorEncoder = CollectorSpark.getEncoder();
     CollectorConfig = new SparkFlexConfig();

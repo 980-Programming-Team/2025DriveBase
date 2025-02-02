@@ -22,8 +22,22 @@ public final class Constants
   public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED  = Units.feetToMeters(14.5);
+  public static final double MAX_SPEED  = Units.feetToMeters(15.1);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
+
+  // COLLECTOR
+  public static final int index = 13;
+  public static final int collect = 14;
+
+    // SHOOTER
+    public static final int flywheelRightBot = 19;
+    public static final int flywheelLeftTop = 17;
+    public static final int angleRight = 18;
+    public static final int angleLeft = 16;
+
+      // ELEVATOR
+  public static final int elevator = 12;
+  public static final int elevatorShooter = 11;
 
 //  public static final class AutonConstants
 //  {
