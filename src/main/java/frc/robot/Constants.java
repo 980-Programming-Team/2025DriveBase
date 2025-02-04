@@ -24,6 +24,37 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
+  public class SuperstructureConstants {
+
+    // Krakens
+    public static final double kElevatorPDP = 3;
+    public static final double kElevatorRoboRio = 4;
+
+    // NEO 550s
+    public static final double kFunnelIntake = 5;
+    public static final double kClaw = 6;
+
+    // NEO
+    public static final double kFunnel = 7;
+    public static final double kArm = 8;
+  }
+
+  public class CageConstants {
+
+    // NEO
+    public static final double kCageL1 = 9;
+    public static final double kCageFunnel = 10;
+  }
+
+  public class L1Mechanism {
+
+    // NEO
+    public static final double kL1Deploy = 25;
+
+    // NEO 550
+    public static final double kL1Collect = 26;
+  }
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
