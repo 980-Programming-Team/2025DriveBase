@@ -133,48 +133,48 @@ public class TunerConstants {
               .withDriveFrictionVoltage(kDriveFrictionVoltage);
 
   // Front Left
-  private static final int kFrontLeftDriveMotorId = 11; // 41
-  private static final int kFrontLeftSteerMotorId = 12; // 42
-  private static final int kFrontLeftEncoderId = 13; // 43
-  private static final Angle kFrontLeftEncoderOffset = Rotations.of(-0.057861328125);
+  private static final int kFrontLeftDriveMotorId = 11;
+  private static final int kFrontLeftSteerMotorId = 12;
+  private static final int kFrontLeftEncoderId = 13;
+  private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.133544921875);
   private static final boolean kFrontLeftSteerMotorInverted = false;
   private static final boolean kFrontLeftEncoderInverted = false;
 
-  private static final Distance kFrontLeftXPos = Inches.of(11.5); // change
-  private static final Distance kFrontLeftYPos = Inches.of(11.5); // change
+  private static final Distance kFrontLeftXPos = Inches.of(11.5);
+  private static final Distance kFrontLeftYPos = Inches.of(11.5);
 
   // Front Right
-  private static final int kFrontRightDriveMotorId = 21; // 51
-  private static final int kFrontRightSteerMotorId = 22; // 52
-  private static final int kFrontRightEncoderId = 23; // 53
-  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.237548828125);
+  private static final int kFrontRightDriveMotorId = 21;
+  private static final int kFrontRightSteerMotorId = 22;
+  private static final int kFrontRightEncoderId = 23;
+  private static final Angle kFrontRightEncoderOffset = Rotations.of(0.23388671875);
   private static final boolean kFrontRightSteerMotorInverted = false;
   private static final boolean kFrontRightEncoderInverted = false;
 
-  private static final Distance kFrontRightXPos = Inches.of(11.5); // change
-  private static final Distance kFrontRightYPos = Inches.of(-11.5); // change
+  private static final Distance kFrontRightXPos = Inches.of(11.5);
+  private static final Distance kFrontRightYPos = Inches.of(-11.5);
 
   // Back Left
-  private static final int kBackLeftDriveMotorId = 31; // 21
-  private static final int kBackLeftSteerMotorId = 32; // 22
-  private static final int kBackLeftEncoderId = 33; // 23
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(0.336181640625);
+  private static final int kBackLeftDriveMotorId = 31;
+  private static final int kBackLeftSteerMotorId = 32;
+  private static final int kBackLeftEncoderId = 33;
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.151123046875);
   private static final boolean kBackLeftSteerMotorInverted = false;
   private static final boolean kBackLeftEncoderInverted = false;
 
-  private static final Distance kBackLeftXPos = Inches.of(-11.5); // change
-  private static final Distance kBackLeftYPos = Inches.of(11.5); // change
+  private static final Distance kBackLeftXPos = Inches.of(-11.5);
+  private static final Distance kBackLeftYPos = Inches.of(11.5);
 
   // Back Right
-  private static final int kBackRightDriveMotorId = 41; // 31
-  private static final int kBackRightSteerMotorId = 42; // 32
-  private static final int kBackRightEncoderId = 43; // 33
-  private static final Angle kBackRightEncoderOffset = Rotations.of(0.133544921875);
+  private static final int kBackRightDriveMotorId = 41;
+  private static final int kBackRightSteerMotorId = 42;
+  private static final int kBackRightEncoderId = 43;
+  private static final Angle kBackRightEncoderOffset = Rotations.of(0.439453125);
   private static final boolean kBackRightSteerMotorInverted = false;
   private static final boolean kBackRightEncoderInverted = false;
 
-  private static final Distance kBackRightXPos = Inches.of(-11.5); // change
-  private static final Distance kBackRightYPos = Inches.of(-11.5); // change
+  private static final Distance kBackRightXPos = Inches.of(-11.5);
+  private static final Distance kBackRightYPos = Inches.of(-11.5);
 
   public static final SwerveModuleConstants<
           TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>

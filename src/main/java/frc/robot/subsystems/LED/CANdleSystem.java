@@ -17,7 +17,7 @@ import frc.robot.Constants;
 
 public class CANdleSystem extends SubsystemBase {
   private final CANdle m_candle = new CANdle(Constants.CANdleID, "CANmeloAnthony");
-  private final int LedCount = 60;
+  private final int LedCount = 300;
   private CommandXboxController joystick;
 
   private Animation m_toAnimate = null;
@@ -37,8 +37,8 @@ public class CANdleSystem extends SubsystemBase {
 
   private AnimationTypes m_currentAnimation;
 
-  public CANdleSystem(CommandXboxController testController) {
-    this.joystick = testController;
+  public CANdleSystem(CommandXboxController joy) {
+    this.joystick = joy;
     changeAnimation(AnimationTypes.SetAll);
     CANdleConfiguration configAll = new CANdleConfiguration();
     configAll.statusLedOffWhenActive = true;
@@ -46,6 +46,8 @@ public class CANdleSystem extends SubsystemBase {
     configAll.stripType = LEDStripType.GRB;
     configAll.brightnessScalar = 0.1;
     configAll.vBatOutputMode = VBatOutputMode.Modulated;
+    m_candle.clearAnimation(LedCount);
+    m_candle.clearStickyFaults();
     m_candle.configAllSettings(configAll, 100);
   }
 
@@ -199,11 +201,14 @@ public class CANdleSystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (m_toAnimate == null) {
-      m_candle.setLEDs(255, 255, 255);
+      m_candle.setLEDs(
+          (int) (joystick.getLeftTriggerAxis() * 255),
+          (int) (joystick.getRightTriggerAxis() * 255),
+          (int) (joystick.getLeftX() * 255));
     } else {
-      m_candle.animate(m_toAnimate);
+      m_candle.animate(m_toAnimate, LedCount);
     }
-    m_candle.modulateVBatOutput(1);
+    m_candle.modulateVBatOutput(joystick.getRightY());
   }
 
   @Override
