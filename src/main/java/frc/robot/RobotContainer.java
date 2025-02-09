@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.CANdleConfigCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
@@ -23,6 +23,7 @@ import frc.robot.commands.Reef.LevelTwo;
 import frc.robot.commands.Reef.ResetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -50,6 +51,10 @@ public class RobotContainer {
 
   // Controllers
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController testController = new CommandXboxController(2);
+
+  // CANdle
+  private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
 
   // Haute M42
   private final Joystick gamePad = new Joystick(1);
@@ -185,6 +190,17 @@ public class RobotContainer {
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+    testController
+        .pov(Constants.MaxBrightnessAngle)
+        .onTrue(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 1.0));
+    testController
+        .pov(Constants.MidBrightnessAngle)
+        .onTrue(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0.3));
+    testController
+        .pov(Constants.ZeroBrightnessAngle)
+        .onTrue(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0));
+
     // controller.a().onTrue(new LevelTwoPID());
 
     // Reset gyro to 0° when B button is pressed
@@ -206,19 +222,19 @@ public class RobotContainer {
     controller.leftBumper().whileTrue(new DriveToTagLeft(drive, vision));
     controller.rightBumper().whileTrue(new DriveToTagRight(drive, vision));
 
-    controller
-        .povLeft()
-        .onTrue(
-            Commands.deadline(
-                new WaitCommand(.8),
-                DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)));
+    // controller
+    //     .povLeft()
+    //     .onTrue(
+    //         Commands.deadline(
+    //             new WaitCommand(.8),
+    //             DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)));
 
-    controller
-        .povRight()
-        .onTrue(
-            Commands.deadline(
-                new WaitCommand(.8),
-                DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)));
+    // controller
+    //     .povRight()
+    //     .onTrue(
+    //         Commands.deadline(
+    //             new WaitCommand(.8),
+    //             DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)));
 
     // gamePad
     l1.onTrue(new LevelOne(elevator));

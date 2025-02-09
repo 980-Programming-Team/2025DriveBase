@@ -24,6 +24,12 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
+  public static final int CANdleID = 31;
+
+  public static final int MaxBrightnessAngle = 90;
+  public static final int MidBrightnessAngle = 180;
+  public static final int ZeroBrightnessAngle = 270;
+
   public static enum Mode {
     /** Running on a real robot. */
     REAL,
