@@ -244,6 +244,8 @@ public class RobotContainer {
 
     reset.onTrue(new ResetElevator(elevator));
 
+    testController.b().onTrue(Commands.runOnce(m_candleSubsystem::setWhite));
+
     // up.onTrue(getAutonomousCommand());
     // down.onTrue(getAutonomousCommand());
 
