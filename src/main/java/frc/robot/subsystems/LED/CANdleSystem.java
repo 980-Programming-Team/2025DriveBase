@@ -80,11 +80,7 @@ public class CANdleSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    m_candle.setLEDs(
-        (int) (joystick.getLeftY() * 255),
-        (int) (joystick.getLeftY() * 255),
-        (int) (joystick.getLeftY() * 255));
-    m_candle.modulateVBatOutput(joystick.getRightY());
+
   }
 
   @Override
