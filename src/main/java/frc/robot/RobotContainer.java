@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -16,10 +17,6 @@ import frc.robot.commands.CANdleConfigCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.DriveToTagLeft;
 import frc.robot.commands.DriveToTagRight;
-import frc.robot.commands.Reef.LevelFour;
-import frc.robot.commands.Reef.LevelOne;
-import frc.robot.commands.Reef.LevelThree;
-import frc.robot.commands.Reef.LevelTwo;
 import frc.robot.commands.Reef.ResetElevator;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Elevator;
@@ -237,12 +234,19 @@ public class RobotContainer {
     //             DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)));
 
     // gamePad
-    l1.onTrue(new LevelOne(elevator));
-    l2.onTrue(new LevelTwo(elevator));
-    l3.onTrue(new LevelThree(elevator));
-    l4.onTrue(new LevelFour(elevator));
+    // l1.onTrue(new LevelOne(elevator));
+    // l2.onTrue(new LevelTwo(elevator));
+    // l3.onTrue(new LevelThree(elevator));
+    // l4.onTrue(new LevelFour(elevator));
+
+    l1.onTrue(new RunCommand(m_candleSubsystem::SetLEDRed, m_candleSubsystem));
+    l2.onTrue(new RunCommand(m_candleSubsystem::SetLEDGreen, m_candleSubsystem));
+    l3.onTrue(new RunCommand(m_candleSubsystem::SetLEDYellow, m_candleSubsystem));
+    l4.onTrue(new RunCommand(m_candleSubsystem::SetLEDBlue, m_candleSubsystem));
 
     reset.onTrue(new ResetElevator(elevator));
+
+    // testController.b().onTrue(Commands.runOnce(m_candleSubsystem::setWhite));
 
     // up.onTrue(getAutonomousCommand());
     // down.onTrue(getAutonomousCommand());
