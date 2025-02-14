@@ -17,6 +17,10 @@ public class Elevator extends SubsystemBase {
 
   private Drive Drivebase;
 
+  public boolean shouldEStop = false;
+  public boolean isEStopped = false;
+  public boolean stowed = false;
+
   public Elevator(Drive drive) {
     ElevatorSpark = new SparkMax(Constants.elevator, MotorType.kBrushless);
     ElevatorEncoder = ElevatorSpark.getEncoder();
