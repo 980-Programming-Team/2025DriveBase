@@ -50,7 +50,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final Superstructure elevator;
   private final Vision vision;
 
   // Controllers
@@ -65,6 +64,14 @@ public class RobotContainer {
   private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
 
 
+  public static ElevatorIO elevatorIO = Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
+  public static ArmClawIO armClawIO = Constants.armEnabled ? new ArmClawIOSpark() : new ArmClawIO() {};
+  public static FunnelIO funnelIO = Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
+
+  public static Elevator elevator = new Elevator(elevatorIO);
+  public static ArmClaw armClaw = new ArmClaw(armClawIO);
+  public static Funnel funnel = new Funnel(funnelIO);
+  public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -120,18 +127,6 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
-
-    public static ElevatorIO elevatorIO =
-      Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
-    public static ArmClawIO armClawIO =
-      Constants.armEnabled ? new ArmClawIOSpark() : new ArmClawIO() {};
-    public static FunnelIO funnelIO = 
-      Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
-
-    public static Elevator elevator = new Elevator(elevatorIO);
-    public static ArmClaw armClaw = new ArmClaw(armClawIO);
-    public static Funnel funnel = new Funnel(funnelIO);
-    public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
     
 
 

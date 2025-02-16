@@ -3,11 +3,17 @@ package frc.robot.subsystems.arm;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.arm.ArmClawIO.ArmClawIOInputs;
+
 import org.littletonrobotics.junction.Logger;
+
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
 
 public class ArmClaw extends SubsystemBase {
   private ArmClawIO io;
-  private ArmClawIOInputsAutoLogged inputs = new ArmClawIOInputsAutoLogged();
+  private ArmClawIOInputs inputs;
+
+  private boolean OURCODE = false; //!
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -29,20 +35,23 @@ public class ArmClaw extends SubsystemBase {
     L3,
     L4,
     EJECT,
-    SHOOT
+    SHOOT,
+    SECURING_CORAL
   }
 
   public ArmClaw(ArmClawIO io) {
     this.io = io;
+
+    inputs = new ArmClawIOInputs();
   }
 
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("ArmClaw", inputs);
+    Logger.processInputs("ArmClaw", null); //! 
     Logger.recordOutput("ArmClaw/State", state.toString());
     Logger.recordOutput("ArmClaw/Coral Detection", hasCoral());
-    Logger.recordOutput("ArmClaw/Coral Detetion", coralSecured());
+    Logger.recordOutput("ArmClaw/Coral Detection", coralSecured());
 
     switch (state) {
       case IDLE:
@@ -67,7 +76,7 @@ public class ArmClaw extends SubsystemBase {
 
         if (requestEject && coralSecured()) {
           state = ArmStates.EJECT;
-        } else if (inputs.frontBeamBreakTriggered) {
+        } else if (OURCODE) { // else if (coral intake successful) //! inputs.frontBeamBreakTriggered
           state = ArmStates.SECURING_CORAL;
         } else if (requestIdle) {
           state = ArmStates.IDLE;
@@ -78,7 +87,7 @@ public class ArmClaw extends SubsystemBase {
 
         if (requestEject) {
           state = ArmStates.EJECT;
-        } else if (!inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered) {
+        } else if (OURCODE) { // else if (coral ready to eject) //! !inputs.backBeamBreakTriggered && inputs.frontBeamBreakTriggered
           state = ArmStates.IDLE;
           coralSecured = true;
           unsetAllRequests(); // account for automation from sensor triggers
@@ -89,7 +98,7 @@ public class ArmClaw extends SubsystemBase {
 
         if (requestEject) {
           state = ArmStates.EJECT;
-        } else if (!inputs.frontBeamBreakTriggered) {
+        } else if (OURCODE) { // else if (coral eject successful) //! !inputs.frontBeamBreakTriggered
           shootTimer.start();
           if (shootTimer.hasElapsed(Constants.Arm.shootWaitTimerSec)) {
             coralSecured = false;
@@ -103,7 +112,7 @@ public class ArmClaw extends SubsystemBase {
       case EJECT:
         io.setArmVoltage(Constants.Arm.spitVoltage);
         coralSecured = false;
-        if (!inputs.backBeamBreakTriggered) {
+        if (OURCODE) { // else if (coral passed intake, not ready to eject) //! inputs.backBeamBreakTriggered
           state = ArmStates.FEED;
         }
         break;

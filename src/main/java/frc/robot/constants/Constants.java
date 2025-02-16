@@ -89,6 +89,14 @@ public final class Constants {
     public static final double armFeedVoltage = 0.5; // TODO: Determine value
     public static final double clawFeedVoltage = 0.5; // TODO: Determine value
 
+    public static double secondFeedVoltage; // !
+
+    public static double shootVoltage; // !
+
+    public static double shootWaitTimerSec; // ! 
+
+    public static double spitVoltage; // !
+
   }
 
   public class Funnel {
