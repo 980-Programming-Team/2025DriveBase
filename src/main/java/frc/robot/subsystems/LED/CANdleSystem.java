@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
 
 public class CANdleSystem extends SubsystemBase {
-  private final CANdle m_candle = new CANdle(Constants.CANdleID, "CANmeloAnthony");
+  private final CANdle m_candle = new CANdle(Constants.CANdle.kCANdleID, Constants.kCANivore);
   private CommandXboxController joystick;
-  private int LedCount = 68;
+  private int LedCount = Constants.LED_NUM;
 
   public CANdleSystem(CommandXboxController joy) {
     this.joystick = joy;

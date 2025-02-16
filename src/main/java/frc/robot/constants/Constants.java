@@ -27,6 +27,8 @@ public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
+  public static final String kCANivore = "CANmeloAnthony";
+
   public static final boolean elevatorEnabled = true;
   public static final boolean armEnabled = true;
   public static final boolean funnelEnabled = true;
@@ -92,10 +94,26 @@ public final class Constants {
   public class Funnel {
 
     // NEO 550 
-    public static final int kFunnelIntake = 5;
+     public static final int kFunnelIntake = 5;
 
     // NEO
     public static final int kFunnelPivot = 7;
+
+    public class Pivot {
+
+      public static final double deployedSetpointMechanismRotations = 0.0;
+      public static final double setpointToleranceMechanismRotations = 0.01;
+
+    }
+
+    
+    public class Intake {
+
+      // NEO
+      public static final double deployedSetpointMechanismRotations = 0.0;
+      public static final double setpointToleranceMechanismRotations = 0.01;
+
+    }
     
   }
 
@@ -122,6 +140,8 @@ public final class Constants {
     public static final int MaxBrightnessAngle = 90;
     public static final int MidBrightnessAngle = 180;
     public static final int ZeroBrightnessAngle = 270;
+
+    public static final int CANdleID = 0;
 
   }
 

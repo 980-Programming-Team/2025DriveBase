@@ -32,7 +32,7 @@ public class FunnelIOSpark implements FunnelIO {
 
     if (pivotConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon "
+          "NEO "
               + pivot.getDeviceID()
               + " error (Algae Pivot): "
               + pivotConfigStatus.getDescription(),
@@ -41,8 +41,8 @@ public class FunnelIOSpark implements FunnelIO {
 
     if (rollerConfigStatus != StatusCode.OK) {
       DriverStation.reportError(
-          "Talon "
-              + rollerMotor.getDeviceID()
+          "NEO 550 "
+              + intake.getDeviceID()
               + " error (Algae Roller): "
               + rollerConfigStatus.getDescription(),
           false);

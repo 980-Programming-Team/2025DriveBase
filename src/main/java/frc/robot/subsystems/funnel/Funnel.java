@@ -3,6 +3,8 @@ package frc.robot.subsystems.funnel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.Util;
 import frc.robot.constants.Constants;
+
+import org.jheaps.annotations.ConstantTime;
 import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
@@ -12,9 +14,9 @@ public class Funnel extends SubsystemBase {
   private boolean requestIdle;
   private boolean requestDescore;
 
-  private FlipperStates state = FlipperStates.STARTING_CONFIG;
+  private FunnelStates state = FunnelStates.STARTING_CONFIG;
 
-  public enum FlipperStates {
+  public enum FunnelStates {
     STARTING_CONFIG,
     IDLE,
     CLIMB_READY,
@@ -27,17 +29,17 @@ public class Funnel extends SubsystemBase {
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Flipper", inputs);
-    Logger.recordOutput("Flipper/State", state.toString());
+    Logger.processInputs("Funnel", inputs);
+    Logger.recordOutput("Funnel/State", state.toString());
 
     switch (state) {
-      case SEED_POSITION:
+      case STARTING_CONFIG:
         io.seedPivotPosition(inputs.pivotPosAbsMechanismRotations);
-        state = FlipperStates.IDLE;
+        state = FunnelStates.IDLE;
         break;
       case IDLE:
         io.setPivotPosition(Constants.Funnel.Pivot.stowedSetpointMechanismRotations);
-        io.setRollerVoltage(0);
+        io.setIntakeVoltage(Constants.Funnel.Intake.);
 
         if (requestDescore) {
           state = FlipperStates.FLIP;

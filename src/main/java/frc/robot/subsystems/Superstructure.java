@@ -27,12 +27,9 @@ public class Superstructure extends SubsystemBase {
   public static enum Superstates {
     IDLE,
     FEEDING,
-    EJECT,
-    PRE_SCORE,
-    SAFE_FLIP,
-    SAFE_RETRACT,
-    PRE_SCORE_FLIP,
-    TRANSITION_FLIP,
+    L2,
+    L3,
+    L4,
     SCORE
   }
 
