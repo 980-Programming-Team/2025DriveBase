@@ -41,9 +41,9 @@ public class ScoringManager {
 
   private boolean flipReqested;
 
-  private int scoringLocation = 1;
-  private String alignDirection = "AL";
-  private String scoringLevel = "L2";
+  private Integer scoringLocation = null;
+  private String alignDirection = null;
+  private String scoringLevel = null;
 
   // scoring face enumerated from 0 - 5 counterclockwise starting at reef face
   // closest to middle driver station for blue and red
@@ -87,7 +87,7 @@ public class ScoringManager {
 
   public void updateScoringList() {
     String[] scoringList = new String[3];
-    scoringList[0] = getScoringLocationName(scoringLocation);
+    scoringList[0] = scoringLocation != null ? getScoringLocationName(scoringLocation) : null;
     scoringList[1] = alignDirection;
     scoringList[2] = scoringLevel;
 
@@ -95,7 +95,10 @@ public class ScoringManager {
   }
 
   public void clearScoringList() {
-    Logger.recordOutput("Scoring/ScoringList", new String[0]);
+    scoringLocation = null;
+    alignDirection = null;
+    scoringLevel = null;
+    updateScoringList();
   }
 
   private String getScoringLocationName(int location) {
@@ -134,28 +137,61 @@ public class ScoringManager {
 
   public void configScoringPosButtons() {
     new JoystickButton(controller, 1)
-        .onTrue(new InstantCommand(() -> setScoringLocation(1)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(1);
+          updateScoringList();
+        }));
     new JoystickButton(controller, 2)
-        .onTrue(new InstantCommand(() -> setScoringLocation(2)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(2);
+          updateScoringList();
+        }));
     new JoystickButton(controller, 3)
-        .onTrue(new InstantCommand(() -> setScoringLocation(3)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(3);
+          updateScoringList();
+        }));
     new JoystickButton(controller, 4)
-        .onTrue(new InstantCommand(() -> setScoringLocation(4)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(4);
+          updateScoringList();
+        }));
     new JoystickButton(controller, 5)
-        .onTrue(new InstantCommand(() -> setScoringLocation(5)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(5);
+          updateScoringList();
+        }));
     new JoystickButton(controller, 6)
-        .onTrue(new InstantCommand(() -> setScoringLocation(6)));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLocation(6);
+          updateScoringList();
+        }));
 
     new JoystickButton(controller, 7)
-        .onTrue(new InstantCommand(() -> setAlignDirection("AL")));
+        .onTrue(new InstantCommand(() -> {
+          setAlignDirection("AL");
+          updateScoringList();
+        }));
     new JoystickButton(controller, 8)
-        .onTrue(new InstantCommand(() -> setAlignDirection("AR")));
+        .onTrue(new InstantCommand(() -> {
+          setAlignDirection("AR");
+          updateScoringList();
+        }));
 
     new JoystickButton(controller, 9)
-        .onTrue(new InstantCommand(() -> setScoringLevel("L2")));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLevel("L2");
+          updateScoringList();
+        }));
     new JoystickButton(controller, 10)
-        .onTrue(new InstantCommand(() -> setScoringLevel("L3")));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLevel("L3");
+          updateScoringList();
+        }));
     new JoystickButton(controller, 11)
-        .onTrue(new InstantCommand(() -> setScoringLevel("L4")));
+        .onTrue(new InstantCommand(() -> {
+          setScoringLevel("L4");
+          updateScoringList();
+        }));
   }
 }
