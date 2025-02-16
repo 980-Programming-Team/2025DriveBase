@@ -47,54 +47,56 @@ public class DriveCommands {
   private static final double WHEEL_RADIUS_MAX_VELOCITY = 0.25; // Rad/Sec
   private static final double WHEEL_RADIUS_RAMP_RATE = 0.05; // Rad/Sec^2
 
-  private DriveCommands() {}
-
-  private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
-    // Apply deadband
-    double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
-    Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
-
-    // Square magnitude for more precise control
-    linearMagnitude = linearMagnitude * linearMagnitude;
-
-    // Return new linear velocity
-    return new Pose2d(new Translation2d(), linearDirection)
-        .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
-        .getTranslation();
-  }
-
-  /**
-   * Field relative drive command using two joysticks (controlling linear and angular velocities).
-   */
-  public static Command joystickDrive(
-      Drive drive,
-      DoubleSupplier xSupplier,
-      DoubleSupplier ySupplier,
-      DoubleSupplier omegaSupplier) {
-    return Commands.run(
-        () -> {
-          // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
-
-          // Apply rotation deadband
-          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
-
-          // Square rotation value for more precise control
-          omega = Math.copySign(omega * omega, omega);
-
-          // Convert to field relative speeds & send command
-          ChassisSpeeds speeds =
+  private static ChassisSpeeds speed = new ChassisSpeeds();
+  
+    private DriveCommands() {}
+  
+    private static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
+      // Apply deadband
+      double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), DEADBAND);
+      Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
+  
+      // Square magnitude for more precise control
+      linearMagnitude = linearMagnitude * linearMagnitude;
+  
+      // Return new linear velocity
+      return new Pose2d(new Translation2d(), linearDirection)
+          .transformBy(new Transform2d(linearMagnitude, 0.0, new Rotation2d()))
+          .getTranslation();
+    }
+  
+    /**
+     * Field relative drive command using two joysticks (controlling linear and angular velocities).
+     */
+    public static Command joystickDrive(
+        Drive drive,
+        DoubleSupplier xSupplier,
+        DoubleSupplier ySupplier,
+        DoubleSupplier omegaSupplier) {
+      return Commands.run(
+          () -> {
+            // Get linear velocity
+            Translation2d linearVelocity =
+                getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+  
+            // Apply rotation deadband
+            double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+  
+            // Square rotation value for more precise control
+            omega = Math.copySign(omega * omega, omega);
+  
+            // Convert to field relative speeds & send command
+            speed =
               new ChassisSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  omega * drive.getMaxAngularSpeedRadPerSec());
+                  linearVelocity.getX() * Drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * Drive.getMaxLinearSpeedMetersPerSec(),
+                  omega * Drive.getMaxAngularSpeedRadPerSec());
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
           drive.runVelocity(
               ChassisSpeeds.fromFieldRelativeSpeeds(
-                  speeds,
+                  speed,
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));
@@ -137,8 +139,8 @@ public class DriveCommands {
               // Convert to field relative speeds & send command
               ChassisSpeeds speeds =
                   new ChassisSpeeds(
-                      linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                      linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getX() * Drive.getMaxLinearSpeedMetersPerSec(),
+                      linearVelocity.getY() * Drive.getMaxLinearSpeedMetersPerSec(),
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
@@ -293,4 +295,10 @@ public class DriveCommands {
     Rotation2d lastAngle = new Rotation2d();
     double gyroDelta = 0.0;
   }
+
+
+  public void setRobotSpeed(ChassisSpeeds robotSpeed) {
+    DriveCommands.speed = robotSpeed;
+}
+
 }

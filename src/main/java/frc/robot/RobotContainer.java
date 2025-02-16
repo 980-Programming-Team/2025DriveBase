@@ -13,20 +13,27 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.CANdleConfigCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.DriveToTagLeft;
-import frc.robot.commands.DriveToTagRight;
-import frc.robot.commands.Reef.ResetElevator;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Elevator;
+import frc.robot.commands.CANdle.CANdleConfigCommands;
+import frc.robot.constants.Constants;
+import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
+import frc.robot.subsystems.arm.ArmClaw;
+import frc.robot.subsystems.arm.ArmClawIO;
+import frc.robot.subsystems.arm.ArmClawIOSpark;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
+import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.funnel.FunnelIO;
+import frc.robot.subsystems.funnel.FunnelIOSpark;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
@@ -43,39 +50,21 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final Elevator elevator;
+  private final Superstructure elevator;
   private final Vision vision;
 
   // Controllers
-  private final CommandXboxController controller = new CommandXboxController(0);
+  public static SourceManager driver = new SourceManager(0);
+
+  public static ScoringManager operatorBoard = new ScoringManager(1);
+
+
   private final CommandXboxController testController = new CommandXboxController(2);
 
   // CANdle
   private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
 
-  // Haute M42
-  private final Joystick gamePad = new Joystick(1);
 
-  private JoystickButton up = new JoystickButton(gamePad, 8);
-  private JoystickButton down = new JoystickButton(gamePad, 7);
-
-  private JoystickButton l1 = new JoystickButton(gamePad, 2);
-  private JoystickButton l2 = new JoystickButton(gamePad, 3);
-  private JoystickButton l3 = new JoystickButton(gamePad, 1);
-  private JoystickButton l4 = new JoystickButton(gamePad, 4);
-
-  private JoystickButton button5 = new JoystickButton(gamePad, 5);
-  private JoystickButton button6 = new JoystickButton(gamePad, 6);
-  private JoystickButton button9 = new JoystickButton(gamePad, 9);
-  private JoystickButton button10 = new JoystickButton(gamePad, 10);
-
-  private JoystickButton reset = new JoystickButton(gamePad, 13);
-
-  private JoystickButton button11 = new JoystickButton(gamePad, 11);
-  private JoystickButton button12 = new JoystickButton(gamePad, 12);
-  private JoystickButton button14 = new JoystickButton(gamePad, 14);
-
-  // 15 16
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -132,7 +121,19 @@ public class RobotContainer {
         break;
     }
 
-    elevator = new Elevator(drive);
+    public static ElevatorIO elevatorIO =
+      Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
+    public static ArmClawIO armClawIO =
+      Constants.armEnabled ? new ArmClawIOSpark() : new ArmClawIO() {};
+    public static FunnelIO funnelIO = 
+      Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
+
+    public static Elevator elevator = new Elevator(elevatorIO);
+    public static ArmClaw armClaw = new ArmClaw(armClawIO);
+    public static Funnel funnel = new Funnel(funnelIO);
+    public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
+    
+
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -153,7 +154,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    elevator.setDefaultCommand(Commands.run(() -> elevator.Manual(gamePad.getZ()), elevator));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -171,9 +171,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> -driver.getDriver().getLeftY(),
+            () -> -driver.getDriver().getLeftX(),
+            () -> -driver.getDriver().getRightX()));
 
     // Lock to 0° when A button is held
     // controller
@@ -186,7 +186,7 @@ public class RobotContainer {
     //             () -> new Rotation2d()));
 
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // driver.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
     testController
         .pov(Constants.MaxBrightnessAngle)
@@ -198,11 +198,9 @@ public class RobotContainer {
         .pov(Constants.ZeroBrightnessAngle)
         .onTrue(new CANdleConfigCommands.ConfigBrightness(m_candleSubsystem, 0));
 
-    // controller.a().onTrue(new LevelTwoPID());
-
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
+    // Reset gyro to 0° when A button is pressed
+    driver
+        .getDriver().a()
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -211,52 +209,15 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.y().onTrue(new ResetElevator(elevator));
 
-    // Bind the DriveToTag command to the left bumper with a desired distance of 2 meters and target
-    // tag IDs
 
-    controller.leftBumper().whileTrue(new DriveToTagLeft(drive, vision));
-    controller.rightBumper().whileTrue(new DriveToTagRight(drive, vision));
+    // l1.onTrue(new RunCommand(m_candleSubsystem::SetLEDRed, m_candleSubsystem));
+    // l2.onTrue(new RunCommand(m_candleSubsystem::SetLEDGreen, m_candleSubsystem));
+    // l3.onTrue(new RunCommand(m_candleSubsystem::SetLEDYellow, m_candleSubsystem));
+    // l4.onTrue(new RunCommand(m_candleSubsystem::SetLEDBlue, m_candleSubsystem));
 
-    // controller
-    //     .povLeft()
-    //     .onTrue(
-    //         Commands.deadline(
-    //             new WaitCommand(.8),
-    //             DriveCommands.joystickDrive(drive, () -> 0, () -> .5, () -> 0)));
 
-    // controller
-    //     .povRight()
-    //     .onTrue(
-    //         Commands.deadline(
-    //             new WaitCommand(.8),
-    //             DriveCommands.joystickDrive(drive, () -> 0, () -> -.5, () -> 0)));
 
-    // gamePad
-    // l1.onTrue(new LevelOne(elevator));
-    // l2.onTrue(new LevelTwo(elevator));
-    // l3.onTrue(new LevelThree(elevator));
-    // l4.onTrue(new LevelFour(elevator));
-
-    l1.onTrue(new RunCommand(m_candleSubsystem::SetLEDRed, m_candleSubsystem));
-    l2.onTrue(new RunCommand(m_candleSubsystem::SetLEDGreen, m_candleSubsystem));
-    l3.onTrue(new RunCommand(m_candleSubsystem::SetLEDYellow, m_candleSubsystem));
-    l4.onTrue(new RunCommand(m_candleSubsystem::SetLEDBlue, m_candleSubsystem));
-
-    reset.onTrue(new ResetElevator(elevator));
-
-    // testController.b().onTrue(Commands.runOnce(m_candleSubsystem::setWhite));
-
-    // up.onTrue(getAutonomousCommand());
-    // down.onTrue(getAutonomousCommand());
-
-    // gamePad.povUp(null);
-    // gamePad.povDown(null);
-    // gamePad.povLeft(null);
-    // gamePad.povUpRight(null);
-
-    // gamePad.trigger(null);
   }
 
   /**
