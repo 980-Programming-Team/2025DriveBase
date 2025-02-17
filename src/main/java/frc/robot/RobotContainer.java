@@ -18,9 +18,12 @@ import frc.robot.commands.CANdle.CANdleConfigCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
-import frc.robot.subsystems.arm.ArmClaw;
-import frc.robot.subsystems.arm.ArmClawIO;
-import frc.robot.subsystems.arm.ArmClawIOSpark;
+import frc.robot.subsystems.arm.Manipulator;
+import frc.robot.subsystems.arm.ManipulatorIO;
+import frc.robot.subsystems.arm.ManipulatorIOSpark;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSpark;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -30,6 +33,7 @@ import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
+import frc.robot.subsystems.elevator.ElevatorIOSpark;
 import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelIO;
@@ -50,7 +54,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private final Superstructure elevator;
   private final Vision vision;
 
   // Controllers
@@ -63,6 +66,21 @@ public class RobotContainer {
 
   // CANdle
   private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
+
+  public static ElevatorIO elevatorIO =
+  Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
+public static ManipulatorIO armClawIO =
+  Constants.armEnabled ? new ManipulatorIOSpark() : new ManipulatorIO() {};
+public static FunnelIO funnelIO = 
+  Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
+public static ClimberIO climberIO =
+  Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
+
+public static Elevator elevator = new Elevator(elevatorIO);
+public static Manipulator armClaw = new Manipulator(armClawIO);
+public static Funnel funnel = new Funnel(funnelIO);
+public static Climber climber = new Climber(climberIO);
+public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
 
 
 
@@ -120,18 +138,6 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
-
-    public static ElevatorIO elevatorIO =
-      Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
-    public static ArmClawIO armClawIO =
-      Constants.armEnabled ? new ArmClawIOSpark() : new ArmClawIO() {};
-    public static FunnelIO funnelIO = 
-      Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
-
-    public static Elevator elevator = new Elevator(elevatorIO);
-    public static ArmClaw armClaw = new ArmClaw(armClawIO);
-    public static Funnel funnel = new Funnel(funnelIO);
-    public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
     
 
 

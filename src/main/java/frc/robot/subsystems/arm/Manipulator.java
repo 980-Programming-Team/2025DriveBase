@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
-public class ArmClaw extends SubsystemBase {
-  private ArmClawIO io;
-  private ArmClawIOInputsAutoLogged inputs = new ArmClawIOInputsAutoLogged();
+public class Manipulator extends SubsystemBase {
+  private ManipulatorIO io;
+  private ManipulatorIOInputsAutoLogged inputs = new ManipulatorIOInputsAutoLogged();
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -32,17 +32,17 @@ public class ArmClaw extends SubsystemBase {
     SHOOT
   }
 
-  public ArmClaw(ArmClawIO io) {
+  public Manipulator(ManipulatorIO io) {
     this.io = io;
   }
 
   @Override
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("ArmClaw", inputs);
-    Logger.recordOutput("ArmClaw/State", state.toString());
-    Logger.recordOutput("ArmClaw/Coral Detection", hasCoral());
-    Logger.recordOutput("ArmClaw/Coral Detetion", coralSecured());
+    Logger.processInputs("Manipulator", inputs);
+    Logger.recordOutput("Manipulator/State", state.toString());
+    Logger.recordOutput("Manipulator/Coral Detection", hasCoral());
+    Logger.recordOutput("Manipulator/Coral Detetion", coralSecured());
 
     switch (state) {
       case IDLE:

@@ -32,6 +32,7 @@ public final class Constants {
   public static final boolean elevatorEnabled = true;
   public static final boolean armEnabled = true;
   public static final boolean funnelEnabled = true;
+  public static final boolean climberEnabled = true;
 
   public static final boolean magneticLimitSwitchesEnabled = true;
   public static final boolean beamBreaksEnabled = false;
@@ -76,7 +77,7 @@ public final class Constants {
 
   }
 
-  public class Arm {
+  public class Manipulator {
 
     // NEO 550s
     public static final int kClaw = 6;
@@ -84,10 +85,19 @@ public final class Constants {
     // NEO
     public static final int kArm = 8;
 
-    public static final double coralDetectionCurrentThreshold = 10.0; // Placeholder value, needs experimental determination
-    
+    public class Arm {
+          
     public static final double armFeedVoltage = 0.5; // TODO: Determine value
-    public static final double clawFeedVoltage = 0.5; // TODO: Determine value
+
+    }
+
+    public class Claw {
+
+      public static final double feedVoltage = 0.5; // TODO: Determine value
+      public static final int currentLimit = 20;
+      public static final double coralDetectionCurrentThreshold = 10.0; // Placeholder value, needs experimental determination
+
+    }
 
   }
 
@@ -120,11 +130,16 @@ public final class Constants {
     
   }
 
-  public class Cage {
-
+    public class Climber {
+  
     // NEO
-    public static final int kCageL1 = 9;
-    public static final int kCageFunnel = 10;
+    public static final int kNearL1 = 9;
+    public static final int kNearFunnel = 10;
+    // ratio 50 to 1
+
+    public static final double supplyCurrentLimit = 40;
+    public static final double statorCurrentLimit = 100;
+
   }
 
   public class L1Mechanism {

@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface FunnelIO {
   @AutoLog
-  public static class FlipperIOInputs {
+  public static class FunnelIOInputs {
     public double pivotAppliedVoltage = 0.0;
     public double pivotSupplyCurrentAmps = 0.0;
     public double pivotStatorCurrentAmps = 0.0;
@@ -19,7 +19,7 @@ public interface FunnelIO {
     public double intakeSpeedRotationsPerSec = 0.0;
   }
 
-  public default void updateInputs(FlipperIOInputs inputs) {}
+  public default void updateInputs(FunnelIOInputs inputs) {}
 
   public default void setPivotPosition(double mechanismRotations) {}
 

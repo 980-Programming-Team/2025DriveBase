@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.arm.ArmClaw;
+import frc.robot.subsystems.arm.Manipulator;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 
@@ -18,7 +18,7 @@ public class Superstructure extends SubsystemBase {
 
   private Superstates state = Superstates.IDLE;
   private Elevator elevator;
-  private ArmClaw arm;
+  private Manipulator arm;
   private Funnel funnel;
 
   private Level level = Level.L2;
@@ -39,7 +39,7 @@ public class Superstructure extends SubsystemBase {
     L4
   }
 
-  public Superstructure(Elevator elevator, ArmClaw arm, Funnel funnel) {
+  public Superstructure(Elevator elevator, Manipulator arm, Funnel funnel) {
     this.elevator = elevator;
     this.arm = arm;
     this.funnel = funnel;

@@ -32,14 +32,15 @@ public class FunnelIOSpark implements FunnelIO {
     pivot = new SparkMax(Constants.Funnel.kFunnelPivot, MotorType.kBrushless);
     intake = new SparkMax(Constants.Funnel.kFunnelIntake, MotorType.kBrushless);
 
-    configurePivot(pivot);
-    configureIntake(intake);
+    configurePivot(pivot, pivotConfig);
+    configureIntake(intake, intakeConfig);
     StatusCode rollerConfigStatus = configRoller();
 
     motorMissingAlert = new Alert("NEO 550 " + getIntakeID() + " missing (Algae Roller)", AlertType.ERROR);
 
     if (rollerConfigStatus != StatusCode.OK) {
       motorMissingAlert.set(true);
+      DriverStation.reportError("NEO 550 " + getIntakeID() + " missing (Algae Roller)", false);
     } else {
       motorMissingAlert.set(false);
     }
@@ -47,22 +48,17 @@ public class FunnelIOSpark implements FunnelIO {
     pivotEncoder = new Encoder(Constants.Funnel.Pivot.pivotEncoderDIO1, Constants.Funnel.Pivot.pivotEncoderDIO2);
   }
 
-  private void configurePivot(SparkBase motor) {
+  private void configurePivot(SparkBase motor, SparkBaseConfig config) {
+
+    config.smartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
+    config.secondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
+
+    motor.configure(config, null, null);
+  }
+
+  private void configureIntake(SparkBase motor, SparkBaseConfig config) {
     motor.setSmartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
     motor.setSecondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
-  }
-
-  private void configureIntake(SparkBase motor) {
-    motor.setSmartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
-    motor.setSecondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
-  }
-
-  private int getPivotID(){
-    return Constants.Funnel.kFunnelPivot;
-  }
-
-  private int getIntakeID(){
-    return Constants.Funnel.kFunnelIntake;
   }
 
   private StatusCode configPivot() {
@@ -95,7 +91,7 @@ public class FunnelIOSpark implements FunnelIO {
   }
 
   @Override
-  public void updateInputs(FlipperIOInputs inputs) {
+  public void updateInputs(FunnelIOInputs inputs) {
     inputs.pivotAppliedVoltage = pivot.getMotorVoltage().getValueAsDouble();
     inputs.pivotStatorCurrentAmps = pivot.getStatorCurrent().getValueAsDouble();
     inputs.pivotSupplyCurrentAmps = pivot.getStatorCurrent().getValueAsDouble();
@@ -131,7 +127,7 @@ public class FunnelIOSpark implements FunnelIO {
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    pivot.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    pivotConfig.(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     rollerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 }
