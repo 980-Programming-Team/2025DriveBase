@@ -101,6 +101,9 @@ public final class Constants {
 
     public class Pivot {
 
+      public static final int pivotEncoderDIO1 = 0;
+      public static final int pivotEncoderDIO2 = 1;
+
       public static final double deployedSetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.01;
 

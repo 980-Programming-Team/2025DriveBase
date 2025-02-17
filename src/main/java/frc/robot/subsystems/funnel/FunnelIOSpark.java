@@ -11,51 +11,63 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
 
 public class FunnelIOSpark implements FunnelIO {
   private SparkBase pivot;
   private SparkBase intake;
+  private Encoder pivotEncoder;
   // private Canandmag pivotEncoder;
 
   private SparkMaxConfig pivotConfig = new SparkMaxConfig();
   private SparkMaxConfig intakeConfig = new SparkMaxConfig();
+  private Alert motorMissingAlert;
 
   public FunnelIOSpark() {
     pivot = new SparkMax(Constants.Funnel.kFunnelPivot, MotorType.kBrushless);
     intake = new SparkMax(Constants.Funnel.kFunnelIntake, MotorType.kBrushless);
 
-    StatusCode pivotConfigStatus = configPivot();
+    configurePivot(pivot);
+    configureIntake(intake);
     StatusCode rollerConfigStatus = configRoller();
 
-    if (pivotConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "NEO "
-              + pivot.getDeviceID()
-              + " error (Algae Pivot): "
-              + pivotConfigStatus.getDescription(),
-          false);
-    }
+    motorMissingAlert = new Alert("NEO 550 " + getIntakeID() + " missing (Algae Roller)", AlertType.ERROR);
 
     if (rollerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "NEO 550 "
-              + intake.getDeviceID()
-              + " error (Algae Roller): "
-              + rollerConfigStatus.getDescription(),
-          false);
+      motorMissingAlert.set(true);
+    } else {
+      motorMissingAlert.set(false);
     }
 
-    pivotEncoder = new Canandmag(Constants.Flipper.pivotEncoderID);
+    pivotEncoder = new Encoder(Constants.Funnel.Pivot.pivotEncoderDIO1, Constants.Funnel.Pivot.pivotEncoderDIO2);
+  }
 
-    // TODO: Set configs for encoder referencing Redux docs
+  private void configurePivot(SparkBase motor) {
+    motor.setSmartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
+    motor.setSecondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
+  }
+
+  private void configureIntake(SparkBase motor) {
+    motor.setSmartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
+    motor.setSecondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
+  }
+
+  private int getPivotID(){
+    return Constants.Funnel.kFunnelPivot;
+  }
+
+  private int getIntakeID(){
+    return Constants.Funnel.kFunnelIntake;
   }
 
   private StatusCode configPivot() {
-    pivotConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Pivot.statorCurrentLimit;
-    pivotConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Pivot.supplyCurrentLimit;
+    pivotConfig.CurrentLimits.StatorCurrentLimit = Constants.Funnel.Pivot.statorCurrentLimit;
+    pivotConfig.CurrentLimits.SupplyCurrentLimit = Constants.Funnel.Pivot.supplyCurrentLimit;
 
     pivotConfig.MotorOutput.Inverted = Constants.Flipper.Pivot.motorInversion;
     pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -66,7 +78,7 @@ public class FunnelIOSpark implements FunnelIO {
     pivotConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
     pivotConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
 
-    return pivot.getConfigurator().apply(pivotConfig);
+    return pivotConfig.apply(pivotConfig);
   }
 
   private StatusCode configRoller() {
@@ -108,8 +120,8 @@ public class FunnelIOSpark implements FunnelIO {
   }
 
   @Override
-  public void setRollerVoltage(double voltage) {
-    rollerMotor.setControl(new VoltageOut(voltage));
+  public void setIntakeVoltage(double voltage) {
+    intake.setControl(new VoltageOut(voltage));
   }
 
   @Override
