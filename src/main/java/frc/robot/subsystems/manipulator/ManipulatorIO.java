@@ -17,7 +17,9 @@ public interface ManipulatorIO {
     public double clawTempCelcius = 0.0;
     public double clawSpeedRotationsPerSec = 0.0;
 
+    public boolean boxedCoral = false;
     public boolean beamBreakTriggered = false;
+
   }
 
   public default void updateInputs(ManipulatorIOInputs inputs) {}

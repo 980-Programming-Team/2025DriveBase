@@ -43,7 +43,7 @@ public final class Constants {
   public class Elevator {
 
     // Krakens
-    public static final int kElevatorPDP = 3; // Clockwise
+    public static final int kElevatorPDH = 3; // Clockwise
     public static final int kElevatorRoboRio = 4; // Counterclockwise
 
     public static final double gearRatio = 9.0;
@@ -51,13 +51,10 @@ public final class Constants {
 
     public static final double setpointToleranceMeters = 0.01;
 
-    public static final double supplyCurrentLimit = 40;
-    public static final double statorCurrentLimit = 100;
+    public static final int supplyCurrentLimit = 40;
 
-    public static final double peakForwardVoltage = 11.5;
-    public static final double peakReverseVoltage = -11.5;
-
-    public static final InvertedValue roboRioMotorInversion = InvertedValue.Clockwise_Positive;
+    public static final double peakForward = 0.5;
+    public static final double peakReverse = -0.5;
 
     // L1 height gains
     public static final double kS0 = 0;
@@ -160,18 +157,21 @@ public final class Constants {
   public class CANdle {
     public static final int kCANdleID = 31;
     
-    public static final int MaxBrightnessAngle = 90;
-    public static final int MidBrightnessAngle = 180;
-    public static final int ZeroBrightnessAngle = 270;
+    // public static final int MaxBrightnessAngle = 90;
+    // public static final int MidBrightnessAngle = 180;
+    // public static final int ZeroBrightnessAngle = 270;
 
-    public static final int CANdleID = 0;
 
   }
+  public static class Scoring {
+    public static final double L2ScoringHeight = Units.inchesToMeters(4);
+    public static final double L4ScoringHeight = Units.inchesToMeters(28);
 
-
-  public static final int MaxBrightnessAngle = 90;
-  public static final int MidBrightnessAngle = 180;
-  public static final int ZeroBrightnessAngle = 270;
+    public static final double L2SafeFlipHeight =
+        0.240; // elv position to go to initially for pivot to flip
+    public static final double safeFlipPosition =
+        0.217; // position to retract elevator at when flipper in reef
+  }
 
   public static enum Mode {
     /** Running on a real robot. */

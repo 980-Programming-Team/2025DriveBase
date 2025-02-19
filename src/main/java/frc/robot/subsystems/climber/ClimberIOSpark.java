@@ -34,6 +34,8 @@ public class ClimberIOSpark implements ClimberIO {
 
     config.disableFollowerMode();
     config.idleMode(IdleMode.kBrake);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Climber.supplyCurrentLimit);
 
     motor.configure(config, null, null);
@@ -43,6 +45,8 @@ public class ClimberIOSpark implements ClimberIO {
     
     config.follow(leader, false);
     config.idleMode(IdleMode.kBrake);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Climber.supplyCurrentLimit);
 
     motor.configure(config, null, null);

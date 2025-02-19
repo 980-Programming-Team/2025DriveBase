@@ -7,43 +7,41 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 
 public class ElevatorIOSpark implements ElevatorIO {
-  private TalonFX leader;
-  private TalonFX follower;
+  private SparkBase leader;
+  private SparkBase follower;
+  private RelativeEncoder encoder;
 
-  private TalonFXConfiguration motorConfigs = new TalonFXConfiguration();
+  private SparkMaxConfig leaderConfig = new SparkMaxConfig();
+  private SparkMaxConfig followerConfig = new SparkMaxConfig();
+
+  private ClosedLoopSlot L2Slot;
+  private ClosedLoopSlot L4Slot;  
+
+  //private ClosedLoopSlot slot2;
+
 
   public ElevatorIOSpark() {
-    leader =
-        new TalonFX(Constants.Elevator.kElevatorRoboRio, TunerConstants.DrivetrainConstants.CANBusName);
-    follower =
-        new TalonFX(Constants.Elevator.kElevatorPDP, TunerConstants.DrivetrainConstants.CANBusName);
+    leader = new SparkMax(Constants.Elevator.kElevatorRoboRio, MotorType.kBrushless); // The leader is on the side of the robo rio
+    follower = new SparkMax(Constants.Elevator.kElevatorPDH, MotorType.kBrushless); // The follower is on the side of the PDH
 
-    motorConfigs.CurrentLimits.StatorCurrentLimit = Constants.Elevator.statorCurrentLimit;
-    motorConfigs.CurrentLimits.SupplyCurrentLimit = Constants.Elevator.supplyCurrentLimit;
-
-    motorConfigs.Voltage.PeakForwardVoltage = Constants.Elevator.peakForwardVoltage;
-    motorConfigs.Voltage.PeakReverseVoltage = Constants.Elevator.peakReverseVoltage;
-
-    motorConfigs.MotorOutput.Inverted = Constants.Elevator.roboRioMotorInversion;
-    motorConfigs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-    motorConfigs.Slot0.kS = Constants.Elevator.kS0;
-    motorConfigs.Slot0.kP = Constants.Elevator.kP0;
-    motorConfigs.Slot0.kD = Constants.Elevator.kD0;
-
-    motorConfigs.Slot1.kS = Constants.Elevator.kS1;
-    motorConfigs.Slot1.kP = Constants.Elevator.kP1;
-    motorConfigs.Slot1.kD = Constants.Elevator.kD1;
-
-    motorConfigs.Slot2.kS = Constants.Elevator.kS2;
-    motorConfigs.Slot2.kP = Constants.Elevator.kP2;
-    motorConfigs.Slot2.kD = Constants.Elevator.kD2;
-    motorConfigs.Slot2.kG = Constants.Elevator.kG2;
+    configureLeader(leader, leaderConfig);
+    configureFollower(follower, followerConfig);
+  
+  }
 
     motorConfigs.MotionMagic.MotionMagicAcceleration =
         (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
@@ -53,60 +51,52 @@ public class ElevatorIOSpark implements ElevatorIO {
             * Constants.Elevator.gearRatio;
     motorConfigs.MotionMagic.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
 
-    motorConfigs.HardwareLimitSwitch.ForwardLimitEnable = false;
-    motorConfigs.HardwareLimitSwitch.ReverseLimitEnable = false;
 
-    StatusCode leaderConfigStatus = leader.getConfigurator().apply(motorConfigs);
-    StatusCode followerConfigStatus = follower.getConfigurator().apply(motorConfigs);
-    StatusCode followerModeSetStatus =
-        follower.setControl(new Follower(Constants.Elevator.kElevatorRoboRio, true));
+    private void configureLeader(SparkBase motor, SparkBaseConfig config) {
 
-    if (leaderConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + leader.getDeviceID()
-              + " error (Right Elevator): "
-              + leaderConfigStatus.getDescription(),
-          false);
-    }
+    encoder = motor.getEncoder();
 
-    if (followerConfigStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + follower.getDeviceID()
-              + " error (Left Elevator): "
-              + followerConfigStatus.getDescription(),
-          false);
-    }
+    config.disableFollowerMode();
+    config.idleMode(IdleMode.kBrake);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
+    config.closedLoop.pid(0.2, 0, 0.025, L2Slot);
+    config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
+    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    if (followerModeSetStatus != StatusCode.OK) {
-      DriverStation.reportError(
-          "Talon "
-              + follower.getDeviceID()
-              + " error (Left Elevator): "
-              + followerModeSetStatus.getDescription(),
-          false);
-    }
+    config.closedLoop.maxMotion.maxAcceleration(0, L2Slot);
+
+    motor.configure(config, null, null);
+  }
+
+  private void configureFollower(SparkBase motor, SparkBaseConfig config) {
+    
+    config.follow(leader, true);
+    config.idleMode(IdleMode.kBrake);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.limitSwitch.forwardLimitSwitchEnabled(false);
+    config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
+    config.closedLoop.pid(0.2, 0, 0.025, L2Slot);
+    config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
+    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
+
+    motor.configure(config, null, null);
   }
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
-    inputs.posMeters = rotationsToMeters(leader.getPosition().getValueAsDouble());
-    inputs.velMetersPerSecond = rotationsToMeters(leader.getVelocity().getValueAsDouble());
-    inputs.appliedVoltage = leader.getMotorVoltage().getValueAsDouble();
-    inputs.statorCurrentAmps =
-        new double[] {
-          leader.getStatorCurrent().getValueAsDouble(),
-          follower.getStatorCurrent().getValueAsDouble()
-        };
+    inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
+    inputs.velMetersPerSecond = rotationsToMeters(leader.getEncoder().getVelocity());
+    inputs.appliedVoltage = leader.getBusVoltage();
     inputs.supplyCurrentAmps =
         new double[] {
-          leader.getSupplyCurrent().getValueAsDouble(),
-          follower.getSupplyCurrent().getValueAsDouble()
+          leader.getOutputCurrent(),
+          follower.getOutputCurrent()
         };
     inputs.tempCelcius =
         new double[] {
-          leader.getDeviceTemp().getValueAsDouble(), follower.getDeviceTemp().getValueAsDouble()
+          leader.getMotorTemperature(), follower.getMotorTemperature()
         };
   }
 
@@ -126,13 +116,12 @@ public class ElevatorIOSpark implements ElevatorIO {
 
   @Override
   public void setVoltage(double voltage) {
-    leader.setControl(new VoltageOut(voltage));
+    leader.setVoltage(voltage);
   }
 
   @Override
   public void seedPosition(double motorPostionRot) {
-    leader.setPosition(motorPostionRot);
-    follower.setPosition(motorPostionRot);
+    encoder.setPosition(motorPostionRot);
   }
 
   @Override
@@ -143,8 +132,8 @@ public class ElevatorIOSpark implements ElevatorIO {
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    leader.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-    follower.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    leaderConfig.idleMode(IdleMode.kBrake);
+    followerConfig.idleMode(IdleMode.kBrake);
   }
 
   private double metersToRotations(double heightMeters) {
