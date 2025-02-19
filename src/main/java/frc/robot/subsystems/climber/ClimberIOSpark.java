@@ -1,26 +1,14 @@
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.EncoderConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
-import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.funnel.FunnelIO.FunnelIOInputs;
 
 public class ClimberIOSpark implements ClimberIO {
   private SparkBase leader;
@@ -46,6 +34,7 @@ public class ClimberIOSpark implements ClimberIO {
 
     config.disableFollowerMode();
     config.idleMode(IdleMode.kBrake);
+    config.smartCurrentLimit(Constants.Climber.supplyCurrentLimit);
 
     motor.configure(config, null, null);
   }
@@ -54,6 +43,7 @@ public class ClimberIOSpark implements ClimberIO {
     
     config.follow(leader, false);
     config.idleMode(IdleMode.kBrake);
+    config.smartCurrentLimit(Constants.Climber.supplyCurrentLimit);
 
     motor.configure(config, null, null);
   }
@@ -64,6 +54,10 @@ public class ClimberIOSpark implements ClimberIO {
 
   @Override
   public void updateInputs(ClimberIOInputs inputs) {
+
+    inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
+    inputs.velMetersPerSecond = rotationsToMeters(leader.getEncoder().getVelocity());
+
     inputs.kNearL1Connected = (leader.getFirmwareVersion() != 0);
     inputs.leaderAppliedVoltage = leader.getBusVoltage();
     inputs.supplyLeaderCurrentAmps = leader.getOutputCurrent();
@@ -71,27 +65,23 @@ public class ClimberIOSpark implements ClimberIO {
     inputs.leaderPosMotorRotations = leader.getEncoder().getPosition();
 
     inputs.kNearFunnelConnected = (follower.getFirmwareVersion() != 0);
-    inputs.followerAppliedVoltage = follower.getBusVoltage();
-    inputs.supplyFollowerCurrentAmps = follower.getOutputCurrent();
     inputs.followerTempCelcius = follower.getMotorTemperature();
-    inputs.followerPosMotorRotations = follower.getEncoder().getVelocity();
+  }
+
+  private double rotationsToMeters(double rotations) {
+    return rotations
+        / Constants.Climber.gearRatio
+        * (Math.PI * Constants.Climber.splineXLDiameter);
   }
 
   @Override
-  public void setClimberPosition(double mechanismRotations) {
-    leader.setControl(
-        new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio)
-            .withEnableFOC(true));
-  }
-
-  @Override
-  public void setClimberVoltage(double voltage) {
+  public void setVoltage(double voltage) {
     leader.setVoltage(voltage);
   }
 
   @Override
-  public void seedPivotPosition(double newPositionMechanismRot) {
-    pivot.setPosition(newPositionMechanismRot * Constants.Flipper.Pivot.motorGearRatio);
+  public void setPosition(double newPositionMechanismRot) {
+    encoder.setPosition(newPositionMechanismRot * Constants.Climber.gearRatio);
   }
 
   @Override

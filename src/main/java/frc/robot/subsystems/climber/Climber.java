@@ -16,19 +16,16 @@ public class Climber extends SubsystemBase {
   public ClimberIO io;
   public ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
-
   private final Alert leaderMissingAlert = new Alert("Disconnected Near L1 Mechanism Climber Motor", AlertType.kError);
   private final Alert followerMissingAlert = new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
 
   private double setpoint = 0;
   private ClimberStates state = ClimberStates.STARTING_CONFIG;
 
-  private Timer homingTimer = new Timer();
-
   public enum ClimberStates {
     STARTING_CONFIG,
-    HOMING,
-    REQUEST_SETPOINT
+    STOWED,
+    CLIMBING
   }
 
   public Climber(ClimberIO climberIO) {
@@ -44,23 +41,14 @@ public class Climber extends SubsystemBase {
     switch (state) {
       case STARTING_CONFIG:
         if (DriverStation.isEnabled()) {
-          state = ClimberStates.HOMING;
+          state = ClimberStates.STOWED;
         }
         break;
-      case HOMING:
-        homingTimer.start();
-        io.setArmVoltage(Constants.Elevator.homingVoltage);
-        if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
-            && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
-          io.setVoltage(0);
-          io.seedPosition(0);
-          homingTimer.stop();
-          homingTimer.reset();
-          state = ElevatorStates.REQUEST_SETPOINT;
-        }
+      case STOWED:
+         io.setPosition(setpoint); 
         break;
-      case REQUEST_SETPOINT:
-        io.setHeight(setpoint);
+      case CLIMBING:
+        io.setPosition(setpoint);
         break;
     }
 
@@ -69,11 +57,17 @@ public class Climber extends SubsystemBase {
     
   }
 
-  public void requestHeight(double heightMeters) {
-    setpoint = heightMeters;
+  public void requestStowedPosition(double positionMeters) {
+    state = ClimberStates.STOWED;
+    setpoint = positionMeters;
   }
 
-  public double getHeight() {
+  public void requestClimbingPosition(double positionMeters) {
+    state = ClimberStates.CLIMBING;
+    setpoint = positionMeters;
+  }
+
+  public double getPosition() {
     return inputs.posMeters;
   }
 
@@ -83,15 +77,11 @@ public class Climber extends SubsystemBase {
 
   public boolean atSetpoint() {
     return Util.atReference(
-        inputs.posMeters, setpoint, Constants.Elevator.setpointToleranceMeters, true);
+        inputs.posMeters, setpoint, Constants.Climber.setpointToleranceMeters, true);
   }
 
-  public void setHomingState(boolean isHomed) {
-    state = isHomed ? ElevatorStates.REQUEST_SETPOINT : ElevatorStates.HOMING;
-  }
-
-  public void seedPosition(double motorRotations) {
-    io.seedPosition(motorRotations);
+  public void setPosition(double position) {
+    io.setPosition(position);
   }
 
   public void enableBrakeMode(boolean enable) {

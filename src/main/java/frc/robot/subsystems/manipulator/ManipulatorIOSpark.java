@@ -1,10 +1,13 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.manipulator;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj.Encoder;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 //import com.reduxrobotics.sensors.canandcolor.Canandcolor;
@@ -13,6 +16,7 @@ import frc.robot.constants.Constants;
 public class ManipulatorIOSpark implements ManipulatorIO {
   private SparkBase arm;
   private SparkBase claw;
+  private Encoder armEncoder;
   //private Canandcolor beamBreak;
 
   private SparkMaxConfig armConfig = new SparkMaxConfig();

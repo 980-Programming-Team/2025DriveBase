@@ -135,10 +135,15 @@ public final class Constants {
     // NEO
     public static final int kNearL1 = 9;
     public static final int kNearFunnel = 10;
-    // ratio 50 to 1
 
-    public static final double supplyCurrentLimit = 40;
-    public static final double statorCurrentLimit = 100;
+    public static final double gearRatio = 80.0;
+    public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
+    public static final double setpointToleranceMeters = 0.01;
+    public static final int supplyCurrentLimit = 40;
+
+    
+    public static final double stowedPoistion = 0;
+    public static final double climbingPosition = 20; // TODO find real position
 
   }
 

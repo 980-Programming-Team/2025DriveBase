@@ -1,5 +1,7 @@
-package frc.robot.subsystems.arm;
+package frc.robot.subsystems.manipulator;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
@@ -8,6 +10,9 @@ import org.littletonrobotics.junction.Logger;
 public class Manipulator extends SubsystemBase {
   private ManipulatorIO io;
   private ManipulatorIOInputsAutoLogged inputs = new ManipulatorIOInputsAutoLogged();
+
+  private final Alert armMissingAlert = new Alert("Disconnected Arm Motor", AlertType.kError);
+  private final Alert clawMissingAlert = new Alert("Disconnected Claw Motor", AlertType.kError);
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -21,6 +26,7 @@ public class Manipulator extends SubsystemBase {
   private ArmStates state = ArmStates.IDLE;
 
   private Timer shootTimer = new Timer();
+  private Timer homingTimer = new Timer();
 
   public enum ArmStates {
     IDLE,
@@ -164,10 +170,13 @@ public class Manipulator extends SubsystemBase {
   }
 
   private void unsetAllRequests() {
-    requestFeed = false;
     requestIdle = false;
-    requestShoot = false;
+    requestFeed = false;
+    requestL2 = false;
+    requestL3 = false;
+    requestL4 = false;
     requestEject = false;
+    requestShoot = false;
   }
 
   public void enableBrakeMode(boolean enable) {

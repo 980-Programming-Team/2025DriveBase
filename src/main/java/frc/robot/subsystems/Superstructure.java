@@ -2,9 +2,9 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.arm.Manipulator;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
+import frc.robot.subsystems.manipulator.Manipulator;
 
 import org.littletonrobotics.junction.Logger;
 
