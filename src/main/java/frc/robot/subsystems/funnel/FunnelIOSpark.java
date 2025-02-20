@@ -6,10 +6,14 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
@@ -20,8 +24,9 @@ import frc.robot.constants.Constants;
 
 public class FunnelIOSpark implements FunnelIO {
   private SparkBase pivot;
+  private SparkClosedLoopController pivotPIDController;
   private SparkBase intake;
-  private Encoder pivotEncoder;
+  private RelativeEncoder pivotEncoder;
   // private Canandmag pivotEncoder;
 
   private SparkMaxConfig pivotConfig = new SparkMaxConfig();
@@ -32,102 +37,73 @@ public class FunnelIOSpark implements FunnelIO {
     pivot = new SparkMax(Constants.Funnel.kFunnelPivot, MotorType.kBrushless);
     intake = new SparkMax(Constants.Funnel.kFunnelIntake, MotorType.kBrushless);
 
+    pivotPIDController = pivot.getClosedLoopController();
+
     configurePivot(pivot, pivotConfig);
     configureIntake(intake, intakeConfig);
-    StatusCode rollerConfigStatus = configRoller();
 
-    motorMissingAlert = new Alert("NEO 550 " + getIntakeID() + " missing (Algae Roller)", AlertType.ERROR);
+    pivotEncoder = pivot.getEncoder();
 
-    if (rollerConfigStatus != StatusCode.OK) {
-      motorMissingAlert.set(true);
-      DriverStation.reportError("NEO 550 " + getIntakeID() + " missing (Algae Roller)", false);
-    } else {
-      motorMissingAlert.set(false);
-    }
-
-    pivotEncoder = new Encoder(Constants.Funnel.Pivot.pivotEncoderDIO1, Constants.Funnel.Pivot.pivotEncoderDIO2);
+    // pivotEncoder = new Encoder(Constants.Funnel.Pivot.EncoderDIO0, Constants.Funnel.Pivot.EncoderDIO1);
   }
 
   private void configurePivot(SparkBase motor, SparkBaseConfig config) {
 
-    config.smartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
-    config.secondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
+    config.smartCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
+    config.inverted(false);
+    config.idleMode(IdleMode.kBrake);
+    config.closedLoop.pidf(Constants.Funnel.Pivot.kP, Constants.Funnel.Pivot.kI, Constants.Funnel.Pivot.kD, Constants.Funnel.Pivot.kFF);
+
+    config.closedLoop.outputRange(Constants.Funnel.Pivot.minOutput, Constants.Funnel.Pivot.maxOutput);
 
     motor.configure(config, null, null);
   }
 
   private void configureIntake(SparkBase motor, SparkBaseConfig config) {
-    motor.setSmartCurrentLimit(Constants.Funnel.Pivot.statorCurrentLimit);
-    motor.setSecondaryCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
-  }
 
-  private StatusCode configPivot() {
-    pivotConfig.CurrentLimits.StatorCurrentLimit = Constants.Funnel.Pivot.statorCurrentLimit;
-    pivotConfig.CurrentLimits.SupplyCurrentLimit = Constants.Funnel.Pivot.supplyCurrentLimit;
+    config.smartCurrentLimit(Constants.Funnel.Intake.supplyCurrentLimit);
+    config.inverted(false);
+    config.idleMode(IdleMode.kBrake);
 
-    pivotConfig.MotorOutput.Inverted = Constants.Flipper.Pivot.motorInversion;
-    pivotConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motor.configure(config, null, null);
 
-    pivotConfig.Slot0.kP = Constants.Flipper.Pivot.kP;
-    pivotConfig.Slot0.kD = Constants.Flipper.Pivot.kD;
-
-    pivotConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    pivotConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
-
-    return pivotConfig.apply(pivotConfig);
-  }
-
-  private StatusCode configRoller() {
-    rollerConfig.CurrentLimits.StatorCurrentLimit = Constants.Flipper.Roller.statorCurrentLimit;
-    rollerConfig.CurrentLimits.SupplyCurrentLimit = Constants.Flipper.Roller.supplyCurrentLimit;
-
-    rollerConfig.MotorOutput.Inverted = Constants.Flipper.Roller.motorInversion;
-    rollerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-
-    rollerConfig.HardwareLimitSwitch.ForwardLimitEnable = false;
-    rollerConfig.HardwareLimitSwitch.ReverseLimitEnable = false;
-
-    return rollerMotor.getConfigurator().apply(rollerConfig);
   }
 
   @Override
   public void updateInputs(FunnelIOInputs inputs) {
-    inputs.pivotAppliedVoltage = pivot.getMotorVoltage().getValueAsDouble();
-    inputs.pivotStatorCurrentAmps = pivot.getStatorCurrent().getValueAsDouble();
-    inputs.pivotSupplyCurrentAmps = pivot.getStatorCurrent().getValueAsDouble();
-    inputs.pivotTempCelcius = pivot.getStatorCurrent().getValueAsDouble();
-    inputs.pivotPosMotorRotations = pivot.getPosition().getValueAsDouble();
+    inputs.pivotAppliedVoltage = pivot.getBusVoltage();
+    inputs.pivotSupplyCurrentAmps = pivot.getOutputCurrent();
+    inputs.pivotTempCelcius = pivot.getMotorTemperature();
+    inputs.pivotPosMotorRotations = pivot.getEncoder().getPosition();
     inputs.pivotPosAbsMechanismRotations =
-        (pivotEncoder.getAbsPosition() > Constants.Flipper.Pivot.absZeroWrapThreshold)
+        (pivotEncoder.getPosition() > Constants.Funnel.Pivot.absZeroWrapThreshold)
             ? 0.0
-            : (pivotEncoder.getAbsPosition() / Constants.Flipper.Pivot.absEncoderGearRatio);
-    inputs.rollerAppliedVoltage = rollerMotor.getMotorVoltage().getValueAsDouble();
-    inputs.rollerStatorCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.rollerSupplyCurrentAmps = rollerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.rollerTempCelcius = rollerMotor.getStatorCurrent().getValueAsDouble();
-    inputs.rollerSpeedRotationsPerSec = rollerMotor.getVelocity().getValueAsDouble();
+            : (pivotEncoder.getPosition() / Constants.Funnel.Pivot.motorGearRatio);
+    inputs.intakeAppliedVoltage = intake.getBusVoltage();
+    inputs.intakeSupplyCurrentAmps = intake.getOutputCurrent();
+    inputs.intakeTempCelcius = intake.getMotorTemperature();
+    inputs.intakeSpeedRotationsPerSec = intake.getEncoder().getVelocity();
   }
 
   @Override
   public void setPivotPosition(double mechanismRotations) {
-    pivot.setControl(
-        new PositionVoltage(mechanismRotations * Constants.Flipper.Pivot.motorGearRatio)
-            .withEnableFOC(true));
-  }
+  double targetPosition = mechanismRotations * Constants.Funnel.Pivot.motorGearRatio;
+        pivotPIDController.setReference(targetPosition, ControlType.kPosition);
+    }
 
   @Override
   public void setIntakeVoltage(double voltage) {
-    intake.setControl(new VoltageOut(voltage));
+    intake.setVoltage(voltage);
   }
 
   @Override
   public void seedPivotPosition(double newPositionMechanismRot) {
-    pivot.setPosition(newPositionMechanismRot * Constants.Flipper.Pivot.motorGearRatio);
+    pivotEncoder.setPosition(newPositionMechanismRot * Constants.Funnel.Pivot.motorGearRatio);
   }
 
   @Override
   public void enableBrakeMode(boolean enable) {
-    pivotConfig.(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-    rollerMotor.setNeutralMode(enable ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    pivotConfig.idleMode(IdleMode.kBrake);
+    intakeConfig.idleMode(IdleMode.kBrake);
   }
 }

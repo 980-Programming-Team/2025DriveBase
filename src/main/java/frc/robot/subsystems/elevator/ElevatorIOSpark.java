@@ -10,6 +10,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -17,12 +19,15 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 
 public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
+    private SparkClosedLoopController leaderPIDController;
   private SparkBase follower;
+  private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
 
   private SparkMaxConfig leaderConfig = new SparkMaxConfig();
@@ -38,23 +43,20 @@ public class ElevatorIOSpark implements ElevatorIO {
     leader = new SparkMax(Constants.Elevator.kElevatorRoboRio, MotorType.kBrushless); // The leader is on the side of the robo rio
     follower = new SparkMax(Constants.Elevator.kElevatorPDH, MotorType.kBrushless); // The follower is on the side of the PDH
 
+    // throughBoreEncoder = new Encoder(Constants.Elevator.EncoderDIO2, Constants.Elevator.EncoderDIO3);
+    // throughBoreEncoder.reset();
+
+    leaderPIDController = leader.getClosedLoopController();
+
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
   
   }
 
-    motorConfigs.MotionMagic.MotionMagicAcceleration =
-        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio;
-    motorConfigs.MotionMagic.MotionMagicCruiseVelocity =
-        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio;
-    motorConfigs.MotionMagic.MotionMagicJerk = Constants.Elevator.motionMagicJerk;
-
-
     private void configureLeader(SparkBase motor, SparkBaseConfig config) {
 
     encoder = motor.getEncoder();
+    encoder.setPosition(0);
 
     config.disableFollowerMode();
     config.idleMode(IdleMode.kBrake);
@@ -65,7 +67,10 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    config.closedLoop.maxMotion.maxAcceleration(0, L2Slot);
+    config.closedLoop.maxMotion.maxAcceleration((Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxVelocity((Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    * Constants.Elevator.gearRatio);
 
     motor.configure(config, null, null);
   }
@@ -81,13 +86,18 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
+    config.closedLoop.maxMotion.maxAcceleration((Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxVelocity((Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    * Constants.Elevator.gearRatio);
+
     motor.configure(config, null, null);
   }
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
     inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
-    inputs.velMetersPerSecond = rotationsToMeters(leader.getEncoder().getVelocity());
+    inputs.velMetersPerSecond = rotationsToMeters(leader.getEncoder().getVelocity()); //throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();
     inputs.supplyCurrentAmps =
         new double[] {
@@ -102,17 +112,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
   @Override
   public void setHeight(double heightMeters) {
-    if (heightMeters == Constants.Scoring.L2ScoringHeight) {
-      leader.setControl(
-          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(1).withEnableFOC(true));
-    } else if (heightMeters == Constants.Scoring.L3ScoringHeight) {
-      leader.setControl(
-          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(2).withEnableFOC(true));
-    } else {
-      leader.setControl(
-          new MotionMagicVoltage(metersToRotations(heightMeters)).withSlot(0).withEnableFOC(true));
+      double targetPosition = heightMeters * Constants.Elevator.gearRatio;
+        leaderPIDController.setReference(targetPosition, ControlType.kPosition);
     }
-  }
 
   @Override
   public void setVoltage(double voltage) {

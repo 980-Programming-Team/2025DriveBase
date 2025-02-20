@@ -40,7 +40,7 @@ public class Elevator extends SubsystemBase {
         break;
       case HOMING:
         homingTimer.start();
-        io.setArmVoltage(Constants.Elevator.homingVoltage);
+        io.setVoltage(Constants.Elevator.homingVoltage);
         if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
             && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
           io.setVoltage(0);

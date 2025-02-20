@@ -37,14 +37,19 @@ public final class Constants {
   public static final boolean magneticLimitSwitchesEnabled = true;
   public static final boolean beamBreaksEnabled = false;
 
-  public static final double KRAKEN_FREE_SPEED = 6000.0;
+  public static final double NEO_FREE_SPEED = 6000.0; // TODO find the real free speed
   public static final int LED_NUM = 68; // TODO: Determine number of leds
 
   public class Elevator {
 
-    // Krakens
+    // NEOS
     public static final int kElevatorPDH = 3; // Clockwise
     public static final int kElevatorRoboRio = 4; // Counterclockwise
+
+    public static final double innerStageWeight = 12.0; //lbs
+
+    public static final int EncoderDIO2 = 2;
+    public static final int EncoderDIO3 = 3;
 
     public static final double gearRatio = 9.0;
     public static final double sprocketDiameter = Units.inchesToMeters(1.751); // pitch diameter
@@ -56,21 +61,12 @@ public final class Constants {
     public static final double peakForward = 0.5;
     public static final double peakReverse = -0.5;
 
-    // L1 height gains
-    public static final double kS0 = 0;
-    public static final double kP0 = 2.0;
-    public static final double kD0 = 0.05;
+    public static final double mechanismMaxAccel = 0.0;
+    public static final double mechanismMaxCruiseVel = 0.0;
 
-    // L2 height gains
-    public static final double kS1 = 0.4;
-    public static final double kP1 = 2.0;
-    public static final double kD1 = 0;
-    
-    // L3 height gains
-    public static final double kS2 = 0;
-    public static final double kP2 = 2.0;
-    public static final double kD2 = 0.05;
-    public static final double kG2 = 0.40;
+    public static final double homingVoltage = -1.0;
+    public static final double homingVelocityThreshold = 0.01;
+    public static final double homingThresholdSec = 0.25;
 
   }
 
@@ -108,20 +104,34 @@ public final class Constants {
 
     public class Pivot {
 
-      public static final int pivotEncoderDIO1 = 0;
-      public static final int pivotEncoderDIO2 = 1;
+      public static final int EncoderDIO0 = 0;
+      public static final int EncoderDIO1 = 1;
 
       public static final double deployedSetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.01;
+
+      public static final double kP = 0.125; 
+      public static final double kI = 0.0;
+      public static final double kD = 0.025;
+      public static final double kFF = 0.0; 
+      public static final double minOutput = -0.4;
+      public static final double maxOutput = 0.4; 
+
+      public static final double motorGearRatio = 16.0;
+
+      public static final int supplyCurrentLimit = 40;
+      
+      // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
+      public static final double absZeroWrapThreshold = 0.95;
 
     }
 
     
     public class Intake {
 
-      // NEO
-      public static final double deployedSetpointMechanismRotations = 0.0;
-      public static final double setpointToleranceMechanismRotations = 0.01;
+      public static final double motorGearRatio = 4.0;
+
+      public static final int supplyCurrentLimit = 20;
 
     }
     

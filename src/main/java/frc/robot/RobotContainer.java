@@ -2,9 +2,12 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.CANdle.CANdleConfigCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.climber.Climber;
@@ -45,6 +49,8 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.util.LocalADStarAK;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -147,6 +153,18 @@ public static Superstructure superstructure = new Superstructure(elevator, armCl
     registerNamedCommands();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
+    // Create the constraints to use while pathfinding
+PathConstraints constraints = new PathConstraints(
+        3.0, 4.0,
+        Units.degreesToRadians(540), Units.degreesToRadians(720));
+
+      // Since AutoBuilder is configured, we can use it to build pathfinding commands
+    Command pathFindToProcessor = AutoBuilder.pathfindToPose(
+      FieldConstants.Processor.centerFace,
+      constraints,
+      0.0 // Goal end velocity in meters/sec
+    );
+
     // Set up SysId routines
     autoChooser.addOption(
         "Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -195,6 +213,16 @@ public static Superstructure superstructure = new Superstructure(elevator, armCl
                             new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
                     drive)
                 .ignoringDisable(true));
+
+    // driver
+    //     .getDriver().b()
+    //     .whileTrue(new PathfindingCommand(
+    //         drive,
+    //         () -> new Pose2d(FieldConstants.Processor.centerFace.getTranslation(), new Rotation2d()),
+    //         () -> drive.getPose(),
+    //         LocalADStarAK.getInstance().getPathPlanner(),
+    //         drive::setModuleStates,
+    //         drive));           
 
 
 
