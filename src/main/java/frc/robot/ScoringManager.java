@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import org.littletonrobotics.junction.LogTable;
 import org.littletonrobotics.junction.Logger;
 
 public class ScoringManager {
@@ -15,7 +14,7 @@ public class ScoringManager {
 
   public ScoringManager(int port) {
     controller = new GenericHID(port);
-    
+
     // rightController = new GenericHID(rightPort);
     // leftController = new GenericHID(leftPort);
   }
@@ -137,61 +136,83 @@ public class ScoringManager {
 
   public void configScoringPosButtons() {
     new JoystickButton(controller, 1)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(1);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(1);
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 2)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(2);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(2);
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 3)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(3);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(3);
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 4)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(4);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(4);
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 5)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(5);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(5);
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 6)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLocation(6);
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLocation(6);
+                  updateScoringList();
+                }));
 
     new JoystickButton(controller, 7)
-        .onTrue(new InstantCommand(() -> {
-          setAlignDirection("AL");
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setAlignDirection("AL");
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 8)
-        .onTrue(new InstantCommand(() -> {
-          setAlignDirection("AR");
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setAlignDirection("AR");
+                  updateScoringList();
+                }));
 
     new JoystickButton(controller, 9)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLevel("L2");
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLevel("L2");
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 10)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLevel("L3");
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLevel("L3");
+                  updateScoringList();
+                }));
     new JoystickButton(controller, 11)
-        .onTrue(new InstantCommand(() -> {
-          setScoringLevel("L4");
-          updateScoringList();
-        }));
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setScoringLevel("L4");
+                  updateScoringList();
+                }));
   }
 }

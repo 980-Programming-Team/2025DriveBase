@@ -1,14 +1,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class SourceManager {
   private CommandXboxController driver;
-
 
   public SourceManager(int port) {
     driver = new CommandXboxController(port);
@@ -45,7 +42,6 @@ public class SourceManager {
       this.autoRotatePosition = autoRotateRed[source];
       this.aprilTag = aprilTagRed[source];
     }
-
   }
 
   public void setFlipRequest(boolean requestFlip) {
@@ -77,78 +73,90 @@ public class SourceManager {
   }
 
   public void configScoringPosButtons() {
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(0);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(0);
                 }));
 
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(1);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(1);
                 }));
 
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(2);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(2);
                 }));
 
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(3);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(3);
                 }));
 
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(4);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(4);
                 }));
 
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {
                   setSourcePosition(5);
                 }));
-    driver.a()
+    driver
+        .a()
         .onTrue(
             new InstantCommand(
                 () -> {

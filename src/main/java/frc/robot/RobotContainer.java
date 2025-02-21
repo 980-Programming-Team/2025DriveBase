@@ -5,35 +5,22 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.DriveCommands;
 import frc.robot.commands.CANdle.CANdleConfigCommands;
+import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
-import frc.robot.subsystems.arm.ArmClaw;
-import frc.robot.subsystems.arm.ArmClawIO;
-import frc.robot.subsystems.arm.ArmClawIOSpark;
-import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.elevator.Elevator;
-import frc.robot.subsystems.elevator.ElevatorIO;
-import frc.robot.subsystems.elevator.ElevatorIOTalonFX;
-import frc.robot.subsystems.funnel.Funnel;
-import frc.robot.subsystems.funnel.FunnelIO;
-import frc.robot.subsystems.funnel.FunnelIOSpark;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
@@ -57,21 +44,10 @@ public class RobotContainer {
 
   public static ScoringManager operatorBoard = new ScoringManager(1);
 
-
   private final CommandXboxController testController = new CommandXboxController(2);
 
   // CANdle
   private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
-
-
-  public static ElevatorIO elevatorIO = Constants.elevatorEnabled ? new ElevatorIOTalonFX() : new ElevatorIO() {};
-  public static ArmClawIO armClawIO = Constants.armEnabled ? new ArmClawIOSpark() : new ArmClawIO() {};
-  public static FunnelIO funnelIO = Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
-
-  public static Elevator elevator = new Elevator(elevatorIO);
-  public static ArmClaw armClaw = new ArmClaw(armClawIO);
-  public static Funnel funnel = new Funnel(funnelIO);
-  public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -127,8 +103,6 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
-    
-
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -148,7 +122,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
 
     // Configure the button bindings
     configureButtonBindings();
@@ -195,7 +168,8 @@ public class RobotContainer {
 
     // Reset gyro to 0° when A button is pressed
     driver
-        .getDriver().a()
+        .getDriver()
+        .a()
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -204,14 +178,10 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-
-
     // l1.onTrue(new RunCommand(m_candleSubsystem::SetLEDRed, m_candleSubsystem));
     // l2.onTrue(new RunCommand(m_candleSubsystem::SetLEDGreen, m_candleSubsystem));
     // l3.onTrue(new RunCommand(m_candleSubsystem::SetLEDYellow, m_candleSubsystem));
     // l4.onTrue(new RunCommand(m_candleSubsystem::SetLEDBlue, m_candleSubsystem));
-
-
 
   }
 

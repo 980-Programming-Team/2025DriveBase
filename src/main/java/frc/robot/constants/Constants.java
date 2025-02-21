@@ -14,7 +14,6 @@
 package frc.robot.constants;
 
 import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -67,13 +66,12 @@ public final class Constants {
     public static final double kS1 = 0.4;
     public static final double kP1 = 2.0;
     public static final double kD1 = 0;
-    
+
     // L3 height gains
     public static final double kS2 = 0;
     public static final double kP2 = 2.0;
     public static final double kD2 = 0.05;
     public static final double kG2 = 0.40;
-
   }
 
   public class Arm {
@@ -84,8 +82,9 @@ public final class Constants {
     // NEO
     public static final int kArm = 8;
 
-    public static final double coralDetectionCurrentThreshold = 10.0; // Placeholder value, needs experimental determination
-    
+    public static final double coralDetectionCurrentThreshold =
+        10.0; // Placeholder value, needs experimental determination
+
     public static final double armFeedVoltage = 0.5; // TODO: Determine value
     public static final double clawFeedVoltage = 0.5; // TODO: Determine value
 
@@ -93,16 +92,15 @@ public final class Constants {
 
     public static double shootVoltage; // !
 
-    public static double shootWaitTimerSec; // ! 
+    public static double shootWaitTimerSec; // !
 
     public static double spitVoltage; // !
-
   }
 
   public class Funnel {
 
-    // NEO 550 
-     public static final int kFunnelIntake = 5;
+    // NEO 550
+    public static final int kFunnelIntake = 5;
 
     // NEO
     public static final int kFunnelPivot = 7;
@@ -111,18 +109,14 @@ public final class Constants {
 
       public static final double deployedSetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.01;
-
     }
 
-    
     public class Intake {
 
       // NEO
       public static final double deployedSetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.01;
-
     }
-    
   }
 
   public class Cage {
@@ -139,20 +133,17 @@ public final class Constants {
 
     // NEO 550
     public static final int kL1Intake = 26;
-
   }
 
   public class CANdle {
     public static final int kCANdleID = 31;
-    
+
     public static final int MaxBrightnessAngle = 90;
     public static final int MidBrightnessAngle = 180;
     public static final int ZeroBrightnessAngle = 270;
 
     public static final int CANdleID = 0;
-
   }
-
 
   public static final int MaxBrightnessAngle = 90;
   public static final int MidBrightnessAngle = 180;
