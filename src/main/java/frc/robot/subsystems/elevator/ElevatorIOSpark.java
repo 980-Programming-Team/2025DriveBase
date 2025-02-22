@@ -1,14 +1,6 @@
 package frc.robot.subsystems.elevator;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -17,15 +9,12 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
-import frc.robot.constants.TunerConstants;
 
 public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
-    private SparkClosedLoopController leaderPIDController;
+  private SparkClosedLoopController leaderPIDController;
   private SparkBase follower;
   private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
@@ -33,27 +22,29 @@ public class ElevatorIOSpark implements ElevatorIO {
   private SparkMaxConfig leaderConfig = new SparkMaxConfig();
   private SparkMaxConfig followerConfig = new SparkMaxConfig();
 
-  private ClosedLoopSlot L2Slot;
-  private ClosedLoopSlot L4Slot;  
-
-  //private ClosedLoopSlot slot2;
-
+  // private ClosedLoopSlot slot2;
 
   public ElevatorIOSpark() {
-    leader = new SparkMax(Constants.Elevator.kElevatorRoboRio, MotorType.kBrushless); // The leader is on the side of the robo rio
-    follower = new SparkMax(Constants.Elevator.kElevatorPDH, MotorType.kBrushless); // The follower is on the side of the PDH
+    leader =
+        new SparkMax(
+            Constants.Elevator.kElevatorRoboRio,
+            MotorType.kBrushless); // The leader is on the side of the robo rio
+    follower =
+        new SparkMax(
+            Constants.Elevator.kElevatorPDH,
+            MotorType.kBrushless); // The follower is on the side of the PDH
 
-    // throughBoreEncoder = new Encoder(Constants.Elevator.EncoderDIO2, Constants.Elevator.EncoderDIO3);
+    // throughBoreEncoder = new Encoder(Constants.Elevator.EncoderDIO2,
+    // Constants.Elevator.EncoderDIO3);
     // throughBoreEncoder.reset();
 
     leaderPIDController = leader.getClosedLoopController();
 
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
-  
   }
 
-    private void configureLeader(SparkBase motor, SparkBaseConfig config) {
+  private void configureLeader(SparkBase motor, SparkBaseConfig config) {
 
     encoder = motor.getEncoder();
     encoder.setPosition(0);
@@ -63,33 +54,35 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.2, 0, 0.025, L2Slot);
-    config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
+    config.closedLoop.pid(0.2, 0, 0.025);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    config.closedLoop.maxMotion.maxAcceleration((Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    * Constants.Elevator.gearRatio);
-    config.closedLoop.maxMotion.maxVelocity((Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxAcceleration(
+        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxVelocity(
+        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio);
 
     motor.configure(config, null, null);
   }
 
   private void configureFollower(SparkBase motor, SparkBaseConfig config) {
-    
+
     config.follow(leader, true);
     config.idleMode(IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.2, 0, 0.025, L2Slot);
-    config.closedLoop.pid(0.4, 0, 0.05, L4Slot);
+    config.closedLoop.pid(0.2, 0, 0.025);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    config.closedLoop.maxMotion.maxAcceleration((Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    * Constants.Elevator.gearRatio);
-    config.closedLoop.maxMotion.maxVelocity((Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxAcceleration(
+        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio);
+    config.closedLoop.maxMotion.maxVelocity(
+        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
+            * Constants.Elevator.gearRatio);
 
     motor.configure(config, null, null);
   }
@@ -97,24 +90,20 @@ public class ElevatorIOSpark implements ElevatorIO {
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
     inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
-    inputs.velMetersPerSecond = rotationsToMeters(leader.getEncoder().getVelocity()); //throughBoreEncoder.getRate()
+    inputs.velMetersPerSecond =
+        rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();
     inputs.supplyCurrentAmps =
-        new double[] {
-          leader.getOutputCurrent(),
-          follower.getOutputCurrent()
-        };
+        new double[] {leader.getOutputCurrent(), follower.getOutputCurrent()};
     inputs.tempCelcius =
-        new double[] {
-          leader.getMotorTemperature(), follower.getMotorTemperature()
-        };
+        new double[] {leader.getMotorTemperature(), follower.getMotorTemperature()};
   }
 
   @Override
   public void setHeight(double heightMeters) {
-      double targetPosition = heightMeters * Constants.Elevator.gearRatio;
-        leaderPIDController.setReference(targetPosition, ControlType.kPosition);
-    }
+    double targetPosition = heightMeters * Constants.Elevator.gearRatio;
+    leaderPIDController.setReference(targetPosition, ControlType.kPosition);
+  }
 
   @Override
   public void setVoltage(double voltage) {

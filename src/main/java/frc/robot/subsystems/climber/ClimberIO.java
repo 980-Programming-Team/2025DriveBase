@@ -20,7 +20,7 @@ public interface ClimberIO {
     // public double followerAppliedVoltage = 0.0;
     // public double supplyFollowerCurrentAmps = 0.0;
     // public double followerPosMotorRotations = 0.0;
-    
+
   }
 
   public default void updateInputs(ClimberIOInputs inputs) {}
@@ -32,5 +32,4 @@ public interface ClimberIO {
   public default void setPosition(double motorPositionRot) {}
 
   public default void enableBrakeMode(boolean enable) {}
-
 }

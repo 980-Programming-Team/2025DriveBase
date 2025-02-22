@@ -3,21 +3,20 @@ package frc.robot.subsystems.climber;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Util;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
-import frc.robot.subsystems.elevator.Elevator.ElevatorStates;
-
+import frc.robot.util.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Climber extends SubsystemBase {
   public ClimberIO io;
   public ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
 
-  private final Alert leaderMissingAlert = new Alert("Disconnected Near L1 Mechanism Climber Motor", AlertType.kError);
-  private final Alert followerMissingAlert = new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
+  private final Alert leaderMissingAlert =
+      new Alert("Disconnected Near L1 Mechanism Climber Motor", AlertType.kError);
+  private final Alert followerMissingAlert =
+      new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
 
   private double setpoint = 0;
   private ClimberStates state = ClimberStates.STARTING_CONFIG;
@@ -45,16 +44,15 @@ public class Climber extends SubsystemBase {
         }
         break;
       case STOWED:
-         io.setPosition(setpoint); 
+        io.setPosition(setpoint);
         break;
       case CLIMBING:
         io.setPosition(setpoint);
         break;
     }
 
-   leaderMissingAlert.set(!inputs.kNearL1Connected && Constants.currentMode != Mode.SIM);
-   followerMissingAlert.set(!inputs.kNearFunnelConnected && Constants.currentMode != Mode.SIM);
-    
+    leaderMissingAlert.set(!inputs.kNearL1Connected && Constants.currentMode != Mode.SIM);
+    followerMissingAlert.set(!inputs.kNearFunnelConnected && Constants.currentMode != Mode.SIM);
   }
 
   public void requestStowedPosition(double positionMeters) {

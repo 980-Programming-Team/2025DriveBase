@@ -13,8 +13,6 @@
 
 package frc.robot.constants;
 
-import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -46,7 +44,7 @@ public final class Constants {
     public static final int kElevatorPDH = 3; // Clockwise
     public static final int kElevatorRoboRio = 4; // Counterclockwise
 
-    public static final double innerStageWeight = 12.0; //lbs
+    public static final double innerStageWeight = 12.0; // lbs
 
     public static final int EncoderDIO2 = 2;
     public static final int EncoderDIO3 = 3;
@@ -61,13 +59,12 @@ public final class Constants {
     public static final double peakForward = 0.5;
     public static final double peakReverse = -0.5;
 
-    public static final double mechanismMaxAccel = 0.0;
-    public static final double mechanismMaxCruiseVel = 0.0;
+    public static final double mechanismMaxAccel = 3.3274;
+    public static final double mechanismMaxCruiseVel = 1.597152;
 
     public static final double homingVoltage = -1.0;
     public static final double homingVelocityThreshold = 0.01;
     public static final double homingThresholdSec = 0.25;
-
   }
 
   public class Manipulator {
@@ -79,25 +76,23 @@ public final class Constants {
     public static final int kArm = 8;
 
     public class Arm {
-          
-    public static final double armFeedVoltage = 0.5; // TODO: Determine value
 
+      public static final double armFeedVoltage = 0.5; // TODO: Determine value
     }
 
     public class Claw {
 
       public static final double feedVoltage = 0.5; // TODO: Determine value
       public static final int currentLimit = 20;
-      public static final double coralDetectionCurrentThreshold = 10.0; // Placeholder value, needs experimental determination
-
+      public static final double coralDetectionCurrentThreshold =
+          10.0; // Placeholder value, needs experimental determination
     }
-
   }
 
   public class Funnel {
 
-    // NEO 550 
-     public static final int kFunnelIntake = 5;
+    // NEO 550
+    public static final int kFunnelIntake = 5;
 
     // NEO
     public static final int kFunnelPivot = 7;
@@ -107,38 +102,38 @@ public final class Constants {
       public static final int EncoderDIO0 = 0;
       public static final int EncoderDIO1 = 1;
 
-      public static final double deployedSetpointMechanismRotations = 0.0;
+      public static final double stowedSetpointMechanismRotations = 0.0; // TODO find real position
+      public static final double deployedSetpointMechanismRotations =
+          0.0; // TODO find real position
       public static final double setpointToleranceMechanismRotations = 0.01;
 
-      public static final double kP = 0.125; 
+      public static final double kP = 0.125;
       public static final double kI = 0.0;
       public static final double kD = 0.025;
-      public static final double kFF = 0.0; 
+      public static final double kFF = 0.0;
       public static final double minOutput = -0.4;
-      public static final double maxOutput = 0.4; 
+      public static final double maxOutput = 0.4;
 
       public static final double motorGearRatio = 16.0;
 
       public static final int supplyCurrentLimit = 40;
-      
+
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
-
     }
 
-    
     public class Intake {
 
       public static final double motorGearRatio = 4.0;
 
-      public static final int supplyCurrentLimit = 20;
+      public static final double scoreVoltage = 0.55;
 
+      public static final int supplyCurrentLimit = 20;
     }
-    
   }
 
-    public class Climber {
-  
+  public class Climber {
+
     // NEO
     public static final int kNearL1 = 9;
     public static final int kNearFunnel = 10;
@@ -148,10 +143,8 @@ public final class Constants {
     public static final double setpointToleranceMeters = 0.01;
     public static final int supplyCurrentLimit = 40;
 
-    
     public static final double stowedPoistion = 0;
     public static final double climbingPosition = 20; // TODO find real position
-
   }
 
   public class L1Mechanism {
@@ -161,18 +154,17 @@ public final class Constants {
 
     // NEO 550
     public static final int kL1Intake = 26;
-
   }
 
   public class CANdle {
     public static final int kCANdleID = 31;
-    
+
     // public static final int MaxBrightnessAngle = 90;
     // public static final int MidBrightnessAngle = 180;
     // public static final int ZeroBrightnessAngle = 270;
 
-
   }
+
   public static class Scoring {
     public static final double L2ScoringHeight = Units.inchesToMeters(4);
     public static final double L4ScoringHeight = Units.inchesToMeters(28);

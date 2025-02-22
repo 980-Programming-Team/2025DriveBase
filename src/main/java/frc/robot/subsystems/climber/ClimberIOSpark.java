@@ -3,11 +3,10 @@ package frc.robot.subsystems.climber;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
-
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.constants.Constants;
 
 public class ClimberIOSpark implements ClimberIO {
@@ -18,14 +17,17 @@ public class ClimberIOSpark implements ClimberIO {
   private SparkMaxConfig leaderConfig = new SparkMaxConfig();
   private SparkMaxConfig followerConfig = new SparkMaxConfig();
 
-
   public ClimberIOSpark() {
-    leader = new SparkMax(Constants.Climber.kNearL1, MotorType.kBrushless); // The leader is NEAR L1 MECHANISM
-    follower = new SparkMax(Constants.Climber.kNearFunnel, MotorType.kBrushless); // The follower is NEAR the CAGE FUNNEL
+    leader =
+        new SparkMax(
+            Constants.Climber.kNearL1, MotorType.kBrushless); // The leader is NEAR L1 MECHANISM
+    follower =
+        new SparkMax(
+            Constants.Climber.kNearFunnel,
+            MotorType.kBrushless); // The follower is NEAR the CAGE FUNNEL
 
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
-
   }
 
   private void configureLeader(SparkBase motor, SparkBaseConfig config) {
@@ -42,7 +44,7 @@ public class ClimberIOSpark implements ClimberIO {
   }
 
   private void configureFollower(SparkBase motor, SparkBaseConfig config) {
-    
+
     config.follow(leader, false);
     config.idleMode(IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
@@ -52,9 +54,9 @@ public class ClimberIOSpark implements ClimberIO {
     motor.configure(config, null, null);
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return encoder.getPosition();
-  }  
+  }
 
   @Override
   public void updateInputs(ClimberIOInputs inputs) {
@@ -73,9 +75,7 @@ public class ClimberIOSpark implements ClimberIO {
   }
 
   private double rotationsToMeters(double rotations) {
-    return rotations
-        / Constants.Climber.gearRatio
-        * (Math.PI * Constants.Climber.splineXLDiameter);
+    return rotations / Constants.Climber.gearRatio * (Math.PI * Constants.Climber.splineXLDiameter);
   }
 
   @Override

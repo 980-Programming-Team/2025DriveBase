@@ -19,7 +19,6 @@ public interface ManipulatorIO {
 
     public boolean boxedCoral = false;
     public boolean beamBreakTriggered = false;
-
   }
 
   public default void updateInputs(ManipulatorIOInputs inputs) {}

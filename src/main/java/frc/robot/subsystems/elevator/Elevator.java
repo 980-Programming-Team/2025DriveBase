@@ -3,8 +3,8 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Util;
 import frc.robot.constants.Constants;
+import frc.robot.util.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {

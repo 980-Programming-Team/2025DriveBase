@@ -1,25 +1,15 @@
 package frc.robot.subsystems.funnel;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.Alert;
-import edu.wpi.first.wpilibj.Alert.AlertType;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
 
 public class FunnelIOSpark implements FunnelIO {
@@ -44,7 +34,8 @@ public class FunnelIOSpark implements FunnelIO {
 
     pivotEncoder = pivot.getEncoder();
 
-    // pivotEncoder = new Encoder(Constants.Funnel.Pivot.EncoderDIO0, Constants.Funnel.Pivot.EncoderDIO1);
+    // pivotEncoder = new Encoder(Constants.Funnel.Pivot.EncoderDIO0,
+    // Constants.Funnel.Pivot.EncoderDIO1);
   }
 
   private void configurePivot(SparkBase motor, SparkBaseConfig config) {
@@ -52,9 +43,14 @@ public class FunnelIOSpark implements FunnelIO {
     config.smartCurrentLimit(Constants.Funnel.Pivot.supplyCurrentLimit);
     config.inverted(false);
     config.idleMode(IdleMode.kBrake);
-    config.closedLoop.pidf(Constants.Funnel.Pivot.kP, Constants.Funnel.Pivot.kI, Constants.Funnel.Pivot.kD, Constants.Funnel.Pivot.kFF);
+    config.closedLoop.pidf(
+        Constants.Funnel.Pivot.kP,
+        Constants.Funnel.Pivot.kI,
+        Constants.Funnel.Pivot.kD,
+        Constants.Funnel.Pivot.kFF);
 
-    config.closedLoop.outputRange(Constants.Funnel.Pivot.minOutput, Constants.Funnel.Pivot.maxOutput);
+    config.closedLoop.outputRange(
+        Constants.Funnel.Pivot.minOutput, Constants.Funnel.Pivot.maxOutput);
 
     motor.configure(config, null, null);
   }
@@ -62,11 +58,10 @@ public class FunnelIOSpark implements FunnelIO {
   private void configureIntake(SparkBase motor, SparkBaseConfig config) {
 
     config.smartCurrentLimit(Constants.Funnel.Intake.supplyCurrentLimit);
-    config.inverted(false);
+    config.inverted(true);
     config.idleMode(IdleMode.kBrake);
 
     motor.configure(config, null, null);
-
   }
 
   @Override
@@ -87,9 +82,9 @@ public class FunnelIOSpark implements FunnelIO {
 
   @Override
   public void setPivotPosition(double mechanismRotations) {
-  double targetPosition = mechanismRotations * Constants.Funnel.Pivot.motorGearRatio;
-        pivotPIDController.setReference(targetPosition, ControlType.kPosition);
-    }
+    double targetPosition = mechanismRotations * Constants.Funnel.Pivot.motorGearRatio;
+    pivotPIDController.setReference(targetPosition, ControlType.kPosition);
+  }
 
   @Override
   public void setIntakeVoltage(double voltage) {

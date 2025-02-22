@@ -19,7 +19,8 @@ public class FieldConstants {
 
   public static class Processor {
     public static final Pose2d centerFace =
-        new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
+        new Pose2d(
+            Units.inchesToMeters(235.726), Units.inchesToMeters(24), Rotation2d.fromDegrees(90));
   }
 
   public static class Barge {
@@ -39,8 +40,8 @@ public class FieldConstants {
     public static final double stationLength = Units.inchesToMeters(79.750);
     public static final Pose2d leftCenterFace =
         new Pose2d(
-            Units.inchesToMeters(33.526),
-            Units.inchesToMeters(291.176),
+            Units.inchesToMeters(52.526),
+            Units.inchesToMeters(274.176),
             Rotation2d.fromDegrees(90 - 144.011)); // -54
     public static final Pose2d rightCenterFace =
         new Pose2d(
@@ -65,7 +66,7 @@ public class FieldConstants {
       // Initialize faces
       centerFaces[0] =
           new Pose2d(
-              Units.inchesToMeters(144.003),
+              Units.inchesToMeters(120.003),
               Units.inchesToMeters(158.500),
               Rotation2d.fromDegrees(180));
       centerFaces[1] =
