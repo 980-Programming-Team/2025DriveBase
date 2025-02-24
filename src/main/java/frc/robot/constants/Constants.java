@@ -76,13 +76,61 @@ public final class Constants {
     public static final int kArm = 8;
 
     public class Arm {
+      public static final double innerStageWeight = 12.0; // lbs
 
-      public static final double armFeedVoltage = 0.5; // TODO: Determine value
+      public static final double motorGearRatio = 75.0;
+
+      public static final int EncoderDIO2 = 2;
+      public static final int EncoderDIO3 = 3;
+
+      public static final double gearRatio = 9.0;
+      public static final double sprocketDiameter = Units.inchesToMeters(1.751); // pitch diameter
+
+      public static final double setpointToleranceMeters = 0.01;
+
+      public static final double stowedSetpointMechanismRotations = 0.0;
+      public static final double feedSetpointMechanismRotations = 0.0;
+      public static final double l2SetpointMechanismRotations = 0.0;
+      public static final double l3SetpointMechanismRotations = 0.0;
+      public static final double l4SetpointMechanismRotations = 0.0;
+      public static final double setpointToleranceMechanismRotations = 0.05;
+
+      public static final double kP = 0.25;
+      public static final double kI = 0.0;
+      public static final double kD = 0.05;
+      public static final double kFF = 0.0;
+      public static final double minOutput = -0.4;
+      public static final double maxOutput = 0.4;
+
+      // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
+      public static final double absZeroWrapThreshold = 0.95;
+
+      public static final int currentLimit = 40;
+
+      public static final double peakForward = 0.5;
+      public static final double peakReverse = -0.5;
+
+      public static final double mechanismMaxAccel = 3.3274;
+      public static final double mechanismMaxCruiseVel = 1.597152;
+
+      public static final double homingVoltage = -1.0;
+      public static final double homingVelocityThreshold = 0.01;
+      public static final double homingThresholdSec = 0.25;
+
+      public enum ArmStates {
+        IDLE,
+        FEED,
+        L2,
+        L3,
+        L4
+      }
     }
 
     public class Claw {
 
-      public static final double feedVoltage = 0.5; // TODO: Determine value
+      public static final double feedVoltage = 0.22;
+      public static final double scoreL2Voltage = 0.65;
+      public static final double scoreVoltage = -0.65;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
           10.0; // Placeholder value, needs experimental determination
@@ -103,7 +151,7 @@ public final class Constants {
       public static final int EncoderDIO1 = 1;
 
       public static final double stowedSetpointMechanismRotations = 0.0; // TODO find real position
-      public static final double deployedSetpointMechanismRotations =
+      public static final double climbReadySetpointMechanismRotations =
           0.0; // TODO find real position
       public static final double setpointToleranceMechanismRotations = 0.01;
 
@@ -111,8 +159,8 @@ public final class Constants {
       public static final double kI = 0.0;
       public static final double kD = 0.025;
       public static final double kFF = 0.0;
-      public static final double minOutput = -0.4;
-      public static final double maxOutput = 0.4;
+      public static final double minOutput = -0.2;
+      public static final double maxOutput = 0.2;
 
       public static final double motorGearRatio = 16.0;
 
@@ -126,7 +174,8 @@ public final class Constants {
 
       public static final double motorGearRatio = 4.0;
 
-      public static final double scoreVoltage = 0.55;
+      public static final double feedVoltage = 0.32;
+      public static final double reverseVoltage = -0.32;
 
       public static final int supplyCurrentLimit = 20;
     }

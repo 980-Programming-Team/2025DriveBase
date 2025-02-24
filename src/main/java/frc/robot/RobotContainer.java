@@ -56,12 +56,12 @@ public class RobotContainer {
   // Controllers
   public static SourceManager driver = new SourceManager(0);
 
-  public static ScoringManager operatorBoard = new ScoringManager(1);
+  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
 
-  private final CommandXboxController testController = new CommandXboxController(2);
+  private final CommandXboxController testController = new CommandXboxController(3);
 
   // CANdle
-  private final CANdleSystem m_candleSubsystem = new CANdleSystem(testController);
+  private final CANdleSystem m_candleSubsystem = new CANdleSystem();
 
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
@@ -105,7 +105,9 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight("limelight", drive::getRotation));
+                new VisionIOLimelight("limelight-front", drive::getRotation),
+                new VisionIOLimelight("limelight-left", drive::getRotation),
+                new VisionIOLimelight("limelight-back", drive::getRotation));
         break;
 
       case SIM:
@@ -151,7 +153,7 @@ public class RobotContainer {
             FieldConstants.Processor.centerFace, constraints, 0.0 // Goal end velocity in meters/sec
             );
 
-    pathFindToFC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[0], constraints, 0);
+    pathFindToFC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[1], constraints, 0);
 
     // Set up SysId routines
     autoChooser.addOption(

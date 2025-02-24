@@ -89,6 +89,8 @@ public class ElevatorIOSpark implements ElevatorIO {
 
   @Override
   public void updateInputs(ElevatorIOInputs inputs) {
+    inputs.kRoborioMotorConnected = (leader.getFirmwareVersion() != 0);
+    inputs.kPDHMotorConnected = (leader.getFirmwareVersion() != 0);
     inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
     inputs.velMetersPerSecond =
         rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()

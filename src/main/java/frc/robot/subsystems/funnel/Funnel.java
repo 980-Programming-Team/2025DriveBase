@@ -1,10 +1,8 @@
 package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.Util;
 import frc.robot.constants.Constants;
-
-import org.jheaps.annotations.ConstantTime;
+import frc.robot.util.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
@@ -12,13 +10,15 @@ public class Funnel extends SubsystemBase {
   private FunnelIOInputsAutoLogged inputs = new FunnelIOInputsAutoLogged();
 
   private boolean requestIdle;
-  private boolean requestDescore;
+  private boolean requestFeed;
+  private boolean requestClimb;
 
   private FunnelStates state = FunnelStates.STARTING_CONFIG;
 
   public enum FunnelStates {
     STARTING_CONFIG,
     IDLE,
+    FEED,
     CLIMB_READY,
   }
 
@@ -39,34 +39,36 @@ public class Funnel extends SubsystemBase {
         break;
       case IDLE:
         io.setPivotPosition(Constants.Funnel.Pivot.stowedSetpointMechanismRotations);
-        io.setIntakeVoltage(Constants.Funnel.Intake.);
+        io.setIntakeVoltage(0);
 
-        if (requestDescore) {
-          state = FlipperStates.FLIP;
+        if (requestFeed) {
+          state = FunnelStates.FEED;
+        }
+
+        if (requestClimb) {
+          state = FunnelStates.CLIMB_READY;
+        }
+
+        break;
+      case FEED:
+        io.setIntakeVoltage(Constants.Funnel.Intake.feedVoltage);
+        if (requestIdle) {
+          state = FunnelStates.IDLE;
         }
         break;
-      case FLIP:
-        io.setPivotPosition(Constants.Funnel.Pivot.deployedSetpointMechanismRotations);
+      case CLIMB_READY:
+        io.setPivotPosition(Constants.Funnel.Pivot.climbReadySetpointMechanismRotations);
         if (requestIdle) {
-          state = FlipperStates.IDLE;
-        }
-        if (atDeploySetpoint()) {
-          state = FlipperStates.SPIN;
-        }
-        break;
-      case SPIN:
-        io.setRollerVoltage(Constants.Funnel.Roller.descoreVoltage);
-        if (requestIdle) {
-          state = FlipperStates.IDLE;
+          state = FunnelStates.IDLE;
         }
         break;
     }
   }
 
-  public boolean atDeploySetpoint() {
+  public boolean atClimbSetpoint() {
     return Util.atReference(
         inputs.pivotPosAbsMechanismRotations,
-        Constants.Funnel.Pivot.deployedSetpointMechanismRotations,
+        Constants.Funnel.Pivot.climbReadySetpointMechanismRotations,
         Constants.Funnel.Pivot.setpointToleranceMechanismRotations,
         true);
   }
@@ -78,7 +80,7 @@ public class Funnel extends SubsystemBase {
   // Use method only to reset state when robot is disabled
   public void forceIdle() {
     unsetAllRequests();
-    state = FlipperStates.IDLE;
+    state = FunnelStates.IDLE;
   }
 
   public void requestIdle() {
@@ -86,14 +88,20 @@ public class Funnel extends SubsystemBase {
     requestIdle = true;
   }
 
-  public void requestDescore() {
+  public void requestFeed() {
     unsetAllRequests();
-    requestDescore = true;
+    requestFeed = true;
+  }
+
+  public void requestClimb() {
+    unsetAllRequests();
+    requestClimb = true;
   }
 
   private void unsetAllRequests() {
-    requestDescore = false;
+    requestFeed = false;
     requestIdle = false;
+    requestClimb = false;
   }
 
   public void enableBrakeMode(boolean enable) {

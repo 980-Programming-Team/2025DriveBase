@@ -1,15 +1,23 @@
 package frc.robot.subsystems.elevator;
 
+import edu.wpi.first.wpilibj.Alert;
+import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
 import frc.robot.util.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   public ElevatorIO io;
   public ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+
+  private final Alert leaderMissingAlert =
+      new Alert("Disconnected Roborio Elevator Motor", AlertType.kError);
+  private final Alert followerMissingAlert =
+      new Alert("Disconnected PDH / PDP Elevator Motor", AlertType.kError);
 
   private double setpoint = 0;
   private ElevatorStates state = ElevatorStates.STARTING_CONFIG;
@@ -54,6 +62,9 @@ public class Elevator extends SubsystemBase {
         io.setHeight(setpoint);
         break;
     }
+
+    leaderMissingAlert.set(!inputs.kRoborioMotorConnected && Constants.currentMode != Mode.SIM);
+    followerMissingAlert.set(!inputs.kPDHMotorConnected && Constants.currentMode != Mode.SIM);
   }
 
   public void requestHeight(double heightMeters) {

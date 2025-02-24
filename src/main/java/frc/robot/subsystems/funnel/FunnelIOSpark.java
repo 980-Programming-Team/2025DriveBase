@@ -27,11 +27,10 @@ public class FunnelIOSpark implements FunnelIO {
     pivot = new SparkMax(Constants.Funnel.kFunnelPivot, MotorType.kBrushless);
     intake = new SparkMax(Constants.Funnel.kFunnelIntake, MotorType.kBrushless);
 
-    pivotPIDController = pivot.getClosedLoopController();
-
     configurePivot(pivot, pivotConfig);
     configureIntake(intake, intakeConfig);
 
+    pivotPIDController = pivot.getClosedLoopController();
     pivotEncoder = pivot.getEncoder();
 
     // pivotEncoder = new Encoder(Constants.Funnel.Pivot.EncoderDIO0,

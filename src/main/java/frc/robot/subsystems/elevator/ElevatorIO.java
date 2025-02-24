@@ -5,6 +5,8 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ElevatorIO {
   @AutoLog
   public static class ElevatorIOInputs {
+    public boolean kRoborioMotorConnected = false;
+    public boolean kPDHMotorConnected = false;
     public double posMeters = 0.0;
     public double velMetersPerSecond = 0.0;
     public double appliedVoltage = 0.0;

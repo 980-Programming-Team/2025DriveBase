@@ -55,7 +55,7 @@ public class Climber extends SubsystemBase {
     followerMissingAlert.set(!inputs.kNearFunnelConnected && Constants.currentMode != Mode.SIM);
   }
 
-  public void requestStowedPosition(double positionMeters) {
+  public void requestIdle(double positionMeters) {
     state = ClimberStates.STOWED;
     setpoint = positionMeters;
   }

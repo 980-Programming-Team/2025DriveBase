@@ -8,16 +8,13 @@ import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.Constants;
 
 public class CANdleSystem extends SubsystemBase {
   private final CANdle m_candle = new CANdle(Constants.CANdle.kCANdleID, Constants.kCANivore);
-  private CommandXboxController joystick;
   private int LedCount = Constants.LED_NUM;
 
-  public CANdleSystem(CommandXboxController joy) {
-    this.joystick = joy;
+  public CANdleSystem() {
     CANdleConfiguration configAll = new CANdleConfiguration();
     configAll.statusLedOffWhenActive = true;
     configAll.disableWhenLOS = false;
