@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -84,6 +85,10 @@ public class RobotContainer {
   // Pathfinding command
   private final Command pathFindToProcessor;
   private final Command pathFindToFC;
+  private final Command pathFindToBC;
+  private final Command pathFindToFL;
+  private final Command pathFindToBL;
+  private final Command pathFindToSourceL;
 
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
@@ -143,17 +148,22 @@ public class RobotContainer {
         break;
     }
 
-    // Set up auto routines
-    registerNamedCommands();
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
     // Since AutoBuilder is configured, we can use it to build pathfinding commands
     pathFindToProcessor =
         AutoBuilder.pathfindToPose(
             FieldConstants.Processor.centerFace, constraints, 0.0 // Goal end velocity in meters/sec
             );
 
-    pathFindToFC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[1], constraints, 0);
+    pathFindToFC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[3], constraints, 0);
+    pathFindToBC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[0], constraints, 0);
+    pathFindToFL = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[2], constraints, 0);
+    pathFindToBL = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[1], constraints, 0);
+    pathFindToSourceL =
+        AutoBuilder.pathfindToPose(FieldConstants.CoralStation.leftCenterFace, constraints, 0);
+
+    // Set up auto routines
+    registerNamedCommands();
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -227,6 +237,14 @@ public class RobotContainer {
   }
 
   public void registerNamedCommands() {
+
+    NamedCommands.registerCommand("BC", (pathFindToBC));
+    NamedCommands.registerCommand("FC", (pathFindToFC));
+    NamedCommands.registerCommand("FL", (pathFindToFL));
+    NamedCommands.registerCommand("BL", (pathFindToBL));
+    NamedCommands.registerCommand("SourceL", (pathFindToSourceL));
+    NamedCommands.registerCommand("Processor", (pathFindToProcessor));
+
     /*
      // FRONT CENTER ALIGN LEFT L2
      NamedCommands.registerCommand("FC AL L2", new InstantCommand(
