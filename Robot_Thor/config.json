@@ -1,0 +1,112 @@
+{
+  "name": "Thor",
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 180
+    },
+    {
+      "axis": "z",
+      "degrees": 90
+    }
+  ],
+  "position": [
+    0,
+    0,
+    -0.005
+  ],
+  "cameras": [
+    {
+      "name": "Front Camera",
+      "rotations": [],
+      "position": [
+        0.35,
+        0,
+        0.5
+      ],
+      "resolution": [
+        960,
+        720
+      ],
+      "fov": 90
+    },
+    {
+      "name": "Back Camera",
+      "rotations": [
+        {
+          "axis": "z",
+          "degrees": 180
+        }
+      ],
+      "position": [
+        -0.35,
+        0,
+        0.5
+      ],
+      "resolution": [
+        960,
+        720
+      ],
+      "fov": 90
+    }
+  ],
+  "components": [{
+      "zeroedRotations": [{
+        "axis": "x",
+        "degrees": 180
+      }, 
+      {
+        "axis": "z",
+        "degrees": 90
+      }
+  ],
+      "zeroedPosition": [
+        0.2175,
+        0,
+        0.41
+      ]
+    }, 
+    {
+      "zeroedRotations": [{
+        "axis": "x",
+        "degrees": 0
+      }, 
+      { 
+      "axis": "y",
+      "degrees": 180
+      },
+      {
+        "axis": "z",
+        "degrees": 90
+      }
+  ],
+      "zeroedPosition": [
+        0.22,
+        0,
+        1
+      ]
+
+
+    },
+    {
+      "zeroedRotations": [{
+        "axis": "x",
+        "degrees": 200
+      }, 
+      { 
+      "axis": "y",
+      "degrees": 0
+      },
+      {
+        "axis": "z",
+        "degrees": 90
+      }
+  ],
+      "zeroedPosition": [
+        0.07,
+        -0.15,
+        0.575
+      ]
+    }
+  ]
+}
