@@ -47,15 +47,6 @@ public class Vision extends SubsystemBase {
   }
 
   /**
-   * Sets the target tag IDs for the DriveToTag command.
-   *
-   * @param tagIds The set of tag IDs to target.
-   */
-  public void setTargetTagIds(Set<Integer> tagIds) {
-    this.targetTagIds = tagIds;
-  }
-
-  /**
    * Returns the X angle to the best target, which can be used for simple servoing with vision.
    *
    * @param cameraIndex The index of the camera to use.
