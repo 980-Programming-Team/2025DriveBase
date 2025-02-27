@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
 public class CANdleSystem extends SubsystemBase {
-  private final CANdle m_candle = new CANdle(Constants.CANdle.kCANdleID, Constants.kCANivore);
+  private final CANdle m_candle = new CANdle(Constants.CANdle.kCANdleID, "rio");
   private int LedCount = Constants.LED_NUM;
 
   public CANdleSystem() {
