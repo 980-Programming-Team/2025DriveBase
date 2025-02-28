@@ -20,21 +20,12 @@ import edu.wpi.first.math.geometry.Transform3d;
 
 public class VisionConstants {
   // AprilTag layout
-  public static AprilTagFieldLayout aprilTagLayout;
-
-  static {
-    try {
-      aprilTagLayout =
-          AprilTagFieldLayout.loadFromResource("frc/robot/subsystems/vision/reefscape.json");
-    } catch (Exception e) {
-      e.printStackTrace();
-      aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
-    }
-  }
+  public static AprilTagFieldLayout aprilTagLayout =
+      AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
   // Camera names, must match names configured on coprocessor
-  public static String camera0Name = "camera_0";
-  public static String camera1Name = "camera_1";
+  public static String limelightFront = "limelight-front";
+  public static String limelightSource = "limelight-source";
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)

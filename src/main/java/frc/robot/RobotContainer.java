@@ -110,8 +110,8 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight("limelight-front", drive::getRotation),
-                new VisionIOLimelight("limelight-source", drive::getRotation));
+                new VisionIOLimelight(VisionConstants.limelightFront, drive::getRotation),
+                new VisionIOLimelight(VisionConstants.limelightSource, drive::getRotation));
         break;
 
       case SIM:
@@ -128,9 +128,11 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera0Name, VisionConstants.robotToCamera0, drive::getPose),
+                    VisionConstants.limelightFront, VisionConstants.robotToCamera0, drive::getPose),
                 new VisionIOPhotonVisionSim(
-                    VisionConstants.camera1Name, VisionConstants.robotToCamera1, drive::getPose));
+                    VisionConstants.limelightSource,
+                    VisionConstants.robotToCamera1,
+                    drive::getPose));
         break;
 
       default:
@@ -214,7 +216,7 @@ public class RobotContainer {
 
     // Bind the pathfinding command to a button (e.g., B button)
     driver.getDriver().b().whileTrue(pathFindToProcessor);
-    driver.getDriver().x().whileTrue(pathFindToFC);
+    driver.getDriver().x().whileTrue(pathFindToBC);
     driver.configScoringPosButtons();
 
     // driver

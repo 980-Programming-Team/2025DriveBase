@@ -1,3 +1,16 @@
+// Copyright 2021-2025 FRC 6328
+// http://github.com/Mechanical-Advantage
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// version 3 as published by the Free Software Foundation or
+// available in the root directory of this project.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+
 package frc.robot.subsystems.vision;
 
 import static frc.robot.subsystems.vision.VisionConstants.*;
@@ -7,17 +20,14 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -25,7 +35,6 @@ public class Vision extends SubsystemBase {
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
-  private Set<Integer> targetTagIds = new HashSet<>(); // New field for target tag IDs
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
     this.consumer = consumer;
@@ -53,24 +62,6 @@ public class Vision extends SubsystemBase {
    */
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
-  }
-
-  /**
-   * Gets the horizontal offset from crosshair to target.
-   *
-   * @return The tx value from the Limelight.
-   */
-  public double getTX() {
-    return inputs[0].latestTargetObservation.tx().getDegrees();
-  }
-
-  /**
-   * Gets the vertical offset from crosshair to target.
-   *
-   * @return The ty value from the Limelight.
-   */
-  public double getTY() {
-    return inputs[0].latestTargetObservation.ty().getDegrees();
   }
 
   @Override
@@ -121,6 +112,14 @@ public class Vision extends SubsystemBase {
                 || observation.pose().getY() < 0.0
                 || observation.pose().getY() > aprilTagLayout.getFieldWidth();
 
+        // Add pose to log
+        robotPoses.add(observation.pose());
+        if (rejectPose) {
+          robotPosesRejected.add(observation.pose());
+        } else {
+          robotPosesAccepted.add(observation.pose());
+        }
+
         // Skip if rejected
         if (rejectPose) {
           continue;
@@ -140,16 +139,14 @@ public class Vision extends SubsystemBase {
           angularStdDev *= cameraStdDevFactors[cameraIndex];
         }
 
-        // Send vision observation if the tag ID is in the target set
-        if (targetTagIds.contains(observation.tagID())) {
-          consumer.accept(
-              observation.pose().toPose2d(),
-              observation.timestamp(),
-              VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
-        }
+        // Send vision observation
+        consumer.accept(
+            observation.pose().toPose2d(),
+            observation.timestamp(),
+            VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
       }
 
-      // Log camera data
+      // Log camera datadata
       Logger.recordOutput(
           "Vision/Camera" + Integer.toString(cameraIndex) + "/TagPoses",
           tagPoses.toArray(new Pose3d[tagPoses.size()]));
@@ -179,48 +176,6 @@ public class Vision extends SubsystemBase {
     Logger.recordOutput(
         "Vision/Summary/RobotPosesRejected",
         allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
-  }
-
-  /**
-   * Checks if the specified tags are visible.
-   *
-   * @param targetTagIds The set of tag IDs to check for visibility.
-   * @return True if any of the specified tags are visible, false otherwise.
-   */
-  public boolean areTagsVisible(Set<Integer> targetTagIds) {
-    for (int i = 0; i < io.length; i++) {
-      if (io[i] instanceof VisionIOLimelight) {
-        if (((VisionIOLimelight) io[i]).areTagsVisible(inputs[i], targetTagIds)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Returns the pose of the specified tag.
-   *
-   * @param tagID The ID of the tag to get the pose of.
-   * @return The pose of the specified tag, or null if not found.
-   */
-  public Pose2d getTagPose(int tagID) {
-    for (int i = 0; i < io.length; i++) {
-      for (var observation : inputs[i].poseObservations) {
-        if (observation.tagID() == tagID) {
-          return observation.pose().toPose2d();
-        }
-      }
-    }
-    return null;
-  }
-
-  public VisionIOInputsAutoLogged getInputs() {
-    return inputs[0]; // Assuming single camera setup
-  }
-
-  public Transform3d getRobotToCamera() {
-    return robotToCamera0; // Assuming single camera setup
   }
 
   @FunctionalInterface
