@@ -47,19 +47,21 @@ public class Elevator extends SubsystemBase {
         }
         break;
       case HOMING:
-        homingTimer.start();
-        io.setVoltage(Constants.Elevator.homingVoltage);
-        if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
-            && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
-          io.setVoltage(0);
-          io.seedPosition(0);
-          homingTimer.stop();
-          homingTimer.reset();
-          state = ElevatorStates.REQUEST_SETPOINT;
-        }
+        // homingTimer.start();
+        // io.setVoltage(Constants.Elevator.homingVoltage);
+        // if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
+        // && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
+        // io.setVoltage(0);
+        // io.seedPosition(0);
+        // homingTimer.stop();
+        // homingTimer.reset();
+        state = ElevatorStates.REQUEST_SETPOINT;
+        // }
         break;
       case REQUEST_SETPOINT:
-        io.setHeight(setpoint);
+        if (setpoint != 0.0) {
+          io.setHeight(setpoint);
+        }
         break;
     }
 

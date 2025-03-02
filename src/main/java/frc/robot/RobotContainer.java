@@ -8,16 +8,20 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
+import frc.robot.subsystems.Superstructure;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOSpark;
@@ -31,9 +35,16 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
 import frc.robot.subsystems.elevator.ElevatorIOSpark;
+import frc.robot.subsystems.funnel.Funnel;
 // import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.funnel.FunnelIO;
 import frc.robot.subsystems.funnel.FunnelIOSpark;
+import frc.robot.subsystems.manipulator.Arm;
+import frc.robot.subsystems.manipulator.ArmIO;
+import frc.robot.subsystems.manipulator.ArmIOSpark;
+import frc.robot.subsystems.manipulator.Claw;
+import frc.robot.subsystems.manipulator.ClawIO;
+import frc.robot.subsystems.manipulator.ClawIOSpark;
 // import frc.robot.subsystems.manipulator.Manipulator;
 // import frc.robot.subsystems.manipulator.ManipulatorIOSpark;
 import frc.robot.subsystems.vision.Vision;
@@ -54,30 +65,37 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
 
-  // Controllers
-  public static SourceManager driver = new SourceManager(0);
-
-  public static ScoringManager operatorBoard = new ScoringManager(1, 2);
-
-  private final CommandXboxController testController = new CommandXboxController(3);
-
   // CANdle
   private final CANdleSystem m_candleSubsystem = new CANdleSystem();
 
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
-  // public static ManipulatorIO armClawIO =
-  // Constants.armEnabled ? new ManipulatorIOSpark() : new ManipulatorIO() {};
+  public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
+  public static ClawIO armClawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
   public static ClimberIO climberIO =
       Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
-  // public static Manipulator armClaw = new Manipulator(armClawIO);
-  // public static Funnel funnel = new Funnel(funnelIO);
+  public static Arm arm = new Arm(armIO);
+  public static Claw armClaw = new Claw(armClawIO);
+  public static Funnel funnel = new Funnel(funnelIO);
   public static Climber climber = new Climber(climberIO);
-  // public static Superstructure superstructure = new Superstructure(elevator, armClaw, funnel);
+  public static Superstructure superstructure =
+      new Superstructure(elevator, arm, armClaw, funnel, climber);
+
+  // Controllers
+  public static SourceManager driver = new SourceManager(0);
+
+  public static ScoringManager operatorBoard = new ScoringManager(1, 2, superstructure);
+
+  private final CommandXboxController testController = new CommandXboxController(3);
+
+  private final Joystick testJoystick = new Joystick(2);
+  private final JoystickButton testButton = new JoystickButton(testJoystick, 4);
+  private final JoystickButton testButton2 = new JoystickButton(testJoystick, 3);
+  private final JoystickButton testButton3 = new JoystickButton(testJoystick, 2);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -218,6 +236,30 @@ public class RobotContainer {
     driver.getDriver().b().whileTrue(pathFindToProcessor);
     driver.getDriver().x().whileTrue(pathFindToBC);
     driver.configScoringPosButtons();
+
+    // operatorBoard.configScoringPosButtons();
+
+    testButton.onTrue(
+        new InstantCommand(
+                () -> {
+                  superstructure.requestPreScore();
+                  superstructure.requestLevel(2);
+                })
+            .ignoringDisable(true));
+    testButton2.onTrue(
+        new InstantCommand(
+                () -> {
+                  superstructure.requestLevel(3);
+                  superstructure.requestPreScore();
+                })
+            .ignoringDisable(true));
+
+    testButton3.onTrue(
+        new InstantCommand(
+                () -> {
+                  elevator.stop();
+                })
+            .ignoringDisable(true));
 
     // driver
     //     .getDriver().b()

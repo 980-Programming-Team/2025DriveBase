@@ -49,6 +49,7 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
     Logger.recordOutput("Superstructure/State", state.toString());
+    Logger.recordOutput("Superstructure/Level", level.toString());
     switch (state) {
       case IDLE:
         elevator.requestHeight(0);
@@ -151,6 +152,22 @@ public class Superstructure extends SubsystemBase {
 
   public void requestLevel(Level level) {
     this.level = level;
+  }
+
+  public void requestLevel(int level) {
+    switch (level) {
+      case 2:
+        this.level = Level.L2;
+        break;
+
+      case 3:
+        this.level = Level.L3;
+        break;
+
+      case 4:
+        this.level = Level.L4;
+        break;
+    }
   }
 
   public boolean pieceSecured() {

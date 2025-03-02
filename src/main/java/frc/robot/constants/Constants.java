@@ -73,15 +73,15 @@ public final class Constants {
     public static final int kClaw = 6;
 
     // NEO
-    public static final int kArm = 8;
+    public static final int kArm = 5;
 
     public class Arm {
       public static final double innerStageWeight = 12.0; // lbs
 
       public static final double motorGearRatio = 75.0;
 
-      public static final int EncoderDIO2 = 2;
-      public static final int EncoderDIO3 = 3;
+      // public static final int EncoderDIO2 = 2;
+      // public static final int EncoderDIO3 = 3;
 
       public static final double gearRatio = 9.0;
       public static final double sprocketDiameter = Units.inchesToMeters(1.751); // pitch diameter
@@ -140,10 +140,10 @@ public final class Constants {
   public class Funnel {
 
     // NEO 550
-    public static final int kFunnelIntake = 5;
+    public static final int kFunnelIntake = 9;
 
     // NEO
-    public static final int kFunnelPivot = 7;
+    public static final int kFunnelPivot = 8;
 
     public class Pivot {
 
@@ -184,8 +184,8 @@ public final class Constants {
   public class Climber {
 
     // NEO
-    public static final int kNearL1 = 9;
-    public static final int kNearFunnel = 10;
+    public static final int kNearL1 = 2; // dd
+    public static final int kNearFunnel = 7; // dd
 
     public static final double gearRatio = 80.0;
     public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
