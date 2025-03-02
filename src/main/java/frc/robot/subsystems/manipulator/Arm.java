@@ -2,7 +2,7 @@ package frc.robot.subsystems.manipulator;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -11,9 +11,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
   private ArmIO io;
-  private ArmIOInputsAutoLogged inputs = new ArmIOInputsAutoLogged();
+  private ArmIOInputsAutoLogged inputs;
 
-  private final Alert armMissingAlert = new Alert("Disconnected Arm Motor", AlertType.kError);
+  private final Alert armMissingAlert;
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -21,13 +21,13 @@ public class Arm extends SubsystemBase {
   private boolean requestL3;
   private boolean requestL4;
 
-  private Claw claw;
+  // private Claw claw;
 
-  private boolean coralSecured;
+  // private boolean coralSecured;
   private ArmStates state = ArmStates.IDLE;
 
-  private Timer shootTimer = new Timer();
-  private Timer homingTimer = new Timer();
+  // private Timer shootTimer;
+  // private Timer homingTimer;
 
   public enum ArmStates {
     IDLE,
@@ -39,6 +39,12 @@ public class Arm extends SubsystemBase {
 
   public Arm(ArmIO io) {
     this.io = io;
+
+    inputs = new ArmIOInputsAutoLogged();
+    armMissingAlert = new Alert("Disconnected Arm Motor", AlertType.kError);
+
+    // shootTimer = new Timer();
+    // homingTimer = new Timer();
   }
 
   public void periodic() {

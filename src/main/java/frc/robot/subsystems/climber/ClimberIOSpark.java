@@ -14,8 +14,8 @@ public class ClimberIOSpark implements ClimberIO {
   private SparkBase follower;
   private RelativeEncoder encoder;
 
-  private SparkMaxConfig leaderConfig = new SparkMaxConfig();
-  private SparkMaxConfig followerConfig = new SparkMaxConfig();
+  private SparkMaxConfig leaderConfig;
+  private SparkMaxConfig followerConfig;
 
   public ClimberIOSpark() {
     leader =
@@ -25,6 +25,9 @@ public class ClimberIOSpark implements ClimberIO {
         new SparkMax(
             Constants.Climber.kNearFunnel,
             MotorType.kBrushless); // The follower is NEAR the CAGE FUNNEL
+
+    leaderConfig = new SparkMaxConfig();
+    followerConfig = new SparkMaxConfig();
 
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
@@ -67,11 +70,11 @@ public class ClimberIOSpark implements ClimberIO {
     inputs.kNearL1Connected = (leader.getFirmwareVersion() != 0);
     inputs.leaderAppliedVoltage = leader.getBusVoltage();
     inputs.supplyLeaderCurrentAmps = leader.getOutputCurrent();
-    inputs.leaderTempCelcius = leader.getMotorTemperature();
+    inputs.leaderTempCelsius = leader.getMotorTemperature();
     inputs.leaderPosMotorRotations = leader.getEncoder().getPosition();
 
     inputs.kNearFunnelConnected = (follower.getFirmwareVersion() != 0);
-    inputs.followerTempCelcius = follower.getMotorTemperature();
+    inputs.followerTempCelsius = follower.getMotorTemperature();
   }
 
   private double rotationsToMeters(double rotations) {

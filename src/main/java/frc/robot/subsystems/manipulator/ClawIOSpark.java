@@ -10,10 +10,12 @@ import frc.robot.constants.Constants;
 
 public class ClawIOSpark implements ClawIO {
   private SparkBase claw;
-  private SparkMaxConfig clawConfig = new SparkMaxConfig();
+  private SparkMaxConfig clawConfig;
 
   public ClawIOSpark() {
     claw = new SparkMax(Constants.Manipulator.kClaw, MotorType.kBrushless);
+    clawConfig = new SparkMaxConfig();
+
     configureClaw(claw, clawConfig);
   }
 
@@ -31,7 +33,7 @@ public class ClawIOSpark implements ClawIO {
     inputs.clawAppliedVoltage = claw.getBusVoltage();
     inputs.clawSpeedRotationsPerSec = claw.getEncoder().getVelocity();
     inputs.supplyClawCurrentAmps = claw.getOutputCurrent();
-    inputs.clawTempCelcius = claw.getMotorTemperature();
+    inputs.clawTempCelsius = claw.getMotorTemperature();
     // inputs.frontBeamBreakTriggered =
     //     beamBreak.getProximity() < Constants.Arm.proximityDetectionThreshold;
   }

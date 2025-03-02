@@ -7,7 +7,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
   private FunnelIO io;
-  private FunnelIOInputsAutoLogged inputs = new FunnelIOInputsAutoLogged();
+  private FunnelIOInputsAutoLogged inputs;
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -24,6 +24,8 @@ public class Funnel extends SubsystemBase {
 
   public Funnel(FunnelIO io) {
     this.io = io;
+
+    inputs = new FunnelIOInputsAutoLogged();
   }
 
   public void periodic() {

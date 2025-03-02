@@ -16,9 +16,10 @@ public class ArmIOSpark implements ArmIO {
   private SparkClosedLoopController armPIDController;
   private RelativeEncoder armEncoder;
 
-  private SparkMaxConfig armConfig = new SparkMaxConfig();
+  private SparkMaxConfig armConfig;
 
   public ArmIOSpark() {
+    armConfig = new SparkMaxConfig();
     arm = new SparkMax(Constants.Manipulator.kArm, MotorType.kBrushless);
 
     configureArm(arm, armConfig);
@@ -55,7 +56,7 @@ public class ArmIOSpark implements ArmIO {
             ? 0.0
             : (armEncoder.getPosition() / Constants.Manipulator.Arm.motorGearRatio);
     inputs.supplyArmCurrentAmps = arm.getOutputCurrent();
-    inputs.armTempCelcius = arm.getMotorTemperature();
+    inputs.armTempCelsius = arm.getMotorTemperature();
   }
 
   @Override

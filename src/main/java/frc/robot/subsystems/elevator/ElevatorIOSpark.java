@@ -9,18 +9,21 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj.Encoder;
+// import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
   private SparkClosedLoopController leaderPIDController;
   private SparkBase follower;
-  private Encoder throughBoreEncoder;
+  // private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
 
-  private SparkMaxConfig leaderConfig = new SparkMaxConfig();
-  private SparkMaxConfig followerConfig = new SparkMaxConfig();
+  private SparkMaxConfig leaderConfig;
+  private SparkMaxConfig followerConfig;
+
+  double targetPosition;
 
   // private ClosedLoopSlot slot2;
 
@@ -34,14 +37,17 @@ public class ElevatorIOSpark implements ElevatorIO {
             Constants.Elevator.kElevatorPDH,
             MotorType.kBrushless); // The follower is on the side of the PDH
 
+    leaderConfig = new SparkMaxConfig();
+    followerConfig = new SparkMaxConfig();
+
     // throughBoreEncoder = new Encoder(Constants.Elevator.EncoderDIO2,
     // Constants.Elevator.EncoderDIO3);
     // throughBoreEncoder.reset();
 
-    leaderPIDController = leader.getClosedLoopController();
-
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
+
+    leaderPIDController = leader.getClosedLoopController();
   }
 
   private void configureLeader(SparkBase motor, SparkBaseConfig config) {
@@ -54,15 +60,16 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.2, 0, 0.025);
+    config.closedLoop.pid(0.1, 0, 0.0);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    config.closedLoop.maxMotion.maxAcceleration(
-        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio);
-    config.closedLoop.maxMotion.maxVelocity(
-        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio);
+    // config.closedLoop.maxMotion.maxAcceleration(
+    //     (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    //         * Constants.Elevator.gearRatio);
+    // config.closedLoop.maxMotion.maxVelocity(
+    //     (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI *
+    // Constants.Elevator.sprocketDiameter))
+    //         * Constants.Elevator.gearRatio);
 
     motor.configure(config, null, null);
   }
@@ -74,15 +81,16 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.2, 0, 0.025);
+    config.closedLoop.pid(0.1, 0, 0.0);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
-    config.closedLoop.maxMotion.maxAcceleration(
-        (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio);
-    config.closedLoop.maxMotion.maxVelocity(
-        (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI * Constants.Elevator.sprocketDiameter))
-            * Constants.Elevator.gearRatio);
+    // config.closedLoop.maxMotion.maxAcceleration(
+    //     (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
+    //         * Constants.Elevator.gearRatio);
+    // config.closedLoop.maxMotion.maxVelocity(
+    //     (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI *
+    // Constants.Elevator.sprocketDiameter))
+    //         * Constants.Elevator.gearRatio);
 
     motor.configure(config, null, null);
   }
@@ -92,29 +100,34 @@ public class ElevatorIOSpark implements ElevatorIO {
     inputs.kRoborioMotorConnected = (leader.getFirmwareVersion() != 0);
     inputs.kPDHMotorConnected = (leader.getFirmwareVersion() != 0);
     inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
+    inputs.pos = leader.getEncoder().getPosition();
     inputs.velMetersPerSecond =
         rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();
     inputs.supplyCurrentAmps =
         new double[] {leader.getOutputCurrent(), follower.getOutputCurrent()};
-    inputs.tempCelcius =
+    inputs.tempCelsius =
         new double[] {leader.getMotorTemperature(), follower.getMotorTemperature()};
   }
 
   @Override
   public void setHeight(double heightMeters) {
-    double targetPosition = heightMeters * Constants.Elevator.gearRatio;
+    targetPosition = heightMeters * -1; // Constants.Elevator.gearRatio;
     leaderPIDController.setReference(targetPosition, ControlType.kPosition);
+
+    Logger.recordOutput("Elevator/TargetPosition", targetPosition);
+    Logger.recordOutput("Elevator/HeightMeters", heightMeters);
   }
 
   @Override
   public void setVoltage(double voltage) {
     leader.setVoltage(voltage);
+    follower.setVoltage(voltage);
   }
 
   @Override
-  public void seedPosition(double motorPostionRot) {
-    encoder.setPosition(motorPostionRot);
+  public void seedPosition(double motorPositionRot) {
+    encoder.setPosition(motorPositionRot);
   }
 
   @Override
@@ -123,16 +136,24 @@ public class ElevatorIOSpark implements ElevatorIO {
     follower.stopMotor();
   }
 
+  // if (leader.getEncoder().getPosition() > targetPosition) {
+  //   leader.set(-.5);
+  //   // follower.set(5);
+  // } else {
+  //   leader.set(0);
+  //   // follower.set(0);
+  // }
+
   @Override
   public void enableBrakeMode(boolean enable) {
     leaderConfig.idleMode(IdleMode.kBrake);
     followerConfig.idleMode(IdleMode.kBrake);
   }
 
-  private double metersToRotations(double heightMeters) {
-    return (heightMeters / (Math.PI * Constants.Elevator.sprocketDiameter))
-        * Constants.Elevator.gearRatio;
-  }
+  // private double metersToRotations(double heightMeters) {
+  //   return (heightMeters / (Math.PI * Constants.Elevator.sprocketDiameter))
+  //       * Constants.Elevator.gearRatio;
+  // }
 
   private double rotationsToMeters(double rotations) {
     return rotations

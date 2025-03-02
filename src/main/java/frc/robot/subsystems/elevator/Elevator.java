@@ -3,7 +3,7 @@ package frc.robot.subsystems.elevator;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -12,17 +12,15 @@ import org.littletonrobotics.junction.Logger;
 
 public class Elevator extends SubsystemBase {
   public ElevatorIO io;
-  public ElevatorIOInputsAutoLogged inputs = new ElevatorIOInputsAutoLogged();
+  public ElevatorIOInputsAutoLogged inputs;
 
-  private final Alert leaderMissingAlert =
-      new Alert("Disconnected Roborio Elevator Motor", AlertType.kError);
-  private final Alert followerMissingAlert =
-      new Alert("Disconnected PDH / PDP Elevator Motor", AlertType.kError);
+  private final Alert leaderMissingAlert;
+  private final Alert followerMissingAlert;
 
-  private double setpoint = 0;
-  private ElevatorStates state = ElevatorStates.STARTING_CONFIG;
+  private double setpoint;
+  private ElevatorStates state;
 
-  private Timer homingTimer = new Timer();
+  // private Timer homingTimer;
 
   public enum ElevatorStates {
     STARTING_CONFIG,
@@ -32,6 +30,16 @@ public class Elevator extends SubsystemBase {
 
   public Elevator(ElevatorIO elevatorIO) {
     this.io = elevatorIO;
+
+    inputs = new ElevatorIOInputsAutoLogged();
+
+    leaderMissingAlert = new Alert("Disconnected RoboRIO Elevator Motor", AlertType.kError);
+    followerMissingAlert = new Alert("Disconnected PDH Elevator Motor", AlertType.kError);
+
+    setpoint = 0;
+    state = ElevatorStates.STARTING_CONFIG;
+
+    // homingTimer = new Timer();
   }
 
   public void periodic() {

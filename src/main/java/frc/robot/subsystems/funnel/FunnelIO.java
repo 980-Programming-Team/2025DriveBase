@@ -8,14 +8,14 @@ public interface FunnelIO {
     public double pivotAppliedVoltage = 0.0;
     public double pivotSupplyCurrentAmps = 0.0;
     public double pivotStatorCurrentAmps = 0.0;
-    public double pivotTempCelcius = 0.0;
+    public double pivotTempCelsius = 0.0;
     public double pivotPosMotorRotations = 0.0;
     public double pivotPosAbsMechanismRotations = 0.0;
 
     public double intakeAppliedVoltage = 0.0;
     public double intakeSupplyCurrentAmps = 0.0;
     public double intakeStatorCurrentAmps = 0.0;
-    public double intakeTempCelcius = 0.0;
+    public double intakeTempCelsius = 0.0;
     public double intakeSpeedRotationsPerSec = 0.0;
   }
 

@@ -8,7 +8,7 @@ public interface ArmIO {
     public boolean kArmConnected = false;
     public double armAppliedVoltage = 0.0;
     public double supplyArmCurrentAmps = 0.0;
-    public double armTempCelcius = 0.0;
+    public double armTempCelsius = 0.0;
     public double armPosMotorRotations = 0.0;
     public double armPosAbsMechanismRotations = 0.0;
   }

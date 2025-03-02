@@ -14,15 +14,15 @@ public class Superstructure extends SubsystemBase {
   private boolean requestPreScore;
   private boolean requestScore;
 
-  private Superstates state = Superstates.IDLE;
+  private Superstates state;
   private Elevator elevator;
   private Arm arm;
   private Funnel funnel;
   private Claw claw;
   private Climber climber;
 
-  private Level level = Level.L2;
-  private Level prevLevel = Level.L2;
+  private Level level;
+  // private Level prevLevel = Level.L2;
 
   public static enum Superstates {
     IDLE,
@@ -44,6 +44,9 @@ public class Superstructure extends SubsystemBase {
     this.funnel = funnel;
     this.claw = claw;
     this.climber = climber;
+
+    state = Superstates.IDLE;
+    level = Level.L2;
   }
 
   @Override

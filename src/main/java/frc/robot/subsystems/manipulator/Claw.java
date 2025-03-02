@@ -2,7 +2,7 @@ package frc.robot.subsystems.manipulator;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -10,9 +10,9 @@ import org.littletonrobotics.junction.Logger;
 
 public class Claw extends SubsystemBase {
   private ClawIO io;
-  private ClawIOInputsAutoLogged inputs = new ClawIOInputsAutoLogged();
+  private ClawIOInputsAutoLogged inputs;
 
-  private final Alert clawMissingAlert = new Alert("Disconnected Claw Motor", AlertType.kError);
+  private final Alert clawMissingAlert;
 
   private boolean requestIdle;
   private boolean requestFeed;
@@ -20,10 +20,10 @@ public class Claw extends SubsystemBase {
   private boolean requestShootL2;
 
   private boolean coralSecured;
-  private ClawStates state = ClawStates.IDLE;
+  private ClawStates state;
 
-  private Timer shootTimer = new Timer();
-  private Timer homingTimer = new Timer();
+  // private Timer shootTimer;
+  // private Timer homingTimer;
 
   public enum ClawStates {
     IDLE,
@@ -34,6 +34,12 @@ public class Claw extends SubsystemBase {
 
   public Claw(ClawIO io) {
     this.io = io;
+
+    inputs = new ClawIOInputsAutoLogged();
+    clawMissingAlert = new Alert("Disconnected Claw Motor", AlertType.kError);
+    state = ClawStates.IDLE;
+    // shootTimer = new Timer();
+    // homingTimer = new Timer();
   }
 
   public void periodic() {

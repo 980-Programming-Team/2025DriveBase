@@ -9,7 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj.Alert;
+// import edu.wpi.first.wpilibj.Alert;
 import frc.robot.constants.Constants;
 
 public class FunnelIOSpark implements FunnelIO {
@@ -19,13 +19,16 @@ public class FunnelIOSpark implements FunnelIO {
   private RelativeEncoder pivotEncoder;
   // private Canandmag pivotEncoder;
 
-  private SparkMaxConfig pivotConfig = new SparkMaxConfig();
-  private SparkMaxConfig intakeConfig = new SparkMaxConfig();
-  private Alert motorMissingAlert;
+  private SparkMaxConfig pivotConfig;
+  private SparkMaxConfig intakeConfig;
+  // private Alert motorMissingAlert;
 
   public FunnelIOSpark() {
     pivot = new SparkMax(Constants.Funnel.kFunnelPivot, MotorType.kBrushless);
     intake = new SparkMax(Constants.Funnel.kFunnelIntake, MotorType.kBrushless);
+
+    pivotConfig = new SparkMaxConfig();
+    intakeConfig = new SparkMaxConfig();
 
     configurePivot(pivot, pivotConfig);
     configureIntake(intake, intakeConfig);
@@ -67,7 +70,7 @@ public class FunnelIOSpark implements FunnelIO {
   public void updateInputs(FunnelIOInputs inputs) {
     inputs.pivotAppliedVoltage = pivot.getBusVoltage();
     inputs.pivotSupplyCurrentAmps = pivot.getOutputCurrent();
-    inputs.pivotTempCelcius = pivot.getMotorTemperature();
+    inputs.pivotTempCelsius = pivot.getMotorTemperature();
     inputs.pivotPosMotorRotations = pivot.getEncoder().getPosition();
     inputs.pivotPosAbsMechanismRotations =
         (pivotEncoder.getPosition() > Constants.Funnel.Pivot.absZeroWrapThreshold)
@@ -75,7 +78,7 @@ public class FunnelIOSpark implements FunnelIO {
             : (pivotEncoder.getPosition() / Constants.Funnel.Pivot.motorGearRatio);
     inputs.intakeAppliedVoltage = intake.getBusVoltage();
     inputs.intakeSupplyCurrentAmps = intake.getOutputCurrent();
-    inputs.intakeTempCelcius = intake.getMotorTemperature();
+    inputs.intakeTempCelsius = intake.getMotorTemperature();
     inputs.intakeSpeedRotationsPerSec = intake.getEncoder().getVelocity();
   }
 

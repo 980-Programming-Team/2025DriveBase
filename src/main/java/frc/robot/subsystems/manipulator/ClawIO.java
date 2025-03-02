@@ -8,7 +8,7 @@ public interface ClawIO {
     public boolean kClawConnected = false;
     public double clawAppliedVoltage = 0.0;
     public double supplyClawCurrentAmps = 0.0;
-    public double clawTempCelcius = 0.0;
+    public double clawTempCelsius = 0.0;
     public double clawSpeedRotationsPerSec = 0.0;
   }
 

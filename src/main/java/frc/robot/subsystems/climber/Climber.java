@@ -11,15 +11,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class Climber extends SubsystemBase {
   public ClimberIO io;
-  public ClimberIOInputsAutoLogged inputs = new ClimberIOInputsAutoLogged();
+  public ClimberIOInputsAutoLogged inputs;
 
-  private final Alert leaderMissingAlert =
-      new Alert("Disconnected Near L1 Mechanism Climber Motor", AlertType.kError);
-  private final Alert followerMissingAlert =
-      new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
+  private final Alert leaderMissingAlert;
+  private final Alert followerMissingAlert;
 
-  private double setpoint = 0;
-  private ClimberStates state = ClimberStates.STARTING_CONFIG;
+  private double setpoint;
+  private ClimberStates state;
 
   public enum ClimberStates {
     STARTING_CONFIG,
@@ -29,6 +27,14 @@ public class Climber extends SubsystemBase {
 
   public Climber(ClimberIO climberIO) {
     this.io = climberIO;
+
+    leaderMissingAlert = new Alert("Disconnected Near L1 Climber Motor", AlertType.kError);
+    followerMissingAlert = new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
+
+    setpoint = 0;
+    state = ClimberStates.STARTING_CONFIG;
+
+    inputs = new ClimberIOInputsAutoLogged();
   }
 
   public void periodic() {

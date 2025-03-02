@@ -71,7 +71,7 @@ public class RobotContainer {
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
   public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
-  public static ClawIO armClawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
+  public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
   public static ClimberIO climberIO =
@@ -79,11 +79,11 @@ public class RobotContainer {
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static Arm arm = new Arm(armIO);
-  public static Claw armClaw = new Claw(armClawIO);
+  public static Claw claw = new Claw(clawIO);
   public static Funnel funnel = new Funnel(funnelIO);
   public static Climber climber = new Climber(climberIO);
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, armClaw, funnel, climber);
+      new Superstructure(elevator, arm, claw, funnel, climber);
 
   // Controllers
   public static SourceManager driver = new SourceManager(0);

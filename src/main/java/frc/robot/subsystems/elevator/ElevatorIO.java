@@ -8,11 +8,12 @@ public interface ElevatorIO {
     public boolean kRoborioMotorConnected = false;
     public boolean kPDHMotorConnected = false;
     public double posMeters = 0.0;
+    public double pos = 0.0;
     public double velMetersPerSecond = 0.0;
     public double appliedVoltage = 0.0;
     public double[] supplyCurrentAmps = new double[] {}; // {leader, follower}
     public double[] statorCurrentAmps = new double[] {}; // {leader, follower}
-    public double[] tempCelcius = new double[] {}; // {leader, follower}
+    public double[] tempCelsius = new double[] {}; // {leader, follower}
   }
 
   public default void updateInputs(ElevatorIOInputs inputs) {}
