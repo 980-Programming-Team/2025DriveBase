@@ -34,7 +34,6 @@ public class Elevator extends SubsystemBase {
     this.io = elevatorIO;
   }
 
-  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);

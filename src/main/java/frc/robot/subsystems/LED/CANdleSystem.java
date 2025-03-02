@@ -77,7 +77,7 @@ public class CANdleSystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
+    // Ensure that this method is efficient and does not contain unnecessary operations
   }
 
   @Override

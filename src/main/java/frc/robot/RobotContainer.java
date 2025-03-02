@@ -260,23 +260,6 @@ public class RobotContainer {
                   elevator.stop();
                 })
             .ignoringDisable(true));
-
-    // driver
-    //     .getDriver().b()
-    //     .whileTrue(new PathfindingCommand(
-    //         drive,
-    //         () -> new Pose2d(FieldConstants.Processor.centerFace.getTranslation(), new
-    // Rotation2d()),
-    //         () -> drive.getPose(),
-    //         LocalADStarAK.getInstance().getPathPlanner(),
-    //         drive::setModuleStates,
-    //         drive));
-
-    // l1.onTrue(new RunCommand(m_candleSubsystem::SetLEDRed, m_candleSubsystem));
-    // l2.onTrue(new RunCommand(m_candleSubsystem::SetLEDGreen, m_candleSubsystem));
-    // l3.onTrue(new RunCommand(m_candleSubsystem::SetLEDYellow, m_candleSubsystem));
-    // l4.onTrue(new RunCommand(m_candleSubsystem::SetLEDBlue, m_candleSubsystem));
-
   }
 
   public void registerNamedCommands() {

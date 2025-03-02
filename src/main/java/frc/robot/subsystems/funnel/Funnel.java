@@ -26,7 +26,6 @@ public class Funnel extends SubsystemBase {
     this.io = io;
   }
 
-  @Override
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Funnel", inputs);
