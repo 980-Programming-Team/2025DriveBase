@@ -10,6 +10,7 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private SparkBase arm;
@@ -17,6 +18,8 @@ public class ArmIOSpark implements ArmIO {
   private RelativeEncoder armEncoder;
 
   private SparkMaxConfig armConfig;
+
+  private double targetPosition;
 
   public ArmIOSpark() {
     armConfig = new SparkMaxConfig();
@@ -51,18 +54,24 @@ public class ArmIOSpark implements ArmIO {
     inputs.kArmConnected = (arm.getFirmwareVersion() != 0);
     inputs.armAppliedVoltage = arm.getBusVoltage();
     inputs.armPosMotorRotations = arm.getEncoder().getPosition();
-    inputs.armPosAbsMechanismRotations =
-        (armEncoder.getPosition() > Constants.Manipulator.Arm.absZeroWrapThreshold)
-            ? 0.0
-            : (armEncoder.getPosition() / Constants.Manipulator.Arm.motorGearRatio);
     inputs.supplyArmCurrentAmps = arm.getOutputCurrent();
     inputs.armTempCelsius = arm.getMotorTemperature();
+    inputs.armVelocity = arm.getEncoder().getVelocity();
   }
 
   @Override
   public void setArmPosition(double mechanismRotations) {
-    double targetPosition = mechanismRotations * Constants.Manipulator.Arm.motorGearRatio;
+    targetPosition = mechanismRotations; // Constants.Elevator.gearRatio;
     armPIDController.setReference(targetPosition, ControlType.kPosition);
+
+    Logger.recordOutput("Manipulator/Arm/TargetPosition", targetPosition);
+    Logger.recordOutput("Manipulator/Arm/MechanismRotations", mechanismRotations);
+
+    // Stop the motor when the target position is reached
+    if ((arm.getEncoder().getPosition() - targetPosition)
+        > Constants.Elevator.setpointToleranceMeters) {
+      arm.stopMotor();
+    }
   }
 
   @Override

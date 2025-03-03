@@ -257,7 +257,8 @@ public class RobotContainer {
     testButton3.onTrue(
         new InstantCommand(
                 () -> {
-                  elevator.stop();
+                  superstructure.requestLevel(4);
+                  superstructure.requestPreScore();
                 })
             .ignoringDisable(true));
   }

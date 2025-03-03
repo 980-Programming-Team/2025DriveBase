@@ -9,8 +9,8 @@ public interface ArmIO {
     public double armAppliedVoltage = 0.0;
     public double supplyArmCurrentAmps = 0.0;
     public double armTempCelsius = 0.0;
+    public double armVelocity = 0.0;
     public double armPosMotorRotations = 0.0;
-    public double armPosAbsMechanismRotations = 0.0;
   }
 
   public default void updateInputs(ArmIOInputs inputs) {}

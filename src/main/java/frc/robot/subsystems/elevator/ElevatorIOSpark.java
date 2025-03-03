@@ -23,7 +23,7 @@ public class ElevatorIOSpark implements ElevatorIO {
   private SparkMaxConfig leaderConfig;
   private SparkMaxConfig followerConfig;
 
-  double targetPosition;
+  private double targetPosition;
 
   // private ClosedLoopSlot slot2;
 
@@ -60,7 +60,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.1, 0, 0.0);
+    config.closedLoop.pidf(0.8, 0, 0.15, 0.15);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
     // config.closedLoop.maxMotion.maxAcceleration(
@@ -81,7 +81,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(0.1, 0, 0.0);
+    config.closedLoop.pidf(0.8, 0, 0.15, 0.15);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
 
     // config.closedLoop.maxMotion.maxAcceleration(
@@ -117,6 +117,13 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     Logger.recordOutput("Elevator/TargetPosition", targetPosition);
     Logger.recordOutput("Elevator/HeightMeters", heightMeters);
+
+    // Stop the motor when the target position is reached
+    if ((leader.getEncoder().getPosition() - targetPosition)
+        < Constants.Elevator.setpointToleranceMeters) {
+      leader.stopMotor();
+      follower.stopMotor();
+    }
   }
 
   @Override

@@ -56,7 +56,7 @@ public class Superstructure extends SubsystemBase {
     switch (state) {
       case IDLE:
         elevator.requestHeight(0);
-        arm.requestIdle();
+        arm.requestPosition(0);
         funnel.requestIdle();
         claw.requestIdle();
         climber.requestIdle(0);
@@ -69,7 +69,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case FEEDING:
         elevator.requestHeight(0);
-        arm.requestFeed();
+        arm.requestPosition(0.03588729351758957);
         claw.requestFeed();
 
         if (claw.hasCoral()) {
@@ -83,14 +83,14 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE:
         if (level == Level.L2) {
-          arm.requestL2();
+          arm.requestPosition(0.20);
           elevator.requestHeight(0.14);
         } else if (level == Level.L3) {
-          arm.requestL3();
+          arm.requestPosition(0);
           elevator.requestHeight(0.10);
         } else if (level == Level.L4) {
-          arm.requestL4();
-          elevator.requestHeight(0.71);
+          arm.requestPosition(0.70);
+          elevator.requestHeight(0.85);
         }
         funnel.requestIdle();
         climber.requestIdle(0);

@@ -56,8 +56,8 @@ public final class Constants {
 
     public static final int supplyCurrentLimit = 40;
 
-    public static final double peakForward = 0.5;
-    public static final double peakReverse = -0.5;
+    public static final double peakForward = 1;
+    public static final double peakReverse = -1;
 
     public static final double mechanismMaxAccel = 3.3274;
     public static final double mechanismMaxCruiseVel = 1.597152;
@@ -95,12 +95,12 @@ public final class Constants {
       public static final double l4SetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.05;
 
-      public static final double kP = 0.25;
+      public static final double kP = 0.4;
       public static final double kI = 0.0;
       public static final double kD = 0.05;
       public static final double kFF = 0.0;
-      public static final double minOutput = -0.4;
-      public static final double maxOutput = 0.4;
+      public static final double minOutput = -0.5;
+      public static final double maxOutput = 0.5;
 
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
