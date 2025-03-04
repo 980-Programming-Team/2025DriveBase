@@ -11,7 +11,7 @@ public interface ElevatorIO {
     public double pos = 0.0;
     public double velMetersPerSecond = 0.0;
     public double appliedVoltage = 0.0;
-    public double[] supplyCurrentAmps = new double[] {}; // {leader, follower}
+    public double supplyCurrentAmps = 0.0; // {leader, follower}
     public double[] statorCurrentAmps = new double[] {}; // {leader, follower}
     public double[] tempCelsius = new double[] {}; // {leader, follower}
   }

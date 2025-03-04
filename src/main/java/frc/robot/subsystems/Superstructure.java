@@ -84,13 +84,13 @@ public class Superstructure extends SubsystemBase {
       case PRE_SCORE:
         if (level == Level.L2) {
           arm.requestPosition(0.20);
-          elevator.requestHeight(0.14);
+          elevator.requestHeight(-0.14);
         } else if (level == Level.L3) {
           arm.requestPosition(0);
-          elevator.requestHeight(0.10);
+          elevator.requestHeight(-0.10);
         } else if (level == Level.L4) {
           arm.requestPosition(0.70);
-          elevator.requestHeight(0.85);
+          elevator.requestHeight(-0.85);
         }
         funnel.requestIdle();
         climber.requestIdle(0);

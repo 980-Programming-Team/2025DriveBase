@@ -16,6 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
   private SparkClosedLoopController leaderPIDController;
+  // private PIDController leaPidController;
   private SparkBase follower;
   // private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
@@ -55,42 +56,27 @@ public class ElevatorIOSpark implements ElevatorIO {
     encoder = motor.getEncoder();
     encoder.setPosition(0);
 
-    config.disableFollowerMode();
+    // config.disableFollowerMode();
     config.idleMode(IdleMode.kBrake);
+    config.inverted(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pidf(0.8, 0, 0.15, 0.15);
-    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
-
-    // config.closedLoop.maxMotion.maxAcceleration(
-    //     (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    //         * Constants.Elevator.gearRatio);
-    // config.closedLoop.maxMotion.maxVelocity(
-    //     (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI *
-    // Constants.Elevator.sprocketDiameter))
-    //         * Constants.Elevator.gearRatio);
+    config.closedLoop.pid(10, 0, 0.0);
+    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakForward);
 
     motor.configure(config, null, null);
   }
 
   private void configureFollower(SparkBase motor, SparkBaseConfig config) {
 
-    config.follow(leader, true);
+    config.follow(leader, false);
     config.idleMode(IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pidf(0.8, 0, 0.15, 0.15);
-    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakReverse);
-
-    // config.closedLoop.maxMotion.maxAcceleration(
-    //     (Constants.Elevator.mechanismMaxAccel / (Math.PI * Constants.Elevator.sprocketDiameter))
-    //         * Constants.Elevator.gearRatio);
-    // config.closedLoop.maxMotion.maxVelocity(
-    //     (Constants.Elevator.mechanismMaxCruiseVel / (Math.PI *
-    // Constants.Elevator.sprocketDiameter))
-    //         * Constants.Elevator.gearRatio);
+    // config.closedLoop.outputRange(Constants.Elevator.peakReverse,
+    // Constants.Elevator.peakReverse);
 
     motor.configure(config, null, null);
   }
@@ -104,26 +90,16 @@ public class ElevatorIOSpark implements ElevatorIO {
     inputs.velMetersPerSecond =
         rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();
-    inputs.supplyCurrentAmps =
-        new double[] {leader.getOutputCurrent(), follower.getOutputCurrent()};
+    inputs.supplyCurrentAmps = leader.getOutputCurrent();
     inputs.tempCelsius =
         new double[] {leader.getMotorTemperature(), follower.getMotorTemperature()};
   }
 
   @Override
-  public void setHeight(double heightMeters) {
-    targetPosition = heightMeters * -1; // Constants.Elevator.gearRatio;
-    leaderPIDController.setReference(targetPosition, ControlType.kPosition);
-
+  public void setHeight(double targetPosition) {
+    leader.getClosedLoopController().setReference(targetPosition, ControlType.kPosition);
+    // leader.setVoltage(heightMeters);
     Logger.recordOutput("Elevator/TargetPosition", targetPosition);
-    Logger.recordOutput("Elevator/HeightMeters", heightMeters);
-
-    // Stop the motor when the target position is reached
-    if ((leader.getEncoder().getPosition() - targetPosition)
-        < Constants.Elevator.setpointToleranceMeters) {
-      leader.stopMotor();
-      follower.stopMotor();
-    }
   }
 
   @Override
