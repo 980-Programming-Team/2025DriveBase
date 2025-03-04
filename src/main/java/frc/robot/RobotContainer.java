@@ -96,6 +96,7 @@ public class RobotContainer {
   private final JoystickButton testButton = new JoystickButton(testJoystick, 4);
   private final JoystickButton testButton2 = new JoystickButton(testJoystick, 3);
   private final JoystickButton testButton3 = new JoystickButton(testJoystick, 2);
+  private final JoystickButton testButton8 = new JoystickButton(testJoystick, 8);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -259,6 +260,13 @@ public class RobotContainer {
                 () -> {
                   superstructure.requestLevel(4);
                   superstructure.requestPreScore();
+                })
+            .ignoringDisable(true));
+
+    testButton8.onTrue(
+        new InstantCommand(
+                () -> {
+                  superstructure.requestScore();
                 })
             .ignoringDisable(true));
   }

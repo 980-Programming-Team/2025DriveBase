@@ -62,7 +62,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    config.closedLoop.pid(10, 0, 0.0);
+    config.closedLoop.pid(3, 0, 0.0);
     config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakForward);
 
     motor.configure(config, null, null);
@@ -70,7 +70,7 @@ public class ElevatorIOSpark implements ElevatorIO {
 
   private void configureFollower(SparkBase motor, SparkBaseConfig config) {
 
-    config.follow(leader, false);
+    config.follow(leader, true);
     config.idleMode(IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
@@ -90,6 +90,8 @@ public class ElevatorIOSpark implements ElevatorIO {
     inputs.velMetersPerSecond =
         rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();
+    inputs.followerAppliedVoltage = follower.getBusVoltage();
+    inputs.followerSupplyCurrentAmps = follower.getOutputCurrent();
     inputs.supplyCurrentAmps = leader.getOutputCurrent();
     inputs.tempCelsius =
         new double[] {leader.getMotorTemperature(), follower.getMotorTemperature()};

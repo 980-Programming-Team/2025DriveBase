@@ -51,41 +51,41 @@ public class Claw extends SubsystemBase {
       case IDLE:
         io.stop();
 
-        // reset coral secured in cases where coral is removed manually from robot
-        if (!hasCoral()) {
-          coralSecured = false;
-        }
+        // // reset coral secured in cases where coral is removed manually from robot
+        // if (!hasCoral()) {
+        //   coralSecured = false;
+        // }
 
-        if (requestFeed && !coralSecured()) {
+        if (requestFeed /*&& !coralSecured()*/) {
           state = ClawStates.FEED;
-        } else if (requestShoot && coralSecured) {
+        } else if (requestShoot /*&& coralSecured*/) {
           state = ClawStates.SHOOT;
-        } else if (requestShootL2 && coralSecured) {
+        } else if (requestShootL2 /*&& coralSecured/* */) {
           state = ClawStates.SHOOTL2;
         }
         break;
       case FEED:
         io.setClawVoltage(Constants.Manipulator.Claw.feedVoltage);
 
-        if (coralSecured()) {
-          state = ClawStates.IDLE;
-        } else if (requestIdle) {
-          state = ClawStates.IDLE;
-        }
+        // if (coralSecured()) {
+        //   state = ClawStates.IDLE;
+        // } else if (requestIdle) {
+        //   state = ClawStates.IDLE;
+        // }
         break;
       case SHOOTL2:
         io.setClawVoltage(Constants.Manipulator.Claw.scoreL2Voltage);
 
-        if (!coralSecured()) {
-          state = ClawStates.IDLE;
-        }
+        // if (!coralSecured()) {
+        //   state = ClawStates.IDLE;
+        // }
         break;
       case SHOOT:
         io.setClawVoltage(Constants.Manipulator.Claw.scoreVoltage);
 
-        if (!coralSecured()) {
-          state = ClawStates.IDLE;
-        }
+        // if (!coralSecured()) {
+        //   state = ClawStates.IDLE;
+        // }
         break;
     }
 

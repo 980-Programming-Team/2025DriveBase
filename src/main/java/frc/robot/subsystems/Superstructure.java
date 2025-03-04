@@ -99,25 +99,27 @@ public class Superstructure extends SubsystemBase {
         if (requestIdle) {
           state = Superstates.IDLE;
         } else if (level == Level.L2
-            && (requestScore && elevator.atSetpoint() && claw.coralSecured())) {
+            && (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/)) {
           state = Superstates.SCOREL2;
-        } else if (requestScore && elevator.atSetpoint() && claw.coralSecured()) {
+        } else if (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/) {
           state = Superstates.SCORE;
         }
         break;
       case SCOREL2:
         claw.requestShootL2();
 
-        if (!claw.coralSecured() && requestIdle) {
-          state = Superstates.IDLE;
-        }
+        // if (
+        // /*!claw.coralSecured() &&*/ requestIdle) {
+        //   state = Superstates.IDLE;
+        // }
         break;
       case SCORE:
         claw.requestShoot();
 
-        if (!claw.coralSecured() && requestIdle) {
-          state = Superstates.IDLE;
-        }
+        // if (
+        // /*!claw.coralSecured() &&*/ requestIdle) {
+        //   state = Superstates.IDLE;
+        // }
         break;
     }
   }

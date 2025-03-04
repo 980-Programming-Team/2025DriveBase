@@ -129,8 +129,8 @@ public final class Constants {
     public class Claw {
 
       public static final double feedVoltage = 0.22;
-      public static final double scoreL2Voltage = 0.65;
-      public static final double scoreVoltage = -0.65;
+      public static final double scoreL2Voltage = 0.85;
+      public static final double scoreVoltage = -0.85;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
           10.0; // Placeholder value, needs experimental determination
