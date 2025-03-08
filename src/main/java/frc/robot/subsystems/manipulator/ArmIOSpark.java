@@ -81,5 +81,17 @@ public class ArmIOSpark implements ArmIO {
   public void enableCoastMode(boolean enable) {
     armConfig.idleMode(IdleMode.kCoast);
     arm.configure(armConfig, null, PersistMode.kPersistParameters);
+
+    arm.clearFaults();
+    armConfig.disableFollowerMode();
+    armConfig.inverted(false);
+    armConfig.smartCurrentLimit(Constants.Manipulator.Arm.currentLimit);
+    armConfig.closedLoop.pid(
+        Constants.Manipulator.Arm.kP, Constants.Manipulator.Arm.kI, Constants.Manipulator.Arm.kD);
+
+    armConfig.closedLoop.outputRange(
+        Constants.Manipulator.Arm.minOutput, Constants.Manipulator.Arm.maxOutput);
+
+    arm.configure(armConfig, null, null);
   }
 }
