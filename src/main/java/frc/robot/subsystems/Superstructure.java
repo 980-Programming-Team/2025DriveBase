@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
@@ -25,6 +27,8 @@ public class Superstructure extends SubsystemBase {
 
   private Level level;
   // private Level prevLevel = Level.L2;
+
+  private DigitalInput beamBreak;
 
   public static enum Superstates {
     IDLE,
@@ -55,6 +59,7 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     Logger.recordOutput("Superstructure/State", state.toString());
     Logger.recordOutput("Superstructure/Level", level.toString());
     switch (state) {
@@ -65,28 +70,28 @@ public class Superstructure extends SubsystemBase {
         claw.requestIdle();
         candle.SetLEDGreen();
 
-        if (requestFeed /*&& !claw.hasCoral() && elevator.atSetpoint()*/) {
-          state = Superstates.FEEDING;
-        } else if (requestPreScore) {
-          state = Superstates.PRE_SCORE;
-        } else if (requestClimbReady) {
-          state = Superstates.CLIMB_READY;
-        }
-        break;
-      case FEEDING:
-        elevator.requestHeight(0);
-        arm.requestPosition(0.03588729351758957);
-        funnel.requestFeed();
-        claw.requestFeed();
+        //   if (requestFeed /*&& !claw.hasCoral() && elevator.atSetpoint()*/) {
+        //     state = Superstates.FEEDING;
+        //   } else if (requestPreScore) {
+        //     state = Superstates.PRE_SCORE;
+        //   } else if (requestClimbReady) {
+        //     state = Superstates.CLIMB_READY;
+        //   }
+        //   break;
+        // case FEEDING:
+        //   elevator.requestHeight(0);
+        //   // arm.requestPosition(-.0175);
+        //   funnel.requestFeed();
+        //   claw.requestFeed();
 
-        if (claw.hasCoral()) {
-          if (claw.coralSecured()) {
-            state = Superstates.IDLE;
-            unsetAllRequests(); // account for automation from sensor triggers
-          }
-        } else if (requestIdle) {
-          state = Superstates.IDLE;
-        }
+        // if (claw.hasCoral()) {
+        //   if (claw.coralSecured()) {
+        //     state = Superstates.IDLE;
+        //     unsetAllRequests(); // account for automation from sensor triggers
+        //   }
+        // } else if (requestIdle) {
+        //   state = Superstates.IDLE;
+        // }
         break;
       case PRE_SCORE: // 13 inches away from reef for L2
         if (level == Level.L2) {
@@ -158,6 +163,11 @@ public class Superstructure extends SubsystemBase {
       case DISABLED:
         arm.enableCoastMode(true);
         break;
+      default:
+        claw.io.setClawSpeed(0);
+        funnel.io.set(0);
+        unsetAllRequests();
+        requestIdle();
     }
   }
 
@@ -226,5 +236,19 @@ public class Superstructure extends SubsystemBase {
 
   public boolean pieceSecured() {
     return claw.coralSecured();
+  }
+
+  // manual override
+  public void intakeCoral() {
+    elevator.requestHeight(0);
+    // // arm.requestPosition(-.0175);
+    // funnel.requestFeed();
+    // claw.requestFeed();
+
+    unsetAllRequests();
+    state = Superstates.FEEDING;
+
+    funnel.io.set(Constants.Funnel.feedSpeed);
+    claw.io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed);
   }
 }

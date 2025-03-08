@@ -6,6 +6,7 @@ public interface ClawIO {
   @AutoLog
   public static class ClawIOInputs {
     public boolean kClawConnected = false;
+    public boolean kBeamBreak = false;
     public double clawAppliedVoltage = 0.0;
     public double supplyClawCurrentAmps = 0.0;
     public double clawTempCelsius = 0.0;

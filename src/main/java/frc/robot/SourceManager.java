@@ -44,10 +44,13 @@ public class SourceManager {
                     AllianceFlipUtil.apply(FieldConstants.CoralStation.rightCenterFace),
                     RobotContainer.constraints,
                     0));
-    driver.leftBumper().onTrue(new InstantCommand(
-                () -> {
-                  superStructure.requestFeed();
-                })
-            .ignoringDisable(true));
+    driver
+        .leftBumper()
+        .whileTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.intakeCoral();
+                    })
+                .ignoringDisable(true));
   }
 }

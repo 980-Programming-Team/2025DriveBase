@@ -6,15 +6,20 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.constants.Constants;
 
 public class ClawIOSpark implements ClawIO {
   private SparkBase claw;
   private SparkMaxConfig clawConfig;
 
+  private DigitalInput beamBreak;
+
   public ClawIOSpark() {
     claw = new SparkMax(Constants.Manipulator.kClaw, MotorType.kBrushless);
     clawConfig = new SparkMaxConfig();
+
+    beamBreak = new DigitalInput(0);
 
     configureClaw(claw, clawConfig);
   }
@@ -33,6 +38,7 @@ public class ClawIOSpark implements ClawIO {
     inputs.clawSpeedRotationsPerSec = claw.getEncoder().getVelocity();
     inputs.supplyClawCurrentAmps = claw.getOutputCurrent();
     inputs.clawTempCelsius = claw.getMotorTemperature();
+    inputs.kBeamBreak = beamBreak.get();
     // inputs.frontBeamBreakTriggered =
     //     beamBreak.getProximity() < Constants.Arm.proximityDetectionThreshold;
   }

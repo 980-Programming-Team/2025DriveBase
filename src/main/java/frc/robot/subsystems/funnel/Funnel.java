@@ -2,18 +2,12 @@ package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
-import frc.robot.subsystems.manipulator.Claw.ClawStates;
-
 import org.littletonrobotics.junction.Logger;
-
-import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.Idle;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
@@ -65,18 +59,17 @@ public class Funnel extends SubsystemBase {
       case IDLE:
         io.stop();
 
-        if (requestFeed)
-        {
+        if (requestFeed) {
           state = FunnelStates.FEED;
         }
 
         break;
       case FEED:
-        io.setIntakeVoltage(Constants.Funnel.feedSpeed);  
+        io.set(Constants.Funnel.feedSpeed);
 
         if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 2 || requestIdle) {
+        if (feedTimer.get() >= 1 || requestIdle) {
           state = FunnelStates.IDLE;
           feedTimer.stop();
           feedTimer.reset();
@@ -89,15 +82,12 @@ public class Funnel extends SubsystemBase {
     intakeMissingAlert.set(!inputs.kIntakeConnected && Constants.currentMode != Mode.SIM);
   }
 
-  
-  public void requestFeed()
-  {
+  public void requestFeed() {
     requestIdle = false;
     requestFeed = true;
   }
 
-  public void requestIdle()
-  {
+  public void requestIdle() {
     requestFeed = false;
     requestIdle = true;
   }

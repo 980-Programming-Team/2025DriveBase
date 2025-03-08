@@ -130,19 +130,19 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.22;
+      public static final double feedSpeed = 0.5;
       public static final double scoreL2Speed = 0.85;
       public static final double scoreVoltage = -0.85;
       public static final double scoreSpeed = -0.75;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
-          1.0; // Placeholder value, needs experimental determination
+          27.0; // Placeholder value, needs experimental determination
     }
   }
 
   public class Funnel {
 
-    public static final double feedSpeed = .5;
+    public static final double feedSpeed = .525;
 
     // NEO 550
     public static final int kFunnelIntake = 9;

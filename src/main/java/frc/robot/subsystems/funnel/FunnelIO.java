@@ -25,6 +25,8 @@ public interface FunnelIO {
 
   public default void setIntakeVoltage(double voltage) {}
 
+  public default void set(double speed) {}
+
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}

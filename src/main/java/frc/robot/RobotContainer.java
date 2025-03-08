@@ -83,7 +83,7 @@ public class RobotContainer {
       new Superstructure(elevator, arm, claw, funnel, candle);
 
   // Controllers
-  public static SourceManager driver = new SourceManager(0);
+  public static SourceManager driver = new SourceManager(0, superstructure);
 
   public static ScoringManager operatorBoard = new ScoringManager(1, 2, superstructure);
 

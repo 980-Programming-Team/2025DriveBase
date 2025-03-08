@@ -9,7 +9,7 @@ import frc.robot.constants.Constants.Mode;
 import org.littletonrobotics.junction.Logger;
 
 public class Claw extends SubsystemBase {
-  private ClawIO io;
+  public ClawIO io;
   private ClawIOInputsAutoLogged inputs;
 
   private final Alert clawMissingAlert;
@@ -73,7 +73,7 @@ public class Claw extends SubsystemBase {
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
-        if (shootTimer.get() >= 2 || requestIdle) {
+        if (shootTimer.get() >= 3 || requestIdle) {
           state = ClawStates.IDLE;
           shootTimer.stop();
           shootTimer.reset();
