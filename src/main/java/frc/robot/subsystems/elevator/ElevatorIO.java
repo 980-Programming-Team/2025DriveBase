@@ -24,9 +24,11 @@ public interface ElevatorIO {
 
   public default void setVoltage(double voltage) {}
 
-  public default void seedPosition(double motorPositionRot) {}
+  // public default void seedPosition(double motorPositionRot) {}
 
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}
+
+  public default void enableCoastMode(boolean enable) {}
 }

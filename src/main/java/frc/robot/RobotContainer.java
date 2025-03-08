@@ -22,10 +22,9 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.Superstructure;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOSpark;
-// import frc.robot.subsystems.Superstructure;
+// import frc.robot.subsystems.climber.Climber;
+// import frc.robot.subsystems.climber.ClimberIO;
+// import frc.robot.subsystems.climber.ClimberIOSpark;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -65,25 +64,23 @@ public class RobotContainer {
   private final Drive drive;
   private final Vision vision;
 
-  // CANdle
-  private final CANdleSystem m_candleSubsystem = new CANdleSystem();
-
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
   public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
   public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
-  public static ClimberIO climberIO =
-      Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
+  // public static ClimberIO climberIO =
+  // Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static Arm arm = new Arm(armIO);
   public static Claw claw = new Claw(clawIO);
   public static Funnel funnel = new Funnel(funnelIO);
-  public static Climber climber = new Climber(climberIO);
+  // public static Climber climber = new Climber(climberIO);
+  private static CANdleSystem candle = new CANdleSystem();
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, claw, funnel, climber);
+      new Superstructure(elevator, arm, claw, funnel, candle);
 
   // Controllers
   public static SourceManager driver = new SourceManager(0);
@@ -97,6 +94,7 @@ public class RobotContainer {
   private final JoystickButton testButton2 = new JoystickButton(testJoystick, 3);
   private final JoystickButton testButton3 = new JoystickButton(testJoystick, 2);
   private final JoystickButton testButton8 = new JoystickButton(testJoystick, 8);
+  private final JoystickButton testButton12 = new JoystickButton(testJoystick, 12);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -243,8 +241,8 @@ public class RobotContainer {
     testButton.onTrue(
         new InstantCommand(
                 () -> {
-                  superstructure.requestPreScore();
                   superstructure.requestLevel(2);
+                  superstructure.requestPreScore();
                 })
             .ignoringDisable(true));
     testButton2.onTrue(
@@ -267,6 +265,13 @@ public class RobotContainer {
         new InstantCommand(
                 () -> {
                   superstructure.requestScore();
+                })
+            .ignoringDisable(true));
+
+    testButton12.onTrue(
+        new InstantCommand(
+                () -> {
+                  superstructure.requestClimbReady();
                 })
             .ignoringDisable(true));
   }
@@ -506,5 +511,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public void disabledInit() {
+    superstructure.requestDisable();
   }
 }

@@ -3,7 +3,7 @@ package frc.robot.subsystems.manipulator;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -14,34 +14,30 @@ import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private SparkBase arm;
-  private SparkClosedLoopController armPIDController;
-  private RelativeEncoder armEncoder;
+  private RelativeEncoder encoder;
 
   private SparkMaxConfig armConfig;
 
-  private double targetPosition;
-
   public ArmIOSpark() {
-    armConfig = new SparkMaxConfig();
     arm = new SparkMax(Constants.Manipulator.kArm, MotorType.kBrushless);
 
-    configureArm(arm, armConfig);
+    armConfig = new SparkMaxConfig();
 
-    armPIDController = arm.getClosedLoopController();
-    armEncoder = arm.getEncoder();
+    configureArm(arm, armConfig);
   }
 
   private void configureArm(SparkBase motor, SparkBaseConfig config) {
+
+    encoder = motor.getEncoder();
+    encoder.setPosition(0);
+
+    motor.clearFaults();
     config.disableFollowerMode();
     config.inverted(false);
     config.smartCurrentLimit(Constants.Manipulator.Arm.currentLimit);
     config.idleMode(IdleMode.kBrake);
-
-    config.closedLoop.pidf(
-        Constants.Manipulator.Arm.kP,
-        Constants.Manipulator.Arm.kI,
-        Constants.Manipulator.Arm.kD,
-        Constants.Manipulator.Arm.kFF);
+    config.closedLoop.pid(
+        Constants.Manipulator.Arm.kP, Constants.Manipulator.Arm.kI, Constants.Manipulator.Arm.kD);
 
     config.closedLoop.outputRange(
         Constants.Manipulator.Arm.minOutput, Constants.Manipulator.Arm.maxOutput);
@@ -53,34 +49,37 @@ public class ArmIOSpark implements ArmIO {
   public void updateInputs(ArmIOInputs inputs) {
     inputs.kArmConnected = (arm.getFirmwareVersion() != 0);
     inputs.armAppliedVoltage = arm.getBusVoltage();
-    inputs.armPosMotorRotations = arm.getEncoder().getPosition();
+    inputs.pos = arm.getEncoder().getPosition();
     inputs.supplyArmCurrentAmps = arm.getOutputCurrent();
-    inputs.armTempCelsius = arm.getMotorTemperature();
-    inputs.armVelocity = arm.getEncoder().getVelocity();
+    inputs.velMetersPerSecond = arm.getEncoder().getVelocity();
   }
 
   @Override
-  public void setArmPosition(double mechanismRotations) {
-    targetPosition = mechanismRotations; // Constants.Elevator.gearRatio;
-    armPIDController.setReference(targetPosition, ControlType.kPosition);
+  public void setArmPosition(double targetPosition) {
+    arm.getClosedLoopController().setReference(targetPosition, ControlType.kPosition);
 
     Logger.recordOutput("Manipulator/Arm/TargetPosition", targetPosition);
-    Logger.recordOutput("Manipulator/Arm/MechanismRotations", mechanismRotations);
-
-    // Stop the motor when the target position is reached
-    if ((arm.getEncoder().getPosition() - targetPosition)
-        > Constants.Elevator.setpointToleranceMeters) {
-      arm.stopMotor();
-    }
   }
 
-  @Override
-  public void seedPivotPosition(double newPositionMechanismRot) {
-    armEncoder.setPosition(newPositionMechanismRot * Constants.Manipulator.Arm.motorGearRatio);
-  }
+  // @Override
+  // public void seedPivotPosition(double newPositionMechanismRot) {
+  //   armEncoder.setPosition(newPositionMechanismRot * Constants.Manipulator.Arm.motorGearRatio);
+  // }
 
   @Override
   public void stop() {
     arm.stopMotor();
+  }
+
+  @Override
+  public void enableBrakeMode(boolean enable) {
+    armConfig.idleMode(IdleMode.kBrake);
+    arm.configure(armConfig, null, null);
+  }
+
+  @Override
+  public void enableCoastMode(boolean enable) {
+    armConfig.idleMode(IdleMode.kCoast);
+    arm.configure(armConfig, null, PersistMode.kPersistParameters);
   }
 }

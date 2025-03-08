@@ -65,7 +65,7 @@ public class Claw extends SubsystemBase {
         }
         break;
       case FEED:
-        io.setClawVoltage(Constants.Manipulator.Claw.feedVoltage);
+        io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed);
 
         // if (coralSecured()) {
         //   state = ClawStates.IDLE;
@@ -74,15 +74,15 @@ public class Claw extends SubsystemBase {
         // }
         break;
       case SHOOTL2:
-        io.setClawVoltage(Constants.Manipulator.Claw.scoreL2Voltage);
+        io.setClawSpeed(Constants.Manipulator.Claw.scoreL2Speed);
 
         // if (!coralSecured()) {
         //   state = ClawStates.IDLE;
         // }
         break;
       case SHOOT:
-        io.setClawVoltage(Constants.Manipulator.Claw.scoreVoltage);
-
+        // io.setClawVoltage(Constants.Manipulator.Claw.scoreVoltage);
+        io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed);
         // if (!coralSecured()) {
         //   state = ClawStates.IDLE;
         // }

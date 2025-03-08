@@ -20,11 +20,8 @@ public class Elevator extends SubsystemBase {
   private double setpoint;
   private ElevatorStates state;
 
-  // private Timer homingTimer;
-
   public enum ElevatorStates {
     STARTING_CONFIG,
-    HOMING,
     REQUEST_SETPOINT
   }
 
@@ -38,32 +35,19 @@ public class Elevator extends SubsystemBase {
 
     setpoint = 0;
     state = ElevatorStates.STARTING_CONFIG;
-
-    // homingTimer = new Timer();
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Elevator", inputs);
+    Logger.recordOutput("Elevator/State", state.toString());
     Logger.recordOutput("Elevator/Setpoint", setpoint);
 
     switch (state) {
       case STARTING_CONFIG:
         if (DriverStation.isEnabled()) {
-          state = ElevatorStates.HOMING;
+          state = ElevatorStates.REQUEST_SETPOINT;
         }
-        break;
-      case HOMING:
-        // homingTimer.start();
-        // io.setVoltage(Constants.Elevator.homingVoltage);
-        // if (homingTimer.hasElapsed(Constants.Elevator.homingThresholdSec)
-        // && Math.abs(inputs.velMetersPerSecond) < Constants.Elevator.homingVelocityThreshold) {
-        // io.setVoltage(0);
-        // io.seedPosition(0);
-        // homingTimer.stop();
-        // homingTimer.reset();
-        state = ElevatorStates.REQUEST_SETPOINT;
-        // }
         break;
       case REQUEST_SETPOINT:
         if (setpoint != 0.0) {
@@ -91,14 +75,6 @@ public class Elevator extends SubsystemBase {
   public boolean atSetpoint() {
     return Util.atReference(
         inputs.posMeters, setpoint, Constants.Elevator.setpointToleranceMeters, true);
-  }
-
-  public void setHomingState(boolean isHomed) {
-    state = isHomed ? ElevatorStates.REQUEST_SETPOINT : ElevatorStates.HOMING;
-  }
-
-  public void seedPosition(double motorRotations) {
-    io.seedPosition(motorRotations);
   }
 
   public void enableBrakeMode(boolean enable) {

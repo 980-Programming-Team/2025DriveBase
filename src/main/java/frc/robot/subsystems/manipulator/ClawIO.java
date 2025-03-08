@@ -16,6 +16,8 @@ public interface ClawIO {
 
   public default void setClawVoltage(double voltage) {}
 
+  public default void setClawSpeed(double speed) {}
+
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}

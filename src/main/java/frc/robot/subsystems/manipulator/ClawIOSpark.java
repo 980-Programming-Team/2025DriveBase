@@ -20,9 +20,8 @@ public class ClawIOSpark implements ClawIO {
   }
 
   private void configureClaw(SparkBase motor, SparkBaseConfig config) {
-    config.disableFollowerMode();
+    motor.clearFaults();
     config.inverted(true);
-    config.smartCurrentLimit(Constants.Manipulator.Claw.currentLimit);
     config.idleMode(IdleMode.kBrake);
     motor.configure(config, null, null);
   }
@@ -38,8 +37,9 @@ public class ClawIOSpark implements ClawIO {
     //     beamBreak.getProximity() < Constants.Arm.proximityDetectionThreshold;
   }
 
-  public void setClawVoltage(double voltage) {
-    claw.setVoltage(voltage);
+  @Override
+  public void setClawSpeed(double speed) {
+    claw.set(speed);
   }
 
   @Override

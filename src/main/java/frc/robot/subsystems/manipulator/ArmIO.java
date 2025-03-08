@@ -8,18 +8,19 @@ public interface ArmIO {
     public boolean kArmConnected = false;
     public double armAppliedVoltage = 0.0;
     public double supplyArmCurrentAmps = 0.0;
-    public double armTempCelsius = 0.0;
-    public double armVelocity = 0.0;
-    public double armPosMotorRotations = 0.0;
+    public double pos = 0.0;
+    public double velMetersPerSecond = 0.0;
   }
 
   public default void updateInputs(ArmIOInputs inputs) {}
 
-  public default void setArmPosition(double mechanismRotations) {}
+  public default void setArmPosition(double targetPosition) {}
 
-  public default void seedPivotPosition(double newPositionMechanismRot) {}
+  // public default void seedPivotPosition(double newPositionMechanismRot) {}
 
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}
+
+  public default void enableCoastMode(boolean enable) {}
 }

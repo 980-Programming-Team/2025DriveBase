@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj.RobotBase;
  * (log replay from a file).
  */
 public final class Constants {
+
+  public static final boolean tuningMode = false;
+
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
@@ -36,7 +39,7 @@ public final class Constants {
   public static final boolean beamBreaksEnabled = false;
 
   public static final double NEO_FREE_SPEED = 6000.0; // TODO find the real free speed
-  public static final int LED_NUM = 68; // TODO: Determine number of leds
+  public static final int LED_NUM = 105; // TODO: Determine number of leds
 
   public class Elevator {
 
@@ -56,8 +59,8 @@ public final class Constants {
 
     public static final int supplyCurrentLimit = 40;
 
-    public static final double peakForward = 1;
-    public static final double peakReverse = -1;
+    public static final double maxOutput = 1;
+    public static final double minOutput = -1;
 
     public static final double mechanismMaxAccel = 3.3274;
     public static final double mechanismMaxCruiseVel = 1.597152;
@@ -95,10 +98,9 @@ public final class Constants {
       public static final double l4SetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.05;
 
-      public static final double kP = 0.4;
+      public static final double kP = 3.0;
       public static final double kI = 0.0;
-      public static final double kD = 0.05;
-      public static final double kFF = 0.0;
+      public static final double kD = 0.0;
       public static final double minOutput = -0.5;
       public static final double maxOutput = 0.5;
 
@@ -128,12 +130,13 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedVoltage = 0.22;
-      public static final double scoreL2Voltage = 0.85;
+      public static final double feedSpeed = 0.22;
+      public static final double scoreL2Speed = 0.85;
       public static final double scoreVoltage = -0.85;
+      public static final double scoreSpeed = -0.75;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
-          10.0; // Placeholder value, needs experimental determination
+          1.0; // Placeholder value, needs experimental determination
     }
   }
 
@@ -158,7 +161,7 @@ public final class Constants {
       public static final double kP = 0.125;
       public static final double kI = 0.0;
       public static final double kD = 0.025;
-      public static final double kFF = 0.0;
+      // public static final double kFF = 0.0;
       public static final double minOutput = -0.2;
       public static final double maxOutput = 0.2;
 
@@ -191,6 +194,9 @@ public final class Constants {
     public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
     public static final double setpointToleranceMeters = 0.01;
     public static final int supplyCurrentLimit = 40;
+
+    public static final double minOutput = -0.2;
+    public static final double maxOutput = 0.2;
 
     public static final double stowedPoistion = 0;
     public static final double climbingPosition = 20; // TODO find real position

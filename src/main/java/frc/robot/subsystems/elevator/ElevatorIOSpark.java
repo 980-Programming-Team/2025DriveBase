@@ -3,7 +3,6 @@ package frc.robot.subsystems.elevator;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -15,18 +14,13 @@ import org.littletonrobotics.junction.Logger;
 
 public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
-  private SparkClosedLoopController leaderPIDController;
-  // private PIDController leaPidController;
   private SparkBase follower;
+
   // private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
 
   private SparkMaxConfig leaderConfig;
   private SparkMaxConfig followerConfig;
-
-  private double targetPosition;
-
-  // private ClosedLoopSlot slot2;
 
   public ElevatorIOSpark() {
     leader =
@@ -47,8 +41,6 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
-
-    leaderPIDController = leader.getClosedLoopController();
   }
 
   private void configureLeader(SparkBase motor, SparkBaseConfig config) {
@@ -56,27 +48,26 @@ public class ElevatorIOSpark implements ElevatorIO {
     encoder = motor.getEncoder();
     encoder.setPosition(0);
 
-    // config.disableFollowerMode();
+    motor.clearFaults();
     config.idleMode(IdleMode.kBrake);
     config.inverted(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
     config.closedLoop.pid(3, 0, 0.0);
-    config.closedLoop.outputRange(Constants.Elevator.peakReverse, Constants.Elevator.peakForward);
+    config.closedLoop.outputRange(Constants.Elevator.minOutput, Constants.Elevator.maxOutput);
 
     motor.configure(config, null, null);
   }
 
   private void configureFollower(SparkBase motor, SparkBaseConfig config) {
 
+    motor.clearFaults();
     config.follow(leader, true);
     config.idleMode(IdleMode.kBrake);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.limitSwitch.forwardLimitSwitchEnabled(false);
     config.smartCurrentLimit(Constants.Elevator.supplyCurrentLimit);
-    // config.closedLoop.outputRange(Constants.Elevator.peakReverse,
-    // Constants.Elevator.peakReverse);
 
     motor.configure(config, null, null);
   }
@@ -110,10 +101,10 @@ public class ElevatorIOSpark implements ElevatorIO {
     follower.setVoltage(voltage);
   }
 
-  @Override
-  public void seedPosition(double motorPositionRot) {
-    encoder.setPosition(motorPositionRot);
-  }
+  // @Override
+  // public void seedPosition(double motorPositionRot) {
+  //   encoder.setPosition(motorPositionRot);
+  // }
 
   @Override
   public void stop() {
@@ -121,18 +112,16 @@ public class ElevatorIOSpark implements ElevatorIO {
     follower.stopMotor();
   }
 
-  // if (leader.getEncoder().getPosition() > targetPosition) {
-  //   leader.set(-.5);
-  //   // follower.set(5);
-  // } else {
-  //   leader.set(0);
-  //   // follower.set(0);
-  // }
-
   @Override
   public void enableBrakeMode(boolean enable) {
     leaderConfig.idleMode(IdleMode.kBrake);
     followerConfig.idleMode(IdleMode.kBrake);
+  }
+
+  @Override
+  public void enableCoastMode(boolean enable) {
+    leaderConfig.idleMode(IdleMode.kCoast);
+    followerConfig.idleMode(IdleMode.kCoast);
   }
 
   // private double metersToRotations(double heightMeters) {
