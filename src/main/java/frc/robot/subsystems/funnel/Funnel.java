@@ -3,11 +3,17 @@ package frc.robot.subsystems.funnel;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.subsystems.manipulator.Claw.ClawStates;
+
 import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.Idle;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
@@ -21,10 +27,14 @@ public class Funnel extends SubsystemBase {
   private double setpoint;
   private FunnelStates state;
 
+  private boolean requestIdle;
+  private boolean requestFeed;
+
+  private Timer feedTimer;
+
   public enum FunnelStates {
-    STARTING_CONFIG,
-    FEED,
-    REQUEST_SETPOINT
+    IDLE,
+    FEED
   }
 
   public Funnel(FunnelIO funnelIO) {
@@ -36,7 +46,13 @@ public class Funnel extends SubsystemBase {
     intakeMissingAlert = new Alert("Disconnected Intake Motor", AlertType.kError);
 
     setpoint = 0;
-    state = FunnelStates.STARTING_CONFIG;
+    state = FunnelStates.IDLE;
+    requestIdle = true;
+    requestFeed = false;
+
+    feedTimer = new Timer();
+    feedTimer.stop();
+    feedTimer.reset();
   }
 
   public void periodic() {
@@ -46,22 +62,44 @@ public class Funnel extends SubsystemBase {
     Logger.recordOutput("Funnel/Setpoint", setpoint);
 
     switch (state) {
-      case STARTING_CONFIG:
-        if (DriverStation.isEnabled()) {
-          state = FunnelStates.REQUEST_SETPOINT;
+      case IDLE:
+        io.stop();
+
+        if (requestFeed)
+        {
+          state = FunnelStates.FEED;
         }
+
         break;
       case FEED:
-        break;
-      case REQUEST_SETPOINT:
-        if (setpoint != 0.0) {
-          io.setPosition(setpoint);
+        io.setIntakeVoltage(Constants.Funnel.feedSpeed);  
+
+        if (feedTimer.get() <= 0) feedTimer.start();
+
+        if (feedTimer.get() >= 2 || requestIdle) {
+          state = FunnelStates.IDLE;
+          feedTimer.stop();
+          feedTimer.reset();
+          requestIdle();
         }
         break;
     }
 
     pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);
     intakeMissingAlert.set(!inputs.kIntakeConnected && Constants.currentMode != Mode.SIM);
+  }
+
+  
+  public void requestFeed()
+  {
+    requestIdle = false;
+    requestFeed = true;
+  }
+
+  public void requestIdle()
+  {
+    requestFeed = false;
+    requestIdle = true;
   }
 
   public void requestPosition(double position) {

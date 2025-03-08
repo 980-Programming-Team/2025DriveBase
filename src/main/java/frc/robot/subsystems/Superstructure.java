@@ -65,7 +65,7 @@ public class Superstructure extends SubsystemBase {
         claw.requestIdle();
         candle.SetLEDGreen();
 
-        if (requestFeed && !claw.hasCoral() && elevator.atSetpoint()) {
+        if (requestFeed /*&& !claw.hasCoral() && elevator.atSetpoint()*/) {
           state = Superstates.FEEDING;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
@@ -76,6 +76,7 @@ public class Superstructure extends SubsystemBase {
       case FEEDING:
         elevator.requestHeight(0);
         arm.requestPosition(0.03588729351758957);
+        funnel.requestFeed();
         claw.requestFeed();
 
         if (claw.hasCoral()) {

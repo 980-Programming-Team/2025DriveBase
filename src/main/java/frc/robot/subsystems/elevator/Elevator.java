@@ -73,8 +73,7 @@ public class Elevator extends SubsystemBase {
   }
 
   public boolean atSetpoint() {
-    return Util.atReference(
-        inputs.posMeters, setpoint, Constants.Elevator.setpointToleranceMeters, true);
+    return Util.atReference(inputs.pos, setpoint, Constants.Elevator.setpointToleranceMeters, true);
   }
 
   public void enableBrakeMode(boolean enable) {

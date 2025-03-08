@@ -2,7 +2,7 @@ package frc.robot.subsystems.manipulator;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-// import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
@@ -22,7 +22,7 @@ public class Claw extends SubsystemBase {
   private boolean coralSecured;
   private ClawStates state;
 
-  // private Timer shootTimer;
+  private Timer shootTimer;
   // private Timer homingTimer;
 
   public enum ClawStates {
@@ -38,7 +38,9 @@ public class Claw extends SubsystemBase {
     inputs = new ClawIOInputsAutoLogged();
     clawMissingAlert = new Alert("Disconnected Claw Motor", AlertType.kError);
     state = ClawStates.IDLE;
-    // shootTimer = new Timer();
+    shootTimer = new Timer();
+    shootTimer.stop();
+    shootTimer.reset();
     // homingTimer = new Timer();
   }
 
@@ -46,46 +48,61 @@ public class Claw extends SubsystemBase {
     io.updateInputs(inputs);
     Logger.processInputs("Manipulator", inputs);
     Logger.recordOutput("Manipulator/Coral Detection", hasCoral());
+    Logger.recordOutput("Manipulator/Timer", shootTimer.get());
+    Logger.recordOutput("Manipulator/ClawState", state.toString());
 
     switch (state) {
       case IDLE:
         io.stop();
 
-        // // reset coral secured in cases where coral is removed manually from robot
-        // if (!hasCoral()) {
-        //   coralSecured = false;
-        // }
+        // reset coral secured in cases where coral is removed manually from robot
+        if (!hasCoral()) {
+          coralSecured = false;
+        }
 
-        if (requestFeed /*&& !coralSecured()*/) {
+        if (requestFeed && shootTimer.get() <= 0 /*&& !coralSecured()*/) {
           state = ClawStates.FEED;
-        } else if (requestShoot /*&& coralSecured*/) {
+        } else if (requestShoot && shootTimer.get() <= 0 /*&& coralSecured*/) {
           state = ClawStates.SHOOT;
-        } else if (requestShootL2 /*&& coralSecured/* */) {
+        } else if (requestShootL2 && shootTimer.get() <= 0 /*&& coralSecured/* */) {
           state = ClawStates.SHOOTL2;
         }
         break;
       case FEED:
         io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed);
 
-        // if (coralSecured()) {
-        //   state = ClawStates.IDLE;
-        // } else if (requestIdle) {
-        //   state = ClawStates.IDLE;
-        // }
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 2 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
         break;
       case SHOOTL2:
         io.setClawSpeed(Constants.Manipulator.Claw.scoreL2Speed);
 
-        // if (!coralSecured()) {
-        //   state = ClawStates.IDLE;
-        // }
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 2 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
         break;
       case SHOOT:
-        // io.setClawVoltage(Constants.Manipulator.Claw.scoreVoltage);
         io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed);
-        // if (!coralSecured()) {
-        //   state = ClawStates.IDLE;
-        // }
+
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 2 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
         break;
     }
 

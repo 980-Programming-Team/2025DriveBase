@@ -79,6 +79,7 @@
     "cameraspace",
     "Canandmag",
     "capturesnapshot",
+    "Compoenent",
     "Fidcuial",
     "Fiducials",
     "getpipe",
@@ -114,10 +115,13 @@
     "tcclass",
     "tclass",
     "tdclass",
+    "teleop",
     "txnc",
     "tync",
+    "Uncomitted",
     "wpiblue",
     "wpilibj",
+    "WPILOG",
     "wpired"
   ]
 }
