@@ -513,7 +513,5 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
-  public void disabledInit() {
-    superstructure.requestDisable();
-  }
+  public void disabledInit() {}
 }

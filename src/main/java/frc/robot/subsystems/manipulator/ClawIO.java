@@ -9,8 +9,8 @@ public interface ClawIO {
     public boolean kBeamBreak = false;
     public double clawAppliedVoltage = 0.0;
     public double supplyClawCurrentAmps = 0.0;
+    public double clawVel = 0.0;
     public double clawTempCelsius = 0.0;
-    public double clawSpeedRotationsPerSec = 0.0;
   }
 
   public default void updateInputs(ClawIOInputs inputs) {}

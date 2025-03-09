@@ -79,18 +79,31 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case FEEDING:
-        elevator.requestHeight(0);
-        // arm.requestPosition(-.0175);
+        elevator.requestHeight(-0.045);
+        arm.requestPosition(0.025);
         funnel.requestFeed();
         claw.requestFeed();
 
-        if (claw.hasCoral()) {
-          if (claw.coralSecured()) {
-            state = Superstates.IDLE;
-            unsetAllRequests(); // account for automation from sensor triggers
-          }
-        } else if (requestIdle) {
+        candle.SetLEDYellow();
+
+        if (requestIdle) {
           state = Superstates.IDLE;
+        } else if (level == Level.L2
+            && (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/)) {
+          state = Superstates.SCOREL2;
+        } else if (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/) {
+          state = Superstates.SCORE;
+        } else if (requestPreScore) {
+          state = Superstates.PRE_SCORE;
+        }
+
+        if (claw.hasCoral()) {
+          // if (claw.coralSecured()) {
+          state = Superstates.IDLE;
+          unsetAllRequests(); // account for automation from sensor triggers
+          // }
+          // } else if (requestIdle) {
+          //   state = Superstates.IDLE;
         }
         break;
       case PRE_SCORE: // 13 inches away from reef for L2
@@ -240,23 +253,32 @@ public class Superstructure extends SubsystemBase {
 
   // manual override
   public void intakeCoral(Trigger action) {
-    elevator.requestHeight(0.0001);
     // funnel.requestFeed();
     // claw.requestFeed();
-    
+
     action.onTrue(
-      new InstantCommand(
-        () -> {
-                  arm.requestPosition(-.0125);
-                  funnel.io.set(.55);
-                  claw.io.setClawSpeed(.35);
+        new InstantCommand(
+                () -> {
+                  // //   elevator.requestHeight(0.0001);
+                  // arm.requestPosition(-.0125);
+                  // funnel.io.set(.65);
+                  // claw.requestFeed();
+
+                  // candle.SetLEDYellow();
+
+                  if (elevator.getHeight() < .5) {
+                    requestFeed();
+                  }
                 })
             .ignoringDisable(true));
     action.onFalse(
         new InstantCommand(
                 () -> {
-                  funnel.io.set(0);
-                  claw.io.setClawSpeed(0);
+                  // funnel.io.set(0);
+                  // claw.requestIdle();
+
+                  funnel.requestIdle();
+                  requestIdle();
                 })
             .ignoringDisable(true));
   }

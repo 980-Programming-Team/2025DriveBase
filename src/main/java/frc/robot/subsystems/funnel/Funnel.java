@@ -57,7 +57,8 @@ public class Funnel extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.stop();
+        // io.stop();
+        io.set(0);
 
         if (requestFeed) {
           state = FunnelStates.FEED;
@@ -69,7 +70,7 @@ public class Funnel extends SubsystemBase {
 
         if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 1 || requestIdle) {
+        if (feedTimer.get() >= 1.5 || requestIdle) {
           state = FunnelStates.IDLE;
           feedTimer.stop();
           feedTimer.reset();

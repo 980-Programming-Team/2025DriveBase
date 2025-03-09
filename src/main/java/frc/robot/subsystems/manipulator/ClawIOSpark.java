@@ -34,7 +34,7 @@ public class ClawIOSpark implements ClawIO {
   public void updateInputs(ClawIOInputs inputs) {
     inputs.kClawConnected = (claw.getFirmwareVersion() != 0);
     inputs.clawAppliedVoltage = claw.getBusVoltage();
-    inputs.clawSpeedRotationsPerSec = claw.getEncoder().getVelocity();
+    inputs.clawVel = claw.getEncoder().getVelocity();
     inputs.supplyClawCurrentAmps = claw.getOutputCurrent();
     inputs.clawTempCelsius = claw.getMotorTemperature();
     // inputs.kBeamBreak = beamBreak.get();

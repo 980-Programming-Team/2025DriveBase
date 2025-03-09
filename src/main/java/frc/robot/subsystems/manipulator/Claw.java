@@ -111,8 +111,8 @@ public class Claw extends SubsystemBase {
 
   public boolean hasCoral() {
     // Assuming resistance can be inferred from the current draw
-    double currentDraw = inputs.supplyClawCurrentAmps;
-    return currentDraw > Constants.Manipulator.Claw.coralDetectionCurrentThreshold;
+    double currentDraw = inputs.clawVel;
+    return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold;
 
     //    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
   }
