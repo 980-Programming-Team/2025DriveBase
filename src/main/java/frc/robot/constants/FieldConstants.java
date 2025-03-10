@@ -58,7 +58,7 @@ public class FieldConstants {
         Units.inchesToMeters(12); // Side of the reef to the inside of the reef zone line
 
     public static final Pose2d[] centerFaces =
-        new Pose2d[6]; // Starting facing the driver station in clockwise order
+        new Pose2d[12]; // Starting facing the driver station in clockwise order
     public static final List<Map<ReefLevel, Pose3d>> branchPositions =
         new ArrayList<>(); // Starting at the right branch facing the driver station in clockwise
 
@@ -71,25 +71,55 @@ public class FieldConstants {
               Rotation2d.fromDegrees(0));
       centerFaces[1] =
           new Pose2d(
-              Units.inchesToMeters(151.373),
-              Units.inchesToMeters(213.857),
-              Rotation2d.fromDegrees(-60));
+              Units.inchesToMeters(120.003),
+              Units.inchesToMeters(152.500),
+              Rotation2d.fromDegrees(0));
       centerFaces[2] =
           new Pose2d(
-              Units.inchesToMeters(213.116),
-              Units.inchesToMeters(206.858),
-              Rotation2d.fromDegrees(-120));
+              Units.inchesToMeters(154.116),
+              Units.inchesToMeters(212.858),
+              Rotation2d.fromDegrees(-60));
       centerFaces[3] =
           new Pose2d(
-              Units.inchesToMeters(235.489),
-              Units.inchesToMeters(150.502),
-              Rotation2d.fromDegrees(180));
+              Units.inchesToMeters(132.489),
+              Units.inchesToMeters(202.502),
+              Rotation2d.fromDegrees(-60));
       centerFaces[4] =
           new Pose2d(
               Units.inchesToMeters(200.118),
-              Units.inchesToMeters(105.145),
-              Rotation2d.fromDegrees(120));
+              Units.inchesToMeters(213.145),
+              Rotation2d.fromDegrees(-120)); // -120 180 120 60
       centerFaces[5] =
+          new Pose2d(
+              Units.inchesToMeters(212.118),
+              Units.inchesToMeters(203.145),
+              Rotation2d.fromDegrees(-120));
+      centerFaces[6] =
+          new Pose2d(
+              Units.inchesToMeters(235.375),
+              Units.inchesToMeters(152.144),
+              Rotation2d.fromDegrees(180));
+      centerFaces[7] =
+          new Pose2d(
+              Units.inchesToMeters(235.375),
+              Units.inchesToMeters(165.144),
+              Rotation2d.fromDegrees(180));
+      centerFaces[8] =
+          new Pose2d(
+              Units.inchesToMeters(200.118),
+              Units.inchesToMeters(120.145),
+              Rotation2d.fromDegrees(120));
+      centerFaces[9] =
+          new Pose2d(
+              Units.inchesToMeters(212.118),
+              Units.inchesToMeters(120.145),
+              Rotation2d.fromDegrees(120));
+      centerFaces[10] =
+          new Pose2d(
+              Units.inchesToMeters(145.375),
+              Units.inchesToMeters(110.144),
+              Rotation2d.fromDegrees(60));
+      centerFaces[11] =
           new Pose2d(
               Units.inchesToMeters(145.375),
               Units.inchesToMeters(110.144),

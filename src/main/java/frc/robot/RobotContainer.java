@@ -235,6 +235,7 @@ public class RobotContainer {
     driver.getDriver().b().whileTrue(pathFindToProcessor);
     driver.getDriver().x().whileTrue(pathFindToBC);
     driver.configScoringPosButtons();
+    operatorBoard.configScoringPosButtons();
 
     // operatorBoard.configScoringPosButtons();
 
