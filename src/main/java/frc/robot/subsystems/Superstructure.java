@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,7 +30,10 @@ public class Superstructure extends SubsystemBase {
   private Level level;
   // private Level prevLevel = Level.L2;
 
-  // private DigitalInput beamBreak;
+  private DigitalInput beamBreak;
+
+  private Timer feedingTimer;
+  private Timer pausedFeedingTimer;
 
   public static enum Superstates {
     IDLE,
@@ -55,17 +60,32 @@ public class Superstructure extends SubsystemBase {
 
     state = Superstates.IDLE;
     level = Level.L2;
+
+    feedingTimer = new Timer();
+    pausedFeedingTimer = new Timer();
+
+    feedingTimer.stop();
+    feedingTimer.reset();
+
+    pausedFeedingTimer.start();
+
+    beamBreak = new DigitalInput(0);
   }
 
   @Override
   public void periodic() {
 
+    Logger.recordOutput("Superstructure/FeedingTimer", feedingTimer.get());
+    Logger.recordOutput("Superstructure/PausedFeedingTimer", pausedFeedingTimer.get());
+
+    Logger.recordOutput("SuperStructure/BeamBreak", beamBreak.get());
+
     Logger.recordOutput("Superstructure/State", state.toString());
     Logger.recordOutput("Superstructure/Level", level.toString());
     switch (state) {
       case IDLE:
-        elevator.requestHeight(0.001);
-        arm.requestPosition(0.001);
+        elevator.requestHeight(-0.052);
+        arm.requestPosition(0.025);
         funnel.requestPosition(0.001);
         claw.requestIdle();
         candle.SetLEDGreen();
@@ -79,8 +99,10 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case FEEDING:
-        elevator.requestHeight(-0.045);
-        arm.requestPosition(0.025);
+        // elevator.requestHeight(-0.045);
+
+        arm.requestPosition(-.08);
+        elevator.requestHeight(-0.052);
         funnel.requestFeed();
         claw.requestFeed();
 
@@ -97,14 +119,22 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.PRE_SCORE;
         }
 
-        if (claw.hasCoral()) {
-          // if (claw.coralSecured()) {
+        // if (feedingTimer.get() >= 0.75 && claw.hasCoral()) {
+        //   /*|| (claw.hasCoral() && pausedFeedingTimer.get() >= .5 && pausedFeedingTimer.get() <=
+        // 1.5))*/
+        //   // if (claw.coralSecured()) {
+        //   state = Superstates.IDLE;
+        //   unsetAllRequests(); // account for automation from sensor triggers
+        //   // }
+        //   // } else if (requestIdle) {
+        //   //   state = Superstates.IDLE;
+        // }
+
+        if (beamBreak.get()) {
           state = Superstates.IDLE;
-          unsetAllRequests(); // account for automation from sensor triggers
-          // }
-          // } else if (requestIdle) {
-          //   state = Superstates.IDLE;
+          unsetAllRequests();
         }
+
         break;
       case PRE_SCORE: // 13 inches away from reef for L2
         if (level == Level.L2) {
@@ -176,11 +206,6 @@ public class Superstructure extends SubsystemBase {
       case DISABLED:
         arm.enableCoastMode(true);
         break;
-        // default:
-        //   claw.io.setClawSpeed(0);
-        //   funnel.io.set(0);
-        //   unsetAllRequests();
-        //   requestIdle();
     }
   }
 
@@ -253,18 +278,13 @@ public class Superstructure extends SubsystemBase {
 
   // manual override
   public void intakeCoral(Trigger action) {
-    // funnel.requestFeed();
-    // claw.requestFeed();
-
     action.onTrue(
         new InstantCommand(
                 () -> {
-                  // //   elevator.requestHeight(0.0001);
-                  // arm.requestPosition(-.0125);
-                  // funnel.io.set(.65);
-                  // claw.requestFeed();
+                  // pausedFeedingTimer.stop();
+                  // pausedFeedingTimer.reset();
 
-                  // candle.SetLEDYellow();
+                  // if (feedingTimer.get() <= 0) feedingTimer.start();
 
                   if (elevator.getHeight() < .5) {
                     requestFeed();
@@ -274,8 +294,10 @@ public class Superstructure extends SubsystemBase {
     action.onFalse(
         new InstantCommand(
                 () -> {
-                  // funnel.io.set(0);
-                  // claw.requestIdle();
+                  // feedingTimer.stop();
+                  // feedingTimer.reset();
+
+                  // if (pausedFeedingTimer.get() <= 0) pausedFeedingTimer.start();
 
                   funnel.requestIdle();
                   requestIdle();

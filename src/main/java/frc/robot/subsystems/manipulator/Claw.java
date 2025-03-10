@@ -56,9 +56,9 @@ public class Claw extends SubsystemBase {
         io.stop();
 
         // reset coral secured in cases where coral is removed manually from robot
-        if (!hasCoral()) {
-          coralSecured = false;
-        }
+        // if (!hasCoral()) {
+        //   coralSecured = false;
+        // }
 
         if (requestFeed && shootTimer.get() <= 0 /*&& !coralSecured()*/) {
           state = ClawStates.FEED;
@@ -112,7 +112,8 @@ public class Claw extends SubsystemBase {
   public boolean hasCoral() {
     // Assuming resistance can be inferred from the current draw
     double currentDraw = inputs.clawVel;
-    return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold;
+    return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold
+        && currentDraw > 100;
 
     //    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
   }

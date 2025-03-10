@@ -136,7 +136,7 @@ public final class Constants {
       public static final double scoreSpeed = -0.75;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
-          2700.0; // Placeholder value, needs experimental determination
+          2000.0; // Placeholder value, needs experimental determination
     }
   }
 
