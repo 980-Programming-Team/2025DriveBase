@@ -2,7 +2,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
@@ -29,8 +31,8 @@ public class ScoringManager {
   private Superstructure superStructure;
 
   public ScoringManager(int leftPort, int rightPort, Superstructure superstructure) {
-    leftController = new GenericHID(leftPort);
-    rightController = new GenericHID(rightPort);
+    leftController = new Joystick(leftPort);
+    rightController = new Joystick(rightPort);
     superStructure = superstructure;
   }
 
@@ -71,14 +73,14 @@ public class ScoringManager {
                     AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
                     RobotContainer.constraints,
                     0));
-    new JoystickButton(leftController, 11)
+    new JoystickButton(leftController, 12)
         .whileTrue(
             pathFindToFLL =
                 AutoBuilder.pathfindToPose(
                     AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[4]),
                     RobotContainer.constraints,
                     0));
-    new JoystickButton(leftController, 12)
+    new JoystickButton(leftController, 11)
         .whileTrue(
             pathFindToFLR =
                 AutoBuilder.pathfindToPose(
@@ -127,14 +129,42 @@ public class ScoringManager {
                     AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
                     RobotContainer.constraints,
                     0));
-    // new JoystickButton(rightController, 4)
-    //     .onTrue(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   superStructure.requestLevel(2);
-    //                   superStructure.requestPreScore();
-    //                 })
-    //             .ignoringDisable(true));
+
+
+    new JoystickButton(rightController, 4)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(2);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 3).onTrue(
+        new InstantCommand(
+                () -> {
+                  superStructure.requestLevel(3);
+                  superStructure.requestPreScore();
+                })
+            .ignoringDisable(true));
+    new JoystickButton(rightController, 2).onTrue(
+        new InstantCommand(
+                () -> {
+                    superStructure.requestLevel(4);
+                    superStructure.requestPreScore();
+                })
+            .ignoringDisable(true));
+            new JoystickButton(rightController, 8).onTrue(
+        new InstantCommand(
+                () -> {
+                    superStructure.requestScore();
+                })
+            .ignoringDisable(true));    
+    new JoystickButton(rightController, 12).onTrue(
+        new InstantCommand(
+                () -> {
+                    superStructure.requestClimbReady();
+                })
+            .ignoringDisable(true));
 
   }
 }

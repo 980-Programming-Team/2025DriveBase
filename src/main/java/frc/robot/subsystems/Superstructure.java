@@ -32,8 +32,8 @@ public class Superstructure extends SubsystemBase {
 
   private DigitalInput beamBreak;
 
-  private Timer feedingTimer;
-  private Timer pausedFeedingTimer;
+  // private Timer feedingTimer;
+  // private Timer pausedFeedingTimer;
 
   public static enum Superstates {
     IDLE,
@@ -61,13 +61,13 @@ public class Superstructure extends SubsystemBase {
     state = Superstates.IDLE;
     level = Level.L2;
 
-    feedingTimer = new Timer();
-    pausedFeedingTimer = new Timer();
+    // feedingTimer = new Timer();
+    // pausedFeedingTimer = new Timer();
 
-    feedingTimer.stop();
-    feedingTimer.reset();
+    // feedingTimer.stop();
+    // feedingTimer.reset();
 
-    pausedFeedingTimer.start();
+    // pausedFeedingTimer.start();
 
     beamBreak = new DigitalInput(0);
   }
@@ -75,8 +75,8 @@ public class Superstructure extends SubsystemBase {
   @Override
   public void periodic() {
 
-    Logger.recordOutput("Superstructure/FeedingTimer", feedingTimer.get());
-    Logger.recordOutput("Superstructure/PausedFeedingTimer", pausedFeedingTimer.get());
+    // Logger.recordOutput("Superstructure/FeedingTimer", feedingTimer.get());
+    // Logger.recordOutput("Superstructure/PausedFeedingTimer", pausedFeedingTimer.get());
 
     Logger.recordOutput("SuperStructure/BeamBreak", beamBreak.get());
 
@@ -276,15 +276,15 @@ public class Superstructure extends SubsystemBase {
     return claw.coralSecured();
   }
 
-  // manual override
   public void intakeCoral(Trigger action) {
     action.onTrue(
         new InstantCommand(
                 () -> {
+                  //! Manual Override:
                   // pausedFeedingTimer.stop();
-                  // pausedFeedingTimer.reset();
+                  // pausedFeedingTimer.reset(); 
 
-                  // if (feedingTimer.get() <= 0) feedingTimer.start();
+                  // if (feedingTimer.get() <= 0) feedingTimer.start(); end
 
                   if (elevator.getHeight() < .5) {
                     requestFeed();
@@ -294,10 +294,11 @@ public class Superstructure extends SubsystemBase {
     action.onFalse(
         new InstantCommand(
                 () -> {
+                  //! Manual Override:
                   // feedingTimer.stop();
                   // feedingTimer.reset();
 
-                  // if (pausedFeedingTimer.get() <= 0) pausedFeedingTimer.start();
+                  // if (pausedFeedingTimer.get() <= 0) pausedFeedingTimer.start(); end
 
                   funnel.requestIdle();
                   requestIdle();

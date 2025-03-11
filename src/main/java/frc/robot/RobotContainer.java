@@ -234,47 +234,9 @@ public class RobotContainer {
     // Bind the pathfinding command to a button (e.g., B button)
     driver.getDriver().b().whileTrue(pathFindToProcessor);
     driver.getDriver().x().whileTrue(pathFindToBC);
+    
     driver.configScoringPosButtons();
     operatorBoard.configScoringPosButtons();
-
-    // operatorBoard.configScoringPosButtons();
-
-    testButton.onTrue(
-        new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(2);
-                  superstructure.requestPreScore();
-                })
-            .ignoringDisable(true));
-    testButton2.onTrue(
-        new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(3);
-                  superstructure.requestPreScore();
-                })
-            .ignoringDisable(true));
-
-    testButton3.onTrue(
-        new InstantCommand(
-                () -> {
-                  superstructure.requestLevel(4);
-                  superstructure.requestPreScore();
-                })
-            .ignoringDisable(true));
-
-    testButton8.onTrue(
-        new InstantCommand(
-                () -> {
-                  superstructure.requestScore();
-                })
-            .ignoringDisable(true));
-
-    testButton12.onTrue(
-        new InstantCommand(
-                () -> {
-                  superstructure.requestClimbReady();
-                })
-            .ignoringDisable(true));
   }
 
   public void registerNamedCommands() {
