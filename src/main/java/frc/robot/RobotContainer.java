@@ -1,7 +1,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,13 +11,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
-import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.Superstructure;
@@ -99,14 +96,6 @@ public class RobotContainer {
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
-  // Pathfinding command
-  private final Command pathFindToProcessor;
-  private final Command pathFindToFC;
-  private final Command pathFindToBC;
-  private final Command pathFindToFL;
-  private final Command pathFindToBL;
-  private final Command pathFindToSourceL;
-
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
       new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
@@ -166,19 +155,6 @@ public class RobotContainer {
         break;
     }
 
-    // Since AutoBuilder is configured, we can use it to build pathfinding commands
-    pathFindToProcessor =
-        AutoBuilder.pathfindToPose(
-            FieldConstants.Processor.centerFace, constraints, 0.0 // Goal end velocity in meters/sec
-            );
-
-    pathFindToFC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[3], constraints, 0);
-    pathFindToBC = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[0], constraints, 0);
-    pathFindToFL = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[2], constraints, 0);
-    pathFindToBL = AutoBuilder.pathfindToPose(FieldConstants.Reef.centerFaces[1], constraints, 0);
-    pathFindToSourceL =
-        AutoBuilder.pathfindToPose(FieldConstants.CoralStation.leftCenterFace, constraints, 0);
-
     // Set up auto routines
     registerNamedCommands();
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -231,22 +207,18 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // Bind the pathfinding command to a button (e.g., B button)
-    driver.getDriver().b().whileTrue(pathFindToProcessor);
-    driver.getDriver().x().whileTrue(pathFindToBC);
-    
     driver.configScoringPosButtons();
     operatorBoard.configScoringPosButtons();
   }
 
   public void registerNamedCommands() {
 
-    NamedCommands.registerCommand("BC", (pathFindToBC));
-    NamedCommands.registerCommand("FC", (pathFindToFC));
-    NamedCommands.registerCommand("FL", (pathFindToFL));
-    NamedCommands.registerCommand("BL", (pathFindToBL));
-    NamedCommands.registerCommand("SourceL", (pathFindToSourceL));
-    NamedCommands.registerCommand("Processor", (pathFindToProcessor));
+    // NamedCommands.registerCommand("BC", (pathFindToBC));
+    // NamedCommands.registerCommand("FC", (pathFindToFC));
+    // NamedCommands.registerCommand("FL", (pathFindToFL));
+    // NamedCommands.registerCommand("BL", (pathFindToBL));
+    // NamedCommands.registerCommand("SourceL", (pathFindToSourceL));
+    // NamedCommands.registerCommand("Processor", (pathFindToProcessor));
 
     /*
      // FRONT CENTER ALIGN LEFT L2

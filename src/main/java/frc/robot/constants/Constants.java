@@ -130,8 +130,8 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.25;
-      public static final double scoreL2Speed = 0.85;
+      public static final double feedSpeed = 0.07;
+      public static final double scoreL2Speed = 0.93;
       public static final double scoreVoltage = -0.85;
       public static final double scoreSpeed = -0.75;
       public static final int currentLimit = 20;

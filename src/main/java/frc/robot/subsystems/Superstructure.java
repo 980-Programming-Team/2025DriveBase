@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -130,7 +129,7 @@ public class Superstructure extends SubsystemBase {
         //   //   state = Superstates.IDLE;
         // }
 
-        if (beamBreak.get()) {
+        if (!beamBreak.get()) {
           state = Superstates.IDLE;
           unsetAllRequests();
         }
@@ -142,7 +141,7 @@ public class Superstructure extends SubsystemBase {
           elevator.requestHeight(-0.147);
           candle.SetLEDRed();
         } else if (level == Level.L3) {
-          arm.requestPosition(0.80);
+          arm.requestPosition(0.70);
           elevator.requestHeight(-0.10);
           candle.SetLEDGreen();
         } else if (level == Level.L4) {
@@ -280,9 +279,9 @@ public class Superstructure extends SubsystemBase {
     action.onTrue(
         new InstantCommand(
                 () -> {
-                  //! Manual Override:
+                  // ! Manual Override:
                   // pausedFeedingTimer.stop();
-                  // pausedFeedingTimer.reset(); 
+                  // pausedFeedingTimer.reset();
 
                   // if (feedingTimer.get() <= 0) feedingTimer.start(); end
 
@@ -294,7 +293,7 @@ public class Superstructure extends SubsystemBase {
     action.onFalse(
         new InstantCommand(
                 () -> {
-                  //! Manual Override:
+                  // ! Manual Override:
                   // feedingTimer.stop();
                   // feedingTimer.reset();
 

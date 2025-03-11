@@ -70,7 +70,7 @@ public class Funnel extends SubsystemBase {
 
         if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 1.5 || requestIdle) {
+        if (feedTimer.get() >= 0.5 || requestIdle) {
           state = FunnelStates.IDLE;
           feedTimer.stop();
           feedTimer.reset();

@@ -130,7 +130,6 @@ public class ScoringManager {
                     RobotContainer.constraints,
                     0));
 
-
     new JoystickButton(rightController, 4)
         .onTrue(
             new InstantCommand(
@@ -139,32 +138,35 @@ public class ScoringManager {
                       superStructure.requestPreScore();
                     })
                 .ignoringDisable(true));
-    new JoystickButton(rightController, 3).onTrue(
-        new InstantCommand(
-                () -> {
-                  superStructure.requestLevel(3);
-                  superStructure.requestPreScore();
-                })
-            .ignoringDisable(true));
-    new JoystickButton(rightController, 2).onTrue(
-        new InstantCommand(
-                () -> {
-                    superStructure.requestLevel(4);
-                    superStructure.requestPreScore();
-                })
-            .ignoringDisable(true));
-            new JoystickButton(rightController, 8).onTrue(
-        new InstantCommand(
-                () -> {
-                    superStructure.requestScore();
-                })
-            .ignoringDisable(true));    
-    new JoystickButton(rightController, 12).onTrue(
-        new InstantCommand(
-                () -> {
-                    superStructure.requestClimbReady();
-                })
-            .ignoringDisable(true));
-
+    new JoystickButton(rightController, 3)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(3);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 2)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(4);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 8)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 12)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestClimbReady();
+                    })
+                .ignoringDisable(true));
   }
 }
