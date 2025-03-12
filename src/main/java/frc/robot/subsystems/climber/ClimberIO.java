@@ -8,17 +8,9 @@ public interface ClimberIO {
 
     public double pos = 0.0;
 
-    public boolean kNearL1Connected = false;
-    public double leaderAppliedVoltage = 0.0;
-    public double supplyLeaderCurrentAmps = 0.0;
-    public double leaderTempCelsius = 0.0;
-    public double leaderPosMotorRotations = 0.0;
-
-    public boolean kNearFunnelConnected = false;
-    // public double followerAppliedVoltage = 0.0;
-    // public double supplyFollowerCurrentAmps = 0.0;
-    // public double followerPosMotorRotations = 0.0;
-
+    public boolean kClimber = false;
+    public double appliedVoltage = 0.0;
+    public double supplyCurrentAmps = 0.0;
   }
 
   public default void updateInputs(ClimberIOInputs inputs) {}

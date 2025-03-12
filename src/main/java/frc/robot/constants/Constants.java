@@ -98,9 +98,9 @@ public final class Constants {
       public static final double l4SetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.05;
 
-      public static final double kP = 3.0;
+      public static final double kP = 3.5;
       public static final double kI = 0.0;
-      public static final double kD = 0.0;
+      public static final double kD = 0.5;
       public static final double minOutput = -0.5;
       public static final double maxOutput = 0.5;
 
@@ -188,14 +188,12 @@ public final class Constants {
 
   public class Climber {
 
-    // NEO
-    public static final int kNearL1 = 2; // dd
-    public static final int kNearFunnel = 7; // dd
+    public static final int kClimber = 7; // dd
 
     public static final double gearRatio = 80.0;
     public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
     public static final double setpointToleranceMeters = 0.01;
-    public static final int supplyCurrentLimit = 40;
+    public static final int currentLimit = 40;
 
     public static final double minOutput = -0.7;
     public static final double maxOutput = 0.7;
