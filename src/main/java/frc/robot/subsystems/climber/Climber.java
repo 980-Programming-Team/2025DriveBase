@@ -3,10 +3,10 @@ package frc.robot.subsystems.climber;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
-import frc.robot.util.Util;
 import org.littletonrobotics.junction.Logger;
 
 public class Climber extends SubsystemBase {
@@ -27,18 +27,19 @@ public class Climber extends SubsystemBase {
   public Climber(ClimberIO climberIO) {
     this.io = climberIO;
 
-    leaderMissingAlert = new Alert("Disconnected Near L1 Climber Motor", AlertType.kError);
-    followerMissingAlert = new Alert("Disconnected Near Funnel Climber Motor", AlertType.kError);
+    inputs = new ClimberIOInputsAutoLogged();
+
+    leaderMissingAlert = new Alert("Disconnected Climber Funnel Motor", AlertType.kError);
+    followerMissingAlert = new Alert("Disconnected Climber L1 Motor", AlertType.kError);
 
     setpoint = 0;
     state = ClimberStates.STARTING_CONFIG;
-
-    inputs = new ClimberIOInputsAutoLogged();
   }
 
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Climber", inputs);
+    Logger.recordOutput("Climber/State", state.toString());
     Logger.recordOutput("Climber/Setpoint", setpoint);
 
     switch (state) {
@@ -47,15 +48,15 @@ public class Climber extends SubsystemBase {
           state = ClimberStates.REQUEST_SETPOINT;
         }
         break;
-        case REQUEST_SETPOINT:
+      case REQUEST_SETPOINT:
         if (setpoint != 0.0) {
           io.setPosition(setpoint);
         }
         break;
     }
 
-    leaderMissingAlert.set(!inputs.kNearL1Connected && Constants.currentMode != Mode.SIM);
-    followerMissingAlert.set(!inputs.kNearFunnelConnected && Constants.currentMode != Mode.SIM);
+    leaderMissingAlert.set(!inputs.kNearFunnelConnected && Constants.currentMode != Mode.SIM);
+    followerMissingAlert.set(!inputs.kNearL1Connected && Constants.currentMode != Mode.SIM);
   }
 
   public void requestPosition(double position) {
@@ -64,10 +65,6 @@ public class Climber extends SubsystemBase {
 
   public double getPosition() {
     return inputs.pos;
-  }
-
-  public void setPosition(double position) {
-    io.setPosition(position);
   }
 
   public void enableBrakeMode(boolean enable) {

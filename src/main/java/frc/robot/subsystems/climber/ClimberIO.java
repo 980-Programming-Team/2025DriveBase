@@ -25,7 +25,7 @@ public interface ClimberIO {
 
   public default void stop() {}
 
-  public default void setPosition(double motorPositionRot) {}
+  public default void setPosition(double position) {}
 
   public default void enableBrakeMode(boolean enable) {}
 }

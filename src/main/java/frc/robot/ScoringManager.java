@@ -161,7 +161,7 @@ public class ScoringManager {
                       superStructure.requestScore();
                     })
                 .ignoringDisable(true));
-    new JoystickButton(rightController, 12)
+    new JoystickButton(rightController, 6)
         .onTrue(
             new InstantCommand(
                     () -> {

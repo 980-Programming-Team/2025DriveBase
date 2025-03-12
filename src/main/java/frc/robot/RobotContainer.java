@@ -22,6 +22,9 @@ import frc.robot.subsystems.Superstructure;
 // import frc.robot.subsystems.climber.Climber;
 // import frc.robot.subsystems.climber.ClimberIO;
 // import frc.robot.subsystems.climber.ClimberIOSpark;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOSpark;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -65,6 +68,8 @@ public class RobotContainer {
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
   public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
   public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
+  public static ClimberIO climberIO =
+      Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
   // public static ClimberIO climberIO =
@@ -74,10 +79,11 @@ public class RobotContainer {
   public static Arm arm = new Arm(armIO);
   public static Claw claw = new Claw(clawIO);
   public static Funnel funnel = new Funnel(funnelIO);
+  public static Climber climber = new Climber(climberIO);
   // public static Climber climber = new Climber(climberIO);
   private static CANdleSystem candle = new CANdleSystem();
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, claw, funnel, candle);
+      new Superstructure(elevator, arm, claw, funnel, climber, candle);
 
   // Controllers
   public static SourceManager driver = new SourceManager(0, superstructure);

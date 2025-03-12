@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LED.CANdleSystem;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Arm;
@@ -24,6 +25,7 @@ public class Superstructure extends SubsystemBase {
   private Arm arm;
   private Funnel funnel;
   private Claw claw;
+  private Climber climber;
   private CANdleSystem candle;
 
   private Level level;
@@ -50,11 +52,13 @@ public class Superstructure extends SubsystemBase {
     L4
   }
 
-  public Superstructure(Elevator elevator, Arm arm, Claw claw, Funnel funnel, CANdleSystem candle) {
+  public Superstructure(
+      Elevator elevator, Arm arm, Claw claw, Funnel funnel, Climber climber, CANdleSystem candle) {
     this.elevator = elevator;
     this.arm = arm;
     this.funnel = funnel;
     this.claw = claw;
+    this.climber = climber;
     this.candle = candle;
 
     state = Superstates.IDLE;
@@ -200,7 +204,8 @@ public class Superstructure extends SubsystemBase {
         // }
         break;
       case CLIMB_READY:
-        funnel.requestPosition(0.3);
+        // funnel.requestPosition(0.3);
+        climber.requestPosition(1);
         break;
       case DISABLED:
         arm.enableCoastMode(true);

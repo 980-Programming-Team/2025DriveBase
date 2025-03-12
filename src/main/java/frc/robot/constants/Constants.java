@@ -130,7 +130,7 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.07;
+      public static final double feedSpeed = 0.15;
       public static final double scoreL2Speed = 0.93;
       public static final double scoreVoltage = -0.85;
       public static final double scoreSpeed = -0.75;
@@ -197,8 +197,8 @@ public final class Constants {
     public static final double setpointToleranceMeters = 0.01;
     public static final int supplyCurrentLimit = 40;
 
-    public static final double minOutput = -0.2;
-    public static final double maxOutput = 0.2;
+    public static final double minOutput = -0.7;
+    public static final double maxOutput = 0.7;
 
     public static final double stowedPoistion = 0;
     public static final double climbingPosition = 20; // TODO find real position
