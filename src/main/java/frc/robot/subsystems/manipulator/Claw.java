@@ -5,29 +5,28 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.Mode;
-import org.littletonrobotics.junction.Logger;
 
 public class Claw extends SubsystemBase {
   public ClawIO io;
-  private ClawIOInputsAutoLogged inputs;
+  // private ClawIOInputsAutoLogged inputs;
 
   private final Alert clawMissingAlert;
 
   private boolean requestIdle;
   private boolean requestFeed;
   private boolean requestShoot;
+  private boolean requestShootL1;
   private boolean requestShootL2;
 
   private boolean coralSecured;
   private ClawStates state;
 
   private Timer shootTimer;
-  // private Timer homingTimer;
 
   public enum ClawStates {
     IDLE,
     FEED,
+    SHOOTL1,
     SHOOTL2,
     SHOOT
   }
@@ -35,36 +34,32 @@ public class Claw extends SubsystemBase {
   public Claw(ClawIO io) {
     this.io = io;
 
-    inputs = new ClawIOInputsAutoLogged();
+    // inputs = new ClawIOInputsAutoLogged();
     clawMissingAlert = new Alert("Disconnected Claw Motor", AlertType.kError);
     state = ClawStates.IDLE;
     shootTimer = new Timer();
     shootTimer.stop();
     shootTimer.reset();
-    // homingTimer = new Timer();
   }
 
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Manipulator", inputs);
-    Logger.recordOutput("Manipulator/Coral Detection", hasCoral());
-    Logger.recordOutput("Manipulator/Timer", shootTimer.get());
-    Logger.recordOutput("Manipulator/ClawState", state.toString());
+    // io.updateInputs(inputs);
+    // Logger.processInputs("Manipulator", inputs);
+    // Logger.recordOutput("Manipulator/Coral Detection", hasCoral());
+    // Logger.recordOutput("Manipulator/Timer", shootTimer.get());
+    // Logger.recordOutput("Manipulator/ClawState", state.toString());
 
     switch (state) {
       case IDLE:
         io.stop();
 
-        // reset coral secured in cases where coral is removed manually from robot
-        // if (!hasCoral()) {
-        //   coralSecured = false;
-        // }
-
-        if (requestFeed && shootTimer.get() <= 0 /*&& !coralSecured()*/) {
+        if (requestFeed && shootTimer.get() <= 0) {
           state = ClawStates.FEED;
-        } else if (requestShoot && shootTimer.get() <= 0 /*&& coralSecured*/) {
+        } else if (requestShoot && shootTimer.get() <= 0) {
           state = ClawStates.SHOOT;
-        } else if (requestShootL2 && shootTimer.get() <= 0 /*&& coralSecured/* */) {
+        } else if (requestShootL1 && shootTimer.get() <= 0) {
+          state = ClawStates.SHOOTL1;
+        } else if (requestShootL2 && shootTimer.get() <= 0) {
           state = ClawStates.SHOOTL2;
         }
         break;
@@ -74,6 +69,18 @@ public class Claw extends SubsystemBase {
         if (shootTimer.get() <= 0) shootTimer.start();
 
         if (shootTimer.get() >= 3 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
+        break;
+      case SHOOTL1:
+        io.setClawSpeed(Constants.Manipulator.Claw.scoreL1Speed);
+
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 2 || requestIdle) {
           state = ClawStates.IDLE;
           shootTimer.stop();
           shootTimer.reset();
@@ -106,22 +113,22 @@ public class Claw extends SubsystemBase {
         break;
     }
 
-    clawMissingAlert.set(!inputs.kClawConnected && Constants.currentMode != Mode.SIM);
+    // clawMissingAlert.set(!inputs.kClawConnected && Constants.currentMode != Mode.SIM);
   }
 
-  public boolean hasCoral() {
-    // Assuming resistance can be inferred from the current draw
-    double currentDraw = inputs.clawVel;
-    return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold
-        && currentDraw > 100;
+  // public boolean hasCoral() {
+  //   // Assuming resistance can be inferred from the current draw
+  //   double currentDraw = inputs.clawVel;
+  //   return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold
+  //       && currentDraw > 100;
 
-    //    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
-  }
+  //   //    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
+  // }
 
-  public boolean coralSecured() {
-    coralSecured = hasCoral();
-    return coralSecured;
-  }
+  // public boolean coralSecured() {
+  //   coralSecured = hasCoral();
+  //   return coralSecured;
+  // }
 
   // Use method only to reset state when robot is disabled
   public void forceIdle() {
@@ -142,6 +149,11 @@ public class Claw extends SubsystemBase {
   public void requestShoot() {
     unsetAllRequests();
     requestShoot = true;
+  }
+
+  public void requestShootL1() {
+    unsetAllRequests();
+    requestShootL1 = true;
   }
 
   public void requestShootL2() {

@@ -129,7 +129,14 @@ public class ScoringManager {
                     AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
                     RobotContainer.constraints,
                     0));
-
+    new JoystickButton(rightController, 7)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(1);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 4)
         .onTrue(
             new InstantCommand(
@@ -161,11 +168,20 @@ public class ScoringManager {
                       superStructure.requestScore();
                     })
                 .ignoringDisable(true));
-    new JoystickButton(rightController, 6)
+    new JoystickButton(rightController, 12)
         .onTrue(
             new InstantCommand(
                     () -> {
-                      superStructure.requestClimbReady();
+                      superStructure.candle.SetLEDOff();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 10)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      if (rightController.getRawButtonPressed(12)) {
+                        superStructure.requestClimbReady();
+                      }
                     })
                 .ignoringDisable(true));
   }

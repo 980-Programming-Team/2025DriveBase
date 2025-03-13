@@ -6,12 +6,10 @@ import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.Mode;
-import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
-  public FunnelIOInputsAutoLogged inputs;
+  // public FunnelIOInputsAutoLogged inputs;
 
   // instead of has coeral check check if were in the range of a pose, robot
 
@@ -34,7 +32,7 @@ public class Funnel extends SubsystemBase {
   public Funnel(FunnelIO funnelIO) {
     this.io = funnelIO;
 
-    inputs = new FunnelIOInputsAutoLogged();
+    // inputs = new FunnelIOInputsAutoLogged();
 
     pivotMissingAlert = new Alert("Disconnected Pivot Motor", AlertType.kError);
     intakeMissingAlert = new Alert("Disconnected Intake Motor", AlertType.kError);
@@ -50,14 +48,13 @@ public class Funnel extends SubsystemBase {
   }
 
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Funnel", inputs);
-    Logger.recordOutput("Funnel/State", state.toString());
-    Logger.recordOutput("Funnel/Setpoint", setpoint);
+    // io.updateInputs(inputs);
+    // Logger.processInputs("Funnel", inputs);
+    // Logger.recordOutput("Funnel/State", state.toString());
+    // Logger.recordOutput("Funnel/Setpoint", setpoint);
 
     switch (state) {
       case IDLE:
-        // io.stop();
         io.set(0);
 
         if (requestFeed) {
@@ -79,8 +76,8 @@ public class Funnel extends SubsystemBase {
         break;
     }
 
-    pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);
-    intakeMissingAlert.set(!inputs.kIntakeConnected && Constants.currentMode != Mode.SIM);
+    // pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);
+    // intakeMissingAlert.set(!inputs.kIntakeConnected && Constants.currentMode != Mode.SIM);
   }
 
   public void requestFeed() {
@@ -97,13 +94,13 @@ public class Funnel extends SubsystemBase {
     setpoint = position;
   }
 
-  public double getPosition() {
-    return inputs.pos;
-  }
+  // public double getPosition() {
+  //   return inputs.pos;
+  // }
 
-  public double getVelocity() {
-    return inputs.velMetersPerSecond;
-  }
+  // public double getVelocity() {
+  //   return inputs.velMetersPerSecond;
+  // }
 
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);

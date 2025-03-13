@@ -25,20 +25,36 @@ public class CANdleSystem extends SubsystemBase {
     m_candle.configAllSettings(configAll, 100);
   }
 
+  public void SetLEDColor(int red, int green, int blue) {
+    m_candle.setLEDs(red, green, blue, 0, 0, LedCount);
+  }
+
   public void SetLEDRed() {
-    m_candle.setLEDs(140, 0, 0, 0, 0, LedCount);
+    SetLEDColor(140, 0, 0);
   }
 
   public void SetLEDGreen() {
-    m_candle.setLEDs(0, 140, 140, 0, 0, LedCount);
+    SetLEDColor(0, 140, 0);
   }
 
   public void SetLEDYellow() {
-    m_candle.setLEDs(140, 140, 0, 0, 0, LedCount);
+    SetLEDColor(140, 140, 0);
   }
 
   public void SetLEDBlue() {
-    m_candle.setLEDs(0, 0, 140, 0, 0, LedCount);
+    SetLEDColor(0, 0, 140);
+  }
+
+  public void SetLEDPurple() {
+    SetLEDColor(140, 0, 140);
+  }
+
+  public void SetLEDOrange() {
+    SetLEDColor(180, 110, 0);
+  }
+
+  public void SetLEDOff() {
+    m_candle.setLEDs(0, 0, 0, 0, 0, LedCount);
   }
 
   /* Wrappers so we can access the CANdle from the subsystem */

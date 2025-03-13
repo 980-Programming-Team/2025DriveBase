@@ -66,13 +66,13 @@ public class FieldConstants {
       // Initialize faces
       centerFaces[0] =
           new Pose2d(
-              Units.inchesToMeters(120.003),
+              Units.inchesToMeters(118.003),
               Units.inchesToMeters(165.500),
               Rotation2d.fromDegrees(0));
       centerFaces[1] =
           new Pose2d(
-              Units.inchesToMeters(120.003),
-              Units.inchesToMeters(152.500),
+              Units.inchesToMeters(118.003),
+              Units.inchesToMeters(149.500),
               Rotation2d.fromDegrees(0));
       centerFaces[2] =
           new Pose2d(

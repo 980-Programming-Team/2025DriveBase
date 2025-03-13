@@ -26,7 +26,8 @@ public class Superstructure extends SubsystemBase {
   private Funnel funnel;
   private Claw claw;
   private Climber climber;
-  private CANdleSystem candle;
+
+  public CANdleSystem candle;
 
   private Level level;
   // private Level prevLevel = Level.L2;
@@ -40,6 +41,7 @@ public class Superstructure extends SubsystemBase {
     IDLE,
     FEEDING,
     PRE_SCORE,
+    SCOREL1,
     SCOREL2,
     SCORE,
     CLIMB_READY,
@@ -47,6 +49,7 @@ public class Superstructure extends SubsystemBase {
   }
 
   public static enum Level {
+    L1,
     L2,
     L3,
     L4
@@ -87,13 +90,13 @@ public class Superstructure extends SubsystemBase {
     Logger.recordOutput("Superstructure/Level", level.toString());
     switch (state) {
       case IDLE:
-        elevator.requestHeight(-0.052);
+        elevator.requestHeight(-0.055);
         arm.requestPosition(0.025);
         funnel.requestPosition(0.001);
         claw.requestIdle();
         candle.SetLEDGreen();
 
-        if (requestFeed /*&& !claw.hasCoral() && elevator.atSetpoint()*/) {
+        if (requestFeed) {
           state = Superstates.FEEDING;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
@@ -102,10 +105,8 @@ public class Superstructure extends SubsystemBase {
         }
         break;
       case FEEDING:
-        // elevator.requestHeight(-0.045);
-
         arm.requestPosition(-.08);
-        elevator.requestHeight(-0.052);
+        elevator.requestHeight(-0.055);
         funnel.requestFeed();
         claw.requestFeed();
 
@@ -113,25 +114,15 @@ public class Superstructure extends SubsystemBase {
 
         if (requestIdle) {
           state = Superstates.IDLE;
-        } else if (level == Level.L2
-            && (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/)) {
+        } else if (level == Level.L1 && requestScore) {
+          state = Superstates.SCOREL1;
+        } else if (level == Level.L2 && requestScore) {
           state = Superstates.SCOREL2;
-        } else if (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/) {
+        } else if (requestScore) {
           state = Superstates.SCORE;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         }
-
-        // if (feedingTimer.get() >= 0.75 && claw.hasCoral()) {
-        //   /*|| (claw.hasCoral() && pausedFeedingTimer.get() >= .5 && pausedFeedingTimer.get() <=
-        // 1.5))*/
-        //   // if (claw.coralSecured()) {
-        //   state = Superstates.IDLE;
-        //   unsetAllRequests(); // account for automation from sensor triggers
-        //   // }
-        //   // } else if (requestIdle) {
-        //   //   state = Superstates.IDLE;
-        // }
 
         if (!beamBreak.get()) {
           state = Superstates.IDLE;
@@ -140,7 +131,11 @@ public class Superstructure extends SubsystemBase {
 
         break;
       case PRE_SCORE: // 13 inches away from reef for L2
-        if (level == Level.L2) {
+        if (level == Level.L1) {
+          arm.requestPosition(.005);
+          elevator.requestHeight(-.052);
+          candle.SetLEDOrange();
+        } else if (level == Level.L2) {
           arm.requestPosition(0.12881910562515259);
           elevator.requestHeight(-0.147);
           candle.SetLEDRed();
@@ -149,7 +144,7 @@ public class Superstructure extends SubsystemBase {
           elevator.requestHeight(-0.10);
           candle.SetLEDGreen();
         } else if (level == Level.L4) {
-          arm.requestPosition(0.75);
+          arm.requestPosition(0.6);
           elevator.requestHeight(-0.85);
           candle.SetLEDYellow();
         }
@@ -157,13 +152,30 @@ public class Superstructure extends SubsystemBase {
 
         if (requestIdle) {
           state = Superstates.IDLE;
-        } else if (level == Level.L2
-            && (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/)) {
+        } else if (level == Level.L1 && requestScore) {
+          state = Superstates.SCOREL1;
+        } else if (level == Level.L2 && requestScore) {
           state = Superstates.SCOREL2;
-        } else if (requestScore /*&& elevator.atSetpoint()*/ /*&& claw.coralSecured()*/) {
+        } else if (requestScore) {
           state = Superstates.SCORE;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
+        }
+
+        break;
+      case SCOREL1:
+        claw.requestShootL1();
+
+        if (requestPreScore) {
+          state = Superstates.PRE_SCORE;
+        } else if (requestClimbReady) {
+          state = Superstates.CLIMB_READY;
+        } else if (requestIdle) {
+          state = Superstates.IDLE;
+        } else if (requestDisable) {
+          state = Superstates.DISABLED;
+        } else if (requestFeed) {
+          state = Superstates.FEEDING;
         }
         break;
       case SCOREL2:
@@ -180,10 +192,7 @@ public class Superstructure extends SubsystemBase {
         } else if (requestFeed) {
           state = Superstates.FEEDING;
         }
-        // if (
-        // /*!claw.coralSecured() &&*/ requestIdle) {
-        //   state = Superstates.IDLE;
-        // }
+
         break;
       case SCORE:
         claw.requestShoot();
@@ -198,14 +207,11 @@ public class Superstructure extends SubsystemBase {
         } else if (requestFeed) {
           state = Superstates.FEEDING;
         }
-        // if (
-        // /*!claw.coralSecured() &&*/ requestIdle) {
-        //   state = Superstates.IDLE;
-        // }
         break;
       case CLIMB_READY:
-        // funnel.requestPosition(0.3);
-        climber.requestPosition(1);
+        candle.SetLEDPurple();
+        funnel.requestPosition(0.3);
+        climber.requestPosition(65);
         break;
       case DISABLED:
         arm.enableCoastMode(true);
@@ -262,6 +268,10 @@ public class Superstructure extends SubsystemBase {
 
   public void requestLevel(int level) {
     switch (level) {
+      case 1:
+        this.level = Level.L1;
+        break;
+
       case 2:
         this.level = Level.L2;
         break;
@@ -276,9 +286,9 @@ public class Superstructure extends SubsystemBase {
     }
   }
 
-  public boolean pieceSecured() {
-    return claw.coralSecured();
-  }
+  // public boolean pieceSecured() {
+  //   return claw.coralSecured();
+  // }
 
   public void intakeCoral(Trigger action) {
     action.onTrue(

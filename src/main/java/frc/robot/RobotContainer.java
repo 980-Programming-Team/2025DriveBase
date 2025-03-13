@@ -7,12 +7,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
@@ -90,18 +87,8 @@ public class RobotContainer {
 
   public static ScoringManager operatorBoard = new ScoringManager(1, 2, superstructure);
 
-  private final CommandXboxController testController = new CommandXboxController(3);
-
-  private final Joystick testJoystick = new Joystick(2);
-  private final JoystickButton testButton = new JoystickButton(testJoystick, 4);
-  private final JoystickButton testButton2 = new JoystickButton(testJoystick, 3);
-  private final JoystickButton testButton3 = new JoystickButton(testJoystick, 2);
-  private final JoystickButton testButton8 = new JoystickButton(testJoystick, 8);
-  private final JoystickButton testButton12 = new JoystickButton(testJoystick, 12);
-
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
-
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
       new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
@@ -219,7 +206,6 @@ public class RobotContainer {
 
   public void registerNamedCommands() {
 
-    // NamedCommands.registerCommand("BC", (pathFindToBC));
     // NamedCommands.registerCommand("FC", (pathFindToFC));
     // NamedCommands.registerCommand("FL", (pathFindToFL));
     // NamedCommands.registerCommand("BL", (pathFindToBL));

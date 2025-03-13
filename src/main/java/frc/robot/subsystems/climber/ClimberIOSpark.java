@@ -35,7 +35,7 @@ public class ClimberIOSpark implements ClimberIO {
     config.inverted(false);
     config.smartCurrentLimit(Constants.Climber.currentLimit);
     config.idleMode(IdleMode.kBrake);
-    config.closedLoop.pid(1.0, 0.0, 0.0);
+    config.closedLoop.pid(3.0, 0.0, 0.0);
 
     config.closedLoop.outputRange(Constants.Climber.minOutput, Constants.Climber.maxOutput);
 
