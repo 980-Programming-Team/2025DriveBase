@@ -210,8 +210,8 @@ public class Superstructure extends SubsystemBase {
         break;
       case CLIMB_READY:
         candle.SetLEDPurple();
-        funnel.requestPosition(0.3);
-        climber.requestPosition(65);
+        // funnel.requestPosition(0.3);
+        climber.requestPosition(120);
         break;
       case DISABLED:
         arm.enableCoastMode(true);
