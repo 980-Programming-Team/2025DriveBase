@@ -11,27 +11,27 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BackToSourceR"
+            "name": "BCL"
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "SourceRToBR"
+            "waitTime": 0.5
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "BRToSourceR"
+            "name": "L3"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SourceRToBR"
+            "name": "Shoot"
           }
         }
       ]

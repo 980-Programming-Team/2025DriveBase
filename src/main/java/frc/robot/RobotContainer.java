@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,9 +11,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.Superstructure;
@@ -48,6 +51,7 @@ import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -206,7 +210,43 @@ public class RobotContainer {
 
   public void registerNamedCommands() {
 
-    // NamedCommands.registerCommand("FC", (pathFindToFC));
+    NamedCommands.registerCommand(
+        "L4",
+        (new InstantCommand(
+            () -> {
+              superstructure.requestLevel(4);
+              superstructure.requestPreScore();
+            })));
+
+    NamedCommands.registerCommand(
+        "FLR",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BCL",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "Shoot",
+        (new InstantCommand(
+            () -> {
+              superstructure.requestScore();
+            })));
+
+    NamedCommands.registerCommand(
+        "L3",
+        (new InstantCommand(
+            () -> {
+              superstructure.requestLevel(3);
+              superstructure.requestPreScore();
+            })));
+
     // NamedCommands.registerCommand("FL", (pathFindToFL));
     // NamedCommands.registerCommand("BL", (pathFindToBL));
     // NamedCommands.registerCommand("SourceL", (pathFindToSourceL));
