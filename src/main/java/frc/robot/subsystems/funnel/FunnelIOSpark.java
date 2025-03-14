@@ -85,6 +85,11 @@ public class FunnelIOSpark implements FunnelIO {
     intake.set(speed);
   }
 
+  @Override
+  public void setPivot(double speed) {
+    pivot.set(speed);
+  }
+
   // @Override
   // public void seedPivotPosition(double newPositionMechanismRot) {
   //   encoder.setPosition(newPositionMechanismRot * Constants.Funnel.Pivot.motorGearRatio);

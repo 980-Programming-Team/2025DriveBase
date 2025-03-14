@@ -172,7 +172,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      superStructure.candle.SetLEDOff();
+                      superStructure.funnel.requestPosition(5000);
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)

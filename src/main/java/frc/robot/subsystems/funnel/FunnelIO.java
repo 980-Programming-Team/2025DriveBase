@@ -27,6 +27,8 @@ public interface FunnelIO {
 
   public default void set(double speed) {}
 
+  public default void setPivot(double speed) {}
+
   public default void stop() {}
 
   public default void enableBrakeMode(boolean enable) {}

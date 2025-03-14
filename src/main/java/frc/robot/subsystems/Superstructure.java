@@ -23,7 +23,7 @@ public class Superstructure extends SubsystemBase {
   private Superstates state;
   private Elevator elevator;
   private Arm arm;
-  private Funnel funnel;
+  public Funnel funnel;
   private Claw claw;
   private Climber climber;
 
@@ -92,9 +92,12 @@ public class Superstructure extends SubsystemBase {
       case IDLE:
         elevator.requestHeight(-0.055);
         arm.requestPosition(0.025);
-        funnel.requestPosition(0.001);
         claw.requestIdle();
         candle.SetLEDGreen();
+
+        if (!funnel.requestClimb) {
+          funnel.requestPosition(0.001);
+        }
 
         if (requestFeed) {
           state = Superstates.FEEDING;
@@ -144,7 +147,7 @@ public class Superstructure extends SubsystemBase {
           elevator.requestHeight(-0.10);
           candle.SetLEDGreen();
         } else if (level == Level.L4) {
-          arm.requestPosition(0.6);
+          arm.requestPosition(0.72);
           elevator.requestHeight(-0.85);
           candle.SetLEDYellow();
         }
@@ -210,7 +213,6 @@ public class Superstructure extends SubsystemBase {
         break;
       case CLIMB_READY:
         candle.SetLEDPurple();
-        // funnel.requestPosition(0.3);
         climber.requestPosition(120);
         break;
       case DISABLED:

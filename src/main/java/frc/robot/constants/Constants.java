@@ -134,7 +134,7 @@ public final class Constants {
       public static final double scoreL1Speed = .7;
       public static final double scoreL2Speed = 0.93;
       public static final double scoreVoltage = -0.85;
-      public static final double scoreSpeed = -0.75;
+      public static final double scoreSpeed = -0.6;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
           2000.0; // Placeholder value, needs experimental determination
@@ -161,12 +161,12 @@ public final class Constants {
           0.0; // TODO find real position
       public static final double setpointToleranceMechanismRotations = 0.01;
 
-      public static final double kP = 0.125;
+      public static final double kP = 3.0;
       public static final double kI = 0.0;
-      public static final double kD = 0.025;
+      public static final double kD = 0.0;
       // public static final double kFF = 0.0;
-      public static final double minOutput = -0.2;
-      public static final double maxOutput = 0.2;
+      public static final double minOutput = -1;
+      public static final double maxOutput = 1;
 
       public static final double motorGearRatio = 16.0;
 

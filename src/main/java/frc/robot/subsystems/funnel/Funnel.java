@@ -6,10 +6,11 @@ import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
-  // public FunnelIOInputsAutoLogged inputs;
+  public FunnelIOInputsAutoLogged inputs;
 
   // instead of has coeral check check if were in the range of a pose, robot
 
@@ -21,18 +22,20 @@ public class Funnel extends SubsystemBase {
 
   private boolean requestIdle;
   private boolean requestFeed;
+  public boolean requestClimb;
 
   private Timer feedTimer;
 
   public enum FunnelStates {
     IDLE,
-    FEED
+    FEED,
+    CLIMB_READY
   }
 
   public Funnel(FunnelIO funnelIO) {
     this.io = funnelIO;
 
-    // inputs = new FunnelIOInputsAutoLogged();
+    inputs = new FunnelIOInputsAutoLogged();
 
     pivotMissingAlert = new Alert("Disconnected Pivot Motor", AlertType.kError);
     intakeMissingAlert = new Alert("Disconnected Intake Motor", AlertType.kError);
@@ -41,6 +44,7 @@ public class Funnel extends SubsystemBase {
     state = FunnelStates.IDLE;
     requestIdle = true;
     requestFeed = false;
+    requestClimb = false;
 
     feedTimer = new Timer();
     feedTimer.stop();
@@ -48,17 +52,22 @@ public class Funnel extends SubsystemBase {
   }
 
   public void periodic() {
-    // io.updateInputs(inputs);
-    // Logger.processInputs("Funnel", inputs);
-    // Logger.recordOutput("Funnel/State", state.toString());
-    // Logger.recordOutput("Funnel/Setpoint", setpoint);
+    io.updateInputs(inputs);
+    Logger.processInputs("Funnel", inputs);
+
+    Logger.recordOutput("Funnel/Setpoint", setpoint);
+    Logger.recordOutput("Funnel/Position", getPosition());
+    Logger.recordOutput("Funnel/requestClimb", requestClimb);
 
     switch (state) {
       case IDLE:
+        io.setPosition(setpoint);
         io.set(0);
 
         if (requestFeed) {
           state = FunnelStates.FEED;
+        } else if (requestClimb) {
+          state = FunnelStates.CLIMB_READY;
         }
 
         break;
@@ -74,6 +83,13 @@ public class Funnel extends SubsystemBase {
           requestIdle();
         }
         break;
+      case CLIMB_READY:
+        if (inputs.pos <= setpoint) {
+          io.setPivot(.9);
+        } else {
+          io.setPivot(0);
+        }
+        break;
     }
 
     // pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);
@@ -87,16 +103,23 @@ public class Funnel extends SubsystemBase {
 
   public void requestIdle() {
     requestFeed = false;
+    requestClimb = false;
     requestIdle = true;
   }
 
   public void requestPosition(double position) {
     setpoint = position;
+
+    if (position > 1) {
+      requestIdle();
+
+      requestClimb = true;
+    }
   }
 
-  // public double getPosition() {
-  //   return inputs.pos;
-  // }
+  public double getPosition() {
+    return inputs.pos;
+  }
 
   // public double getVelocity() {
   //   return inputs.velMetersPerSecond;
