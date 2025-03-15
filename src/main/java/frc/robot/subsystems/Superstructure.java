@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -106,12 +107,13 @@ public class Superstructure extends SubsystemBase {
         } else if (requestClimbReady) {
           state = Superstates.CLIMB_READY;
         }
+
         break;
       case FEEDING:
-        arm.requestPosition(-.08);
-        elevator.requestHeight(-0.055);
         funnel.requestFeed();
         claw.requestFeed();
+        arm.requestPosition(-.08);
+        elevator.requestHeight(-0.055);
 
         candle.SetLEDYellow();
 
@@ -136,11 +138,11 @@ public class Superstructure extends SubsystemBase {
       case PRE_SCORE: // 13 inches away from reef for L2
         if (level == Level.L1) {
           arm.requestPosition(.005);
-          elevator.requestHeight(-.052);
+          elevator.requestHeight(-.055);
           candle.SetLEDOrange();
         } else if (level == Level.L2) {
-          arm.requestPosition(0.12881910562515259);
-          elevator.requestHeight(-0.147);
+          arm.requestPosition(0.1185);
+          elevator.requestHeight(-0.160);
           candle.SetLEDRed();
         } else if (level == Level.L3) {
           arm.requestPosition(0.70);
@@ -153,7 +155,9 @@ public class Superstructure extends SubsystemBase {
         }
         claw.requestIdle();
 
-        if (requestIdle) {
+        if (requestFeed) {
+          state = Superstates.FEEDING;
+        } else if (requestIdle) {
           state = Superstates.IDLE;
         } else if (level == Level.L1 && requestScore) {
           state = Superstates.SCOREL1;
@@ -167,9 +171,12 @@ public class Superstructure extends SubsystemBase {
 
         break;
       case SCOREL1:
+        SmartDashboard.putString("ScoreTest", "SCOREL1");
         claw.requestShootL1();
 
-        if (requestPreScore) {
+        if (requestFeed) {
+          state = Superstates.FEEDING;
+        } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         } else if (requestClimbReady) {
           state = Superstates.CLIMB_READY;
@@ -177,14 +184,16 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.IDLE;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
-        } else if (requestFeed) {
-          state = Superstates.FEEDING;
         }
+
         break;
       case SCOREL2:
+        SmartDashboard.putString("ScoreTest", "SCOREL2");
         claw.requestShootL2();
 
-        if (requestPreScore) {
+        if (requestFeed) {
+          state = Superstates.FEEDING;
+        } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         } else if (requestClimbReady) {
           state = Superstates.CLIMB_READY;
@@ -192,14 +201,14 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.IDLE;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
-        } else if (requestFeed) {
-          state = Superstates.FEEDING;
         }
 
         break;
       case SCORE:
         claw.requestShoot();
-        if (requestPreScore) {
+        if (requestFeed) {
+          state = Superstates.FEEDING;
+        } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
         } else if (requestClimbReady) {
           state = Superstates.CLIMB_READY;
@@ -207,8 +216,6 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.IDLE;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
-        } else if (requestFeed) {
-          state = Superstates.FEEDING;
         }
         break;
       case CLIMB_READY:
@@ -295,30 +302,28 @@ public class Superstructure extends SubsystemBase {
   public void intakeCoral(Trigger action) {
     action.onTrue(
         new InstantCommand(
-                () -> {
-                  // ! Manual Override:
-                  // pausedFeedingTimer.stop();
-                  // pausedFeedingTimer.reset();
-
-                  // if (feedingTimer.get() <= 0) feedingTimer.start(); end
-
-                  if (elevator.getHeight() < .5) {
-                    requestFeed();
-                  }
-                })
-            .ignoringDisable(true));
+            () -> {
+              // if (elevator.getHeight() < .5) {
+              requestFeed();
+              // }
+            }));
     action.onFalse(
         new InstantCommand(
-                () -> {
-                  // ! Manual Override:
-                  // feedingTimer.stop();
-                  // feedingTimer.reset();
+            () -> {
+              funnel.requestIdle();
+              requestIdle();
+            }));
+  }
 
-                  // if (pausedFeedingTimer.get() <= 0) pausedFeedingTimer.start(); end
-
-                  funnel.requestIdle();
-                  requestIdle();
-                })
-            .ignoringDisable(true));
+  public void intakeCoral(boolean runFeed, double time) {
+    if (runFeed) {
+      new InstantCommand(
+              () -> {
+                if (elevator.getHeight() < .5) {
+                  requestFeed();
+                }
+              })
+          .withTimeout(time);
+    }
   }
 }

@@ -3,6 +3,7 @@ package frc.robot.subsystems.manipulator;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -76,6 +77,7 @@ public class Claw extends SubsystemBase {
         }
         break;
       case SHOOTL1:
+        SmartDashboard.putString("ScoreTest", "SHOOTL1");
         io.setClawSpeed(Constants.Manipulator.Claw.scoreL1Speed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
@@ -88,6 +90,7 @@ public class Claw extends SubsystemBase {
         }
         break;
       case SHOOTL2:
+        SmartDashboard.putString("ScoreTest", "SHOOTL2");
         io.setClawSpeed(Constants.Manipulator.Claw.scoreL2Speed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
@@ -166,6 +169,7 @@ public class Claw extends SubsystemBase {
     requestFeed = false;
     requestShootL2 = false;
     requestShoot = false;
+    requestShootL1 = false;
   }
 
   public void enableBrakeMode(boolean enable) {

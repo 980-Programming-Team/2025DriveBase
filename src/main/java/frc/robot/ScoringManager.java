@@ -77,14 +77,14 @@ public class ScoringManager {
         .whileTrue(
             pathFindToFLL =
                 AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[4]),
+                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
                     RobotContainer.constraints,
                     0));
     new JoystickButton(leftController, 11)
         .whileTrue(
             pathFindToFLR =
                 AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
+                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[4]),
                     RobotContainer.constraints,
                     0));
     new JoystickButton(leftController, 5)
@@ -172,14 +172,14 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      superStructure.funnel.requestPosition(5000);
+                      superStructure.funnel.requestPosition(5500);
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
                     () -> {
-                      if (rightController.getRawButtonPressed(12)) {
+                      if (superStructure.funnel.getPosition() > 5000) {
                         superStructure.requestClimbReady();
                       }
                     })

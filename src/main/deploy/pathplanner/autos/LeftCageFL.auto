@@ -5,15 +5,16 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "LeftCageFL"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "FLR"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LeftCageFL"
+                }
+              }
+            ]
           }
         },
         {
@@ -25,7 +26,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.5
           }
         },
         {
@@ -33,11 +34,36 @@
           "data": {
             "name": "Shoot"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "FL BackOff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "L1"
+                }
+              }
+            ]
+          }
         }
       ]
     }
   },
-  "resetOdom": true,
+  "resetOdom": false,
   "folder": "LeftCage",
   "choreoAuto": false
 }

@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -247,228 +248,21 @@ public class RobotContainer {
               superstructure.requestPreScore();
             })));
 
-    // NamedCommands.registerCommand("FL", (pathFindToFL));
-    // NamedCommands.registerCommand("BL", (pathFindToBL));
-    // NamedCommands.registerCommand("SourceL", (pathFindToSourceL));
-    // NamedCommands.registerCommand("Processor", (pathFindToProcessor));
+    NamedCommands.registerCommand(
+        "L1",
+        (new InstantCommand(
+            () -> {
+              superstructure.requestLevel(1);
+              superstructure.requestPreScore();
+            })));
 
-    /*
-     // FRONT CENTER ALIGN LEFT L2
-     NamedCommands.registerCommand("FC AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT CENTER ALIGN LEFT L3
-     NamedCommands.registerCommand("FC AL L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT CENTER ALIGN LEFT L4
-     NamedCommands.registerCommand("FC AL L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT CENTER ALIGN RIGHT L2
-     NamedCommands.registerCommand("FC AR L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT CENTER ALIGN RIGHT L3
-     NamedCommands.registerCommand("FC AR L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT CENTER ALIGN RIGHT L4
-     NamedCommands.registerCommand("FC AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN LEFT L2
-     NamedCommands.registerCommand("FR AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN LEFT L3
-     NamedCommands.registerCommand("FR AL L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN LEFT L4
-     NamedCommands.registerCommand("FR AL L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN RIGHT L2
-     NamedCommands.registerCommand("FR AR L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN RIGHT L3
-     NamedCommands.registerCommand("FR AR L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT RIGHT ALIGN RIGHT L4
-     NamedCommands.registerCommand("FR AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN LEFT L2
-     NamedCommands.registerCommand("BR AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN LEFT L3
-     NamedCommands.registerCommand("BR AL L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN LEFT L4
-     NamedCommands.registerCommand("BR AL L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN RIGHT L2
-     NamedCommands.registerCommand("BR AR L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN RIGHT L3
-     NamedCommands.registerCommand("BR AR L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK RIGHT ALIGN RIGHT L4
-     NamedCommands.registerCommand("BR AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK CENTER ALIGN LEFT L2
-     NamedCommands.registerCommand("BC AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK CENTER ALIGN LEFT L3
-     NamedCommands.registerCommand("BC AL L3", new InstantCommand(
-         () -> {
-           superstructure.requestEject();
-         }));
-
-     // BACK CENTER ALIGN LEFT L4
-     NamedCommands.registerCommand("BC AL L4", new InstantCommand(
-         () -> {
-           superstructure.requestEject();
-         }));
-
-     // BACK CENTER ALIGN RIGHT L2
-     NamedCommands.registerCommand("BC AR L2", new InstantCommand(
-         () -> {
-           superstructure.requestEject();
-         }));
-
-     // BACK CENTER ALIGN RIGHT L3
-     NamedCommands.registerCommand("BC AR L3", new InstantCommand(
-         () -> {
-           superstructure.requestEject();
-         }));
-
-     // BACK CENTER ALIGN RIGHT L4
-     NamedCommands.registerCommand("BC AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN LEFT L2
-     NamedCommands.registerCommand("BL AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN LEFT L3
-     NamedCommands.registerCommand("BL AL L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN LEFT L4
-     NamedCommands.registerCommand("BL AL L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN RIGHT L2
-     NamedCommands.registerCommand("BL AR L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN RIGHT L3
-     NamedCommands.registerCommand("BL AR L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // BACK LEFT ALIGN RIGHT L4
-     NamedCommands.registerCommand("BL AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-    // FRONT LEFT ALIGN LEFT L2
-    NamedCommands.registerCommand("FL AL L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT LEFT ALIGN LEFT L3
-     NamedCommands.registerCommand("FL AL L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT LEFT ALIGN LEFT L4
-     NamedCommands.registerCommand("FL AL L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT LEFT ALIGN RIGHT L2
-     NamedCommands.registerCommand("FL AR L2", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT LEFT ALIGN RIGHT L3
-     NamedCommands.registerCommand("FL AR L3", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-
-     // FRONT LEFT ALIGN RIGHT L4
-     NamedCommands.registerCommand("FL AR L4", new InstantCommand(
-       () -> {
-         superstructure.requestEject();
-       }));
-       */
+    NamedCommands.registerCommand(
+        "Feed",
+        (new InstantCommand(
+            () -> {
+              superstructure.intakeCoral(true, 5);
+              superstructure.requestPreScore();
+            })));
   }
 
   /**
@@ -480,5 +274,27 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
+  public void autoInit() {
+    isInMatch = true;
+  }
+
   public void disabledInit() {}
+
+  DriverStation.Alliance allianceColor = Alliance.Red;
+  boolean isInMatch;
+
+  public void disabledPeriodic() {
+    if (!isInMatch) {
+      DriverStation.getAlliance()
+          .ifPresent(
+              a -> {
+                if (a != allianceColor) {
+                  allianceColor = a;
+                  operatorBoard.configScoringPosButtons();
+                  System.out.println("Buttons configured for " + a.name() + " Alliance");
+                }
+              });
+    }
+    // System.out.println("Buttons configured for " + allianceColor.name() + " Alliance");
+  }
 }

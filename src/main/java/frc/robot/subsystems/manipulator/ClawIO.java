@@ -15,8 +15,6 @@ public interface ClawIO {
 
   public default void updateInputs(ClawIOInputs inputs) {}
 
-  public default void setClawVoltage(double voltage) {}
-
   public default void setClawSpeed(double speed) {}
 
   public default void stop() {}

@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
-import org.littletonrobotics.junction.Logger;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
@@ -53,11 +52,11 @@ public class Funnel extends SubsystemBase {
 
   public void periodic() {
     io.updateInputs(inputs);
-    Logger.processInputs("Funnel", inputs);
+    // Logger.processInputs("Funnel", inputs);
 
-    Logger.recordOutput("Funnel/Setpoint", setpoint);
-    Logger.recordOutput("Funnel/Position", getPosition());
-    Logger.recordOutput("Funnel/requestClimb", requestClimb);
+    // Logger.recordOutput("Funnel/Setpoint", setpoint);
+    // Logger.recordOutput("Funnel/Position", getPosition());
+    // Logger.recordOutput("Funnel/requestClimb", requestClimb);
 
     switch (state) {
       case IDLE:
@@ -76,7 +75,7 @@ public class Funnel extends SubsystemBase {
 
         if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 0.5 || requestIdle) {
+        if (feedTimer.get() >= 1.25 || requestIdle) {
           state = FunnelStates.IDLE;
           feedTimer.stop();
           feedTimer.reset();

@@ -131,9 +131,8 @@ public final class Constants {
     public class Claw {
 
       public static final double feedSpeed = 0.3;
-      public static final double scoreL1Speed = .7;
+      public static final double scoreL1Speed = .6;
       public static final double scoreL2Speed = 0.93;
-      public static final double scoreVoltage = -0.85;
       public static final double scoreSpeed = -0.6;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
