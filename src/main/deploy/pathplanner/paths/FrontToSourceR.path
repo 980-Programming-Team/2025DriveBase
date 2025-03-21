@@ -61,7 +61,7 @@
     "rotation": -128.0
   },
   "reversed": false,
-  "folder": "ReefPaths",
+  "folder": "Reef",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0

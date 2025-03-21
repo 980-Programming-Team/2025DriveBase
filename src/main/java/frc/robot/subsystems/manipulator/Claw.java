@@ -19,7 +19,7 @@ public class Claw extends SubsystemBase {
   private boolean requestShootL1;
   private boolean requestShootL2;
 
-  private boolean coralSecured;
+  // private boolean coralSecured;
   private ClawStates state;
 
   private Timer shootTimer;

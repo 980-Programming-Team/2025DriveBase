@@ -27,8 +27,8 @@ public class Funnel extends SubsystemBase {
 
   public enum FunnelStates {
     IDLE,
-    FEED,
-    CLIMB_READY
+    FEED//,
+    // CLIMB_READY
   }
 
   public Funnel(FunnelIO funnelIO) {
@@ -60,13 +60,13 @@ public class Funnel extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.setPosition(setpoint);
+        // io.setPosition(setpoint);
         io.set(0);
 
         if (requestFeed) {
           state = FunnelStates.FEED;
-        } else if (requestClimb) {
-          state = FunnelStates.CLIMB_READY;
+        // } else if (requestClimb) {
+        //   state = FunnelStates.CLIMB_READY;
         }
 
         break;
@@ -75,20 +75,20 @@ public class Funnel extends SubsystemBase {
 
         if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 1.25 || requestIdle) {
+        if (feedTimer.get() >= 0.25 || requestIdle) {
           state = FunnelStates.IDLE;
           feedTimer.stop();
           feedTimer.reset();
           requestIdle();
         }
         break;
-      case CLIMB_READY:
-        if (inputs.pos <= setpoint) {
-          io.setPivot(.9);
-        } else {
-          io.setPivot(0);
-        }
-        break;
+      // case CLIMB_READY:
+      //   if (inputs.pos <= setpoint) {
+      //     io.setPivot(.9);
+      //   } else {
+      //     io.setPivot(0);
+      //   }
+      //   break;
     }
 
     // pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);
@@ -106,23 +106,23 @@ public class Funnel extends SubsystemBase {
     requestIdle = true;
   }
 
-  public void requestPosition(double position) {
-    setpoint = position;
+  // public void requestPosition(double position) {
+  //   setpoint = position;
 
-    if (position > 1) {
-      requestIdle();
+  //   if (setpoint > 5000) {
+  //     requestIdle();
 
-      requestClimb = true;
-    }
-  }
-
-  public double getPosition() {
-    return inputs.pos;
-  }
-
-  // public double getVelocity() {
-  //   return inputs.velMetersPerSecond;
+  //     requestClimb = true;
+  //   }
   // }
+
+  // public double getPosition() {
+  //   return inputs.pos;
+  // }
+
+  public double getVelocity() {
+    return inputs.velMetersPerSecond;
+  }
 
   public void enableBrakeMode(boolean enable) {
     io.enableBrakeMode(enable);

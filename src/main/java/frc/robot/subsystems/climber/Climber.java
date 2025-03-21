@@ -29,8 +29,8 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Climber", inputs);
-    Logger.recordOutput("Climber/State", state.toString());
-    Logger.recordOutput("Climber/Setpoint", setpoint);
+    // Logger.recordOutput("Climber/State", state.toString());
+    // Logger.recordOutput("Climber/Setpoint", setpoint);
 
     switch (state) {
       case STARTING_CONFIG:

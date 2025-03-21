@@ -46,5 +46,7 @@ public class SourceManager {
                     0));
     superStructure.setDefaultCommand(
         Commands.run(() -> superStructure.intakeCoral(driver.leftBumper()), superStructure));
+    superStructure.setDefaultCommand(
+        Commands.run(() -> superStructure.readyIntakeCoral(driver.rightBumper()), superStructure));
   }
 }

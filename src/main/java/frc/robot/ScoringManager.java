@@ -172,16 +172,16 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
-                      superStructure.funnel.requestPosition(5500);
+                      //   superStructure.funnel.requestPosition(5300);
                     })
                 .ignoringDisable(true));
     new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
                     () -> {
-                      if (superStructure.funnel.getPosition() > 5000) {
-                        superStructure.requestClimbReady();
-                      }
+                      //   if (superStructure.funnel.getPosition() > 3000) {
+                    //   superStructure.requestClimbReady();
+                      //   }
                     })
                 .ignoringDisable(true));
   }

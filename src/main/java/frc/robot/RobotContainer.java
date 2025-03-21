@@ -53,6 +53,9 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.AllianceFlipUtil;
+
+import java.util.concurrent.CancellationException;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -85,7 +88,7 @@ public class RobotContainer {
   // public static Climber climber = new Climber(climberIO);
   private static CANdleSystem candle = new CANdleSystem();
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, claw, funnel, climber, candle);
+      new Superstructure(elevator, arm, claw, funnel, /*climber, */candle);
 
   // Controllers
   public static SourceManager driver = new SourceManager(0, superstructure);
@@ -96,8 +99,7 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
-      new PathConstraints(3.0, 4.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
-
+      new PathConstraints(2.0, 1.25, Units.degreesToRadians(540), Units.degreesToRadians(720));
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -230,6 +232,27 @@ public class RobotContainer {
         "BCL",
         (AutoBuilder.pathfindToPose(
             AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "FRL",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "FCR",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BRR",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
             RobotContainer.constraints,
             0)));
 
