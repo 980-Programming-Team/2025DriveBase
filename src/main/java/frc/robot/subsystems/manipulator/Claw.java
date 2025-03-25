@@ -18,6 +18,7 @@ public class Claw extends SubsystemBase {
   private boolean requestShoot;
   private boolean requestShootL1;
   private boolean requestShootL2;
+  private boolean requestShootL4;
 
   // private boolean coralSecured;
   private ClawStates state;
@@ -29,7 +30,8 @@ public class Claw extends SubsystemBase {
     FEED,
     SHOOTL1,
     SHOOTL2,
-    SHOOT
+    SHOOT,
+    SHOOTL4
   }
 
   public Claw(ClawIO io) {
@@ -62,6 +64,8 @@ public class Claw extends SubsystemBase {
           state = ClawStates.SHOOTL1;
         } else if (requestShootL2 && shootTimer.get() <= 0) {
           state = ClawStates.SHOOTL2;
+        } else if (requestShootL4 && shootTimer.get() <= 0) {
+          state = ClawStates.SHOOTL4;
         }
         break;
       case FEED:
@@ -104,6 +108,18 @@ public class Claw extends SubsystemBase {
         break;
       case SHOOT:
         io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed);
+
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 2 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
+        break;
+      case SHOOTL4:
+        io.setClawSpeed(Constants.Manipulator.Claw.scoreL4Speed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
@@ -164,12 +180,18 @@ public class Claw extends SubsystemBase {
     requestShootL2 = true;
   }
 
+  public void requestShootL4() {
+    unsetAllRequests();
+    requestShootL4 = true;
+  }
+
   private void unsetAllRequests() {
     requestIdle = false;
     requestFeed = false;
     requestShootL2 = false;
     requestShoot = false;
     requestShootL1 = false;
+    requestShootL4 = false;
   }
 
   public void enableBrakeMode(boolean enable) {

@@ -5,10 +5,11 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase {
   private ArmIO io;
-  // private ArmIOInputsAutoLogged inputs;
+  private ArmIOInputsAutoLogged inputs;
 
   private final Alert armMissingAlert;
 
@@ -31,13 +32,13 @@ public class Arm extends SubsystemBase {
     this.io = io;
 
     setpoint = 0.0;
-    // inputs = new ArmIOInputsAutoLogged();
+    inputs = new ArmIOInputsAutoLogged();
     armMissingAlert = new Alert("Disconnected Arm Motor", AlertType.kError);
   }
 
   public void periodic() {
-    // io.updateInputs(inputs);
-    // Logger.processInputs("Manipulator", inputs);
+    io.updateInputs(inputs);
+    Logger.processInputs("Manipulator", inputs);
     // Logger.recordOutput("Manipulator/State", state.toString());
     // Logger.recordOutput("Manipulator/Setpoint", setpoint);
 

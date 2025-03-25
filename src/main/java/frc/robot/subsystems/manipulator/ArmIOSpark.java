@@ -9,12 +9,14 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
 
 public class ArmIOSpark implements ArmIO {
   private SparkBase arm;
   private RelativeEncoder encoder;
+  private DutyCycleEncoder throughBoreEncoder;
 
   private SparkMaxConfig armConfig;
 
@@ -24,6 +26,9 @@ public class ArmIOSpark implements ArmIO {
     armConfig = new SparkMaxConfig();
 
     configureArm(arm, armConfig);
+
+    throughBoreEncoder = new DutyCycleEncoder(6, 5.0, 0.5950500898762523);
+    throughBoreEncoder.setInverted(true);
   }
 
   private void configureArm(SparkBase motor, SparkBaseConfig config) {
@@ -50,6 +55,7 @@ public class ArmIOSpark implements ArmIO {
     inputs.kArmConnected = (arm.getFirmwareVersion() != 0);
     inputs.armAppliedVoltage = arm.getBusVoltage();
     inputs.pos = arm.getEncoder().getPosition();
+    inputs.absPos = throughBoreEncoder.get();
     inputs.supplyArmCurrentAmps = arm.getOutputCurrent();
     inputs.velMetersPerSecond = arm.getEncoder().getVelocity();
   }

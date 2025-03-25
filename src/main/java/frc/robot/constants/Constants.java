@@ -39,7 +39,7 @@ public final class Constants {
   public static final boolean beamBreaksEnabled = false;
 
   public static final double NEO_FREE_SPEED = 6000.0; // TODO find the real free speed
-  //LED Constants
+  // LED Constants
   public static final int LED_NUM = 105; // TODO: Determine number of leds
   public static final int LED_BRIGHTNESS = 140;
 
@@ -132,10 +132,11 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.2;
+      public static final double feedSpeed = 0.15;
       public static final double scoreL1Speed = .6;
       public static final double scoreL2Speed = 0.93;
       public static final double scoreSpeed = -0.6;
+      public static final double scoreL4Speed = -0.3;
       public static final int currentLimit = 20;
       public static final double coralDetectionCurrentThreshold =
           2000.0; // Placeholder value, needs experimental determination
@@ -144,7 +145,7 @@ public final class Constants {
 
   public class Funnel {
 
-    public static final double feedSpeed = .70;
+    public static final double feedSpeed = .65;
 
     // NEO 550
     public static final int kFunnelIntake = 9;

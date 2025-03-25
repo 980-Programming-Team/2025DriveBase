@@ -180,7 +180,7 @@ public class ScoringManager {
             new InstantCommand(
                     () -> {
                       //   if (superStructure.funnel.getPosition() > 3000) {
-                    //   superStructure.requestClimbReady();
+                      //   superStructure.requestClimbReady();
                       //   }
                     })
                 .ignoringDisable(true));

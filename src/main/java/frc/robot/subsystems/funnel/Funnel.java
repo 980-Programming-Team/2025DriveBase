@@ -27,7 +27,7 @@ public class Funnel extends SubsystemBase {
 
   public enum FunnelStates {
     IDLE,
-    FEED//,
+    FEED // ,
     // CLIMB_READY
   }
 
@@ -65,8 +65,8 @@ public class Funnel extends SubsystemBase {
 
         if (requestFeed) {
           state = FunnelStates.FEED;
-        // } else if (requestClimb) {
-        //   state = FunnelStates.CLIMB_READY;
+          // } else if (requestClimb) {
+          //   state = FunnelStates.CLIMB_READY;
         }
 
         break;
@@ -82,13 +82,13 @@ public class Funnel extends SubsystemBase {
           requestIdle();
         }
         break;
-      // case CLIMB_READY:
-      //   if (inputs.pos <= setpoint) {
-      //     io.setPivot(.9);
-      //   } else {
-      //     io.setPivot(0);
-      //   }
-      //   break;
+        // case CLIMB_READY:
+        //   if (inputs.pos <= setpoint) {
+        //     io.setPivot(.9);
+        //   } else {
+        //     io.setPivot(0);
+        //   }
+        //   break;
     }
 
     // pivotMissingAlert.set(!inputs.kPivotConnected && Constants.currentMode != Mode.SIM);

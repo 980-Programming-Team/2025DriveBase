@@ -9,6 +9,7 @@ public interface ArmIO {
     public double armAppliedVoltage = 0.0;
     public double supplyArmCurrentAmps = 0.0;
     public double pos = 0.0;
+    public double absPos = 0.0;
     public double velMetersPerSecond = 0.0;
   }
 

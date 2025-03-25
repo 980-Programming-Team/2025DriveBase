@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 // import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -16,6 +17,7 @@ public class ElevatorIOSpark implements ElevatorIO {
   private SparkBase leader;
   private SparkBase follower;
 
+  private DutyCycleEncoder throughBoreEncoder;
   // private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
 
@@ -41,6 +43,9 @@ public class ElevatorIOSpark implements ElevatorIO {
 
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
+
+    throughBoreEncoder = new DutyCycleEncoder(5, 150.0, 85.8);
+    throughBoreEncoder.setInverted(true);
   }
 
   private void configureLeader(SparkBase motor, SparkBaseConfig config) {
@@ -78,6 +83,7 @@ public class ElevatorIOSpark implements ElevatorIO {
     inputs.kPDHMotorConnected = (leader.getFirmwareVersion() != 0);
     inputs.posMeters = rotationsToMeters(leader.getEncoder().getPosition());
     inputs.pos = leader.getEncoder().getPosition();
+    inputs.absPos = throughBoreEncoder.get();
     inputs.velMetersPerSecond =
         rotationsToMeters(leader.getEncoder().getVelocity()); // throughBoreEncoder.getRate()
     inputs.appliedVoltage = leader.getBusVoltage();

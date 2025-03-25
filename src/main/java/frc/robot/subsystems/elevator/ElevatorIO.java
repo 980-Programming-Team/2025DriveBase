@@ -9,6 +9,7 @@ public interface ElevatorIO {
     public boolean kPDHMotorConnected = false;
     public double posMeters = 0.0;
     public double pos = 0.0;
+    public double absPos = 0.0;
     public double velMetersPerSecond = 0.0;
     public double appliedVoltage = 0.0;
     public double followerAppliedVoltage = 0.0;

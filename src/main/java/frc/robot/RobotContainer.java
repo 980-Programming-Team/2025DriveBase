@@ -23,14 +23,10 @@ import frc.robot.subsystems.Superstructure;
 // import frc.robot.subsystems.climber.Climber;
 // import frc.robot.subsystems.climber.ClimberIO;
 // import frc.robot.subsystems.climber.ClimberIOSpark;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOSpark;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
@@ -51,11 +47,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.AllianceFlipUtil;
-
-import java.util.concurrent.CancellationException;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -73,22 +65,16 @@ public class RobotContainer {
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
   public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
   public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
-  public static ClimberIO climberIO =
-      Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
-  // public static ClimberIO climberIO =
-  // Constants.climberEnabled ? new ClimberIOSpark() : new ClimberIO() {};
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static Arm arm = new Arm(armIO);
   public static Claw claw = new Claw(clawIO);
   public static Funnel funnel = new Funnel(funnelIO);
-  public static Climber climber = new Climber(climberIO);
-  // public static Climber climber = new Climber(climberIO);
   private static CANdleSystem candle = new CANdleSystem();
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, claw, funnel, /*climber, */candle);
+      new Superstructure(elevator, arm, claw, funnel, candle);
 
   // Controllers
   public static SourceManager driver = new SourceManager(0, superstructure);
@@ -116,30 +102,31 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(VisionConstants.limelightFront, drive::getRotation),
-                new VisionIOLimelight(VisionConstants.limelightSource, drive::getRotation));
+                new VisionIOLimelight(VisionConstants.limelightPDP, drive::getRotation),
+                new VisionIOLimelight(VisionConstants.limelightRio, drive::getRotation));
         break;
 
-      case SIM:
-        // Sim robot, instantiate physics sim IO implementations
-        drive =
-            new Drive(
-                new GyroIO() {},
-                new ModuleIOSim(TunerConstants.FrontLeft),
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight));
+        // case SIM:
+        //   // Sim robot, instantiate physics sim IO implementations
+        //   drive =
+        //       new Drive(
+        //           new GyroIO() {},
+        //           new ModuleIOSim(TunerConstants.FrontLeft),
+        //           new ModuleIOSim(TunerConstants.FrontRight),
+        //           new ModuleIOSim(TunerConstants.BackLeft),
+        //           new ModuleIOSim(TunerConstants.BackRight));
 
-        vision =
-            new Vision(
-                drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(
-                    VisionConstants.limelightFront, VisionConstants.robotToCamera0, drive::getPose),
-                new VisionIOPhotonVisionSim(
-                    VisionConstants.limelightSource,
-                    VisionConstants.robotToCamera1,
-                    drive::getPose));
-        break;
+        //   vision =
+        //       new Vision(
+        //           drive::addVisionMeasurement,
+        //           new VisionIOPhotonVisionSim(
+        //               VisionConstants.limelightPDP, VisionConstants.robotToCamera0,
+        // drive::getPose),
+        //           new VisionIOPhotonVisionSim(
+        //               VisionConstants.limelightRio,
+        //               VisionConstants.robotToCamera1,
+        //               drive::getPose));
+        //   break;
 
       default:
         // Replayed robot, disable IO implementations

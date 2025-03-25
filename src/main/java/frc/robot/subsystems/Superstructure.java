@@ -11,7 +11,6 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Arm;
 import frc.robot.subsystems.manipulator.Claw;
-import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
   private boolean requestIdle;
@@ -35,8 +34,8 @@ public class Superstructure extends SubsystemBase {
 
   private LaserCan ohtaniLaser;
 
-  //pretty sure that both encoders turn counterclockwise
-  //if negative turning for positive movement, use setInverted()
+  // pretty sure that both encoders turn counterclockwise
+  // if negative turning for positive movement, use setInverted()
   private DutyCycleEncoder elevatorEncoder;
   private DutyCycleEncoder armEncoder;
 
@@ -48,6 +47,7 @@ public class Superstructure extends SubsystemBase {
     SCOREL1,
     SCOREL2,
     SCORE,
+    SCOREL4,
     // CLIMB_READY,
     DISABLED
   }
@@ -60,7 +60,11 @@ public class Superstructure extends SubsystemBase {
   }
 
   public Superstructure(
-      Elevator elevator, Arm arm, Claw claw, Funnel funnel, /*Climber climber,*/ CANdleSystem candle) {
+      Elevator elevator,
+      Arm arm,
+      Claw claw,
+      Funnel funnel, /*Climber climber,*/
+      CANdleSystem candle) {
     this.elevator = elevator;
     this.arm = arm;
     this.funnel = funnel;
@@ -75,8 +79,8 @@ public class Superstructure extends SubsystemBase {
 
     // init is (channel/pin in roborio, max value in range, point which returns 0)
     // need to test to see where the 0 point is
-    elevatorEncoder = new DutyCycleEncoder(0, 1, 0);
-    armEncoder = new DutyCycleEncoder(1, 1, 0);
+    // elevatorEncoder = new DutyCycleEncoder(0, 1, 0);
+    // armEncoder = new DutyCycleEncoder(1, 1, 0);
   }
 
   @Override
@@ -84,11 +88,11 @@ public class Superstructure extends SubsystemBase {
     // Logger.recordOutput("Superstructure/State", state.toString());
     // Logger.recordOutput("Superstructure/Level", level.toString());
 
-    Logger.recordOutput("Superstructure/ElevatorEncoderConnection", elevatorEncoder.isConnected());
-    Logger.recordOutput("Superstructure/ArmEncoderConnection", armEncoder.isConnected());
-    Logger.recordOutput("Superstructure/ElevatorEncoder", elevatorEncoder.get());
-    Logger.recordOutput("Superstructure/ArmEncoder", armEncoder.get());
-
+    // Logger.recordOutput("Superstructure/ElevatorEncoderConnection",
+    // elevatorEncoder.isConnected());
+    // Logger.recordOutput("Superstructure/ArmEncoderConnection", armEncoder.isConnected());
+    // Logger.recordOutput("Superstructure/ElevatorEncoder", elevatorEncoder.get());
+    // Logger.recordOutput("Superstructure/ArmEncoder", armEncoder.get());
 
     switch (state) {
       case IDLE:
@@ -105,7 +109,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.FEEDING;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestPreFeed) {
           state = Superstates.PRE_FEED;
@@ -123,15 +127,17 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SCOREL1;
         } else if (level == Level.L2 && requestScore) {
           state = Superstates.SCOREL2;
+        } else if (level == Level.L4 && requestScore) {
+          state = Superstates.SCOREL4;
         } else if (requestScore) {
           state = Superstates.SCORE;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestFeed) {
           state = Superstates.FEEDING;
-        } 
+        }
         break;
       case FEEDING:
         funnel.requestFeed();
@@ -147,17 +153,19 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SCOREL1;
         } else if (level == Level.L2 && requestScore) {
           state = Superstates.SCOREL2;
+        } else if (level == Level.L4 && requestScore) {
+          state = Superstates.SCOREL4;
         } else if (requestScore) {
           state = Superstates.SCORE;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestPreFeed) {
           state = Superstates.PRE_FEED;
         }
 
-        if(ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
+        if (ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
           state = Superstates.IDLE;
           unsetAllRequests();
         } else if (requestPreFeed) {
@@ -174,7 +182,7 @@ public class Superstructure extends SubsystemBase {
           elevator.requestHeight(-0.160);
           candle.SetLEDRed();
         } else if (level == Level.L3) {
-          arm.requestPosition(0.78);
+          arm.requestPosition(0.715);
           elevator.requestHeight(-0.08);
           candle.SetLEDGreen();
         } else if (level == Level.L4) {
@@ -192,10 +200,12 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.SCOREL1;
         } else if (level == Level.L2 && requestScore) {
           state = Superstates.SCOREL2;
+        } else if (level == Level.L4 && requestScore) {
+          state = Superstates.SCOREL4;
         } else if (requestScore) {
           state = Superstates.SCORE;
-        // } else if (requestClimbReady) {
-        // state = Superstates.CLIMB_READY;
+          // } else if (requestClimbReady) {
+          // state = Superstates.CLIMB_READY;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
         } else if (requestPreFeed) {
@@ -210,7 +220,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.FEEDING;
         } else if (requestPreScore) {
           state = Superstates.PRE_SCORE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
@@ -228,7 +238,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.PRE_SCORE;
         } else if (requestIdle) {
           state = Superstates.IDLE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
@@ -245,7 +255,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.PRE_SCORE;
         } else if (requestIdle) {
           state = Superstates.IDLE;
-        // } else if (requestClimbReady) {
+          // } else if (requestClimbReady) {
           // state = Superstates.CLIMB_READY;
         } else if (requestDisable) {
           state = Superstates.DISABLED;
@@ -253,19 +263,34 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.PRE_FEED;
         }
 
+        break;
+      case SCOREL4:
+        claw.requestShootL4();
+        if (requestFeed) {
+          state = Superstates.FEEDING;
+        } else if (requestPreScore) {
+          state = Superstates.PRE_SCORE;
+        } else if (requestIdle) {
+          state = Superstates.IDLE;
+          // } else if (requestClimbReady) {
+          // state = Superstates.CLIMB_READY;
+        } else if (requestDisable) {
+          state = Superstates.DISABLED;
+        } else if (requestPreFeed) {
+          state = Superstates.PRE_FEED;
+        }
 
         break;
-      // case CLIMB_READY:
-      //   candle.SetLEDPurple();
+        // case CLIMB_READY:
+        //   candle.SetLEDPurple();
 
-      //   climber.requestPosition(110);
-      //   break;
+        //   climber.requestPosition(110);
+        //   break;
       case DISABLED:
         arm.enableCoastMode(true);
         break;
     }
   }
-
 
   public Superstates getState() {
     return state;
@@ -276,8 +301,7 @@ public class Superstructure extends SubsystemBase {
     requestIdle = true;
   }
 
-  public void requestPreFeed()
-  {
+  public void requestPreFeed() {
     unsetAllRequests();
     requestPreFeed = true;
   }
@@ -309,6 +333,7 @@ public class Superstructure extends SubsystemBase {
 
   private void unsetAllRequests() {
     requestIdle = false;
+    requestPreFeed = false;
     requestFeed = false;
     requestPreScore = false;
     requestScore = false;
@@ -353,11 +378,17 @@ public class Superstructure extends SubsystemBase {
               requestIdle();
             }));
   }
+
   public void readyIntakeCoral(Trigger action) {
     action.onTrue(
         new InstantCommand(
             () -> {
               requestPreFeed();
+            }));
+    action.onFalse(
+        new InstantCommand(
+            () -> {
+              requestIdle();
             }));
   }
 
