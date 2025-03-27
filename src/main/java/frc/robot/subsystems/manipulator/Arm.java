@@ -39,8 +39,8 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Manipulator", inputs);
-    // Logger.recordOutput("Manipulator/State", state.toString());
-    // Logger.recordOutput("Manipulator/Setpoint", setpoint);
+    Logger.recordOutput("Manipulator/State", state.toString());
+    Logger.recordOutput("Manipulator/Setpoint", setpoint);
 
     switch (state) {
       case STARTING_CONFIG:

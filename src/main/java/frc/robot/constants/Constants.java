@@ -15,6 +15,7 @@ package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
+import frc.robot.util.LoggedTunableNumber;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -23,7 +24,13 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
+
+  public static boolean disableHAL = false;
+
+  public static void disableHAL() {
+    disableHAL = true;
+  }
 
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
@@ -100,19 +107,23 @@ public final class Constants {
       public static final double l4SetpointMechanismRotations = 0.0;
       public static final double setpointToleranceMechanismRotations = 0.05;
 
-      public static final double kP = 3.5;
-      public static final double kI = 0.0;
-      public static final double kD = 0.5;
-      public static final double minOutput = -0.5;
-      public static final double maxOutput = 0.5;
+      public static final LoggedTunableNumber kP1 =
+          new LoggedTunableNumber("Manipulator/P Value Arm", 0.7);
+      public static final LoggedTunableNumber kI1 =
+          new LoggedTunableNumber("Manipulator/I Value Arm", 0.0);
+      public static final LoggedTunableNumber kD1 =
+          new LoggedTunableNumber("Manipulator/D Value Arm", 0.0);
+
+      public static final double kP = 0.75;
+      public static final double kI = 0.1;
+      public static final double kD = 0.0;
+      public static final double minOutput = -0.7;
+      public static final double maxOutput = 0.7;
 
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
 
       public static final int currentLimit = 40;
-
-      public static final double peakForward = 0.5;
-      public static final double peakReverse = -0.5;
 
       public static final double mechanismMaxAccel = 3.3274;
       public static final double mechanismMaxCruiseVel = 1.597152;
@@ -134,7 +145,7 @@ public final class Constants {
 
       public static final double feedSpeed = 0.15;
       public static final double scoreL1Speed = .6;
-      public static final double scoreL2Speed = 0.93;
+      public static final double scoreL2Speed = 0.75;
       public static final double scoreSpeed = -0.6;
       public static final double scoreL4Speed = -0.3;
       public static final int currentLimit = 20;

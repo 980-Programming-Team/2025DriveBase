@@ -2,13 +2,13 @@ package frc.robot.subsystems.manipulator;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.Logger;
@@ -18,6 +18,7 @@ public class ArmIOSpark implements ArmIO {
   private RelativeEncoder encoder;
   private DutyCycleEncoder throughBoreEncoder;
 
+  private PIDController pidController;
   private SparkMaxConfig armConfig;
 
   public ArmIOSpark() {
@@ -27,9 +28,20 @@ public class ArmIOSpark implements ArmIO {
 
     configureArm(arm, armConfig);
 
-    throughBoreEncoder = new DutyCycleEncoder(6, 5.0, 0.5950500898762523);
+    throughBoreEncoder = new DutyCycleEncoder(6, 5.0, 0.0); // 2.70 4.74
     throughBoreEncoder.setInverted(true);
+    pidController =
+        new PIDController(
+            Constants.Manipulator.Arm.kP1.get(),
+            Constants.Manipulator.Arm.kI1.get(),
+            Constants.Manipulator.Arm.kD1.get());
+
+    // pidController.setD(-Constants.Manipulator.Arm.kD1.get());
+    // pidController.setTolerance(0);
   }
+
+  // intake - 2.04
+  // 2.20 l1 l2 2.36 l3 l4 4.03
 
   private void configureArm(SparkBase motor, SparkBaseConfig config) {
 
@@ -38,7 +50,7 @@ public class ArmIOSpark implements ArmIO {
 
     motor.clearFaults();
     config.disableFollowerMode();
-    config.inverted(false);
+    config.inverted(true);
     config.smartCurrentLimit(Constants.Manipulator.Arm.currentLimit);
     config.idleMode(IdleMode.kBrake);
     config.closedLoop.pid(
@@ -62,7 +74,9 @@ public class ArmIOSpark implements ArmIO {
 
   @Override
   public void setArmPosition(double targetPosition) {
-    arm.getClosedLoopController().setReference(targetPosition, ControlType.kPosition);
+
+    arm.set(pidController.calculate(throughBoreEncoder.get(), targetPosition));
+    // arm.getClosedLoopController().setReference(targetPosition, ControlType.kDutyCycle);
 
     Logger.recordOutput("Manipulator/Arm/TargetPosition", targetPosition);
   }

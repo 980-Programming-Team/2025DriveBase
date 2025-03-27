@@ -97,7 +97,7 @@ public class Superstructure extends SubsystemBase {
     switch (state) {
       case IDLE:
         elevator.requestHeight(-0.055);
-        arm.requestPosition(-.08);
+        arm.requestPosition(2.045); // -0.8
         claw.requestIdle();
         candle.SetLEDGreen();
 
@@ -118,7 +118,7 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_FEED:
         elevator.requestHeight(-0.055);
-        arm.requestPosition(-0.8);
+        arm.requestPosition(2.045); // -0.8
         candle.SetLEDPurple();
 
         if (requestIdle) {
@@ -142,7 +142,7 @@ public class Superstructure extends SubsystemBase {
       case FEEDING:
         funnel.requestFeed();
         claw.requestFeed();
-        arm.requestPosition(-.08);
+        arm.requestPosition(2.045); // -.08
         elevator.requestHeight(-0.055);
 
         candle.SetLEDYellow();
@@ -174,19 +174,19 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_SCORE:
         if (level == Level.L1) {
-          arm.requestPosition(.013);
+          arm.requestPosition(2.20); // 0.013
           elevator.requestHeight(-.055);
           candle.SetLEDOrange();
         } else if (level == Level.L2) {
-          arm.requestPosition(0.1193);
-          elevator.requestHeight(-0.160);
+          arm.requestPosition(2.36); // 0.1193
+          elevator.requestHeight(-0.245);
           candle.SetLEDRed();
         } else if (level == Level.L3) {
-          arm.requestPosition(0.715);
+          arm.requestPosition(4.03);
           elevator.requestHeight(-0.08);
           candle.SetLEDGreen();
         } else if (level == Level.L4) {
-          arm.requestPosition(0.715);
+          arm.requestPosition(4.03); // 0.715
           elevator.requestHeight(-0.84);
           candle.SetLEDYellow();
         }

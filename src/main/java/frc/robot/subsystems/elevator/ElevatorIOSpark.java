@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 // import edu.wpi.first.wpilibj.Encoder;
 import frc.robot.constants.Constants;
@@ -20,6 +21,8 @@ public class ElevatorIOSpark implements ElevatorIO {
   private DutyCycleEncoder throughBoreEncoder;
   // private Encoder throughBoreEncoder;
   private RelativeEncoder encoder;
+
+  private PIDController pidController;
 
   private SparkMaxConfig leaderConfig;
   private SparkMaxConfig followerConfig;
@@ -44,8 +47,10 @@ public class ElevatorIOSpark implements ElevatorIO {
     configureLeader(leader, leaderConfig);
     configureFollower(follower, followerConfig);
 
-    throughBoreEncoder = new DutyCycleEncoder(5, 150.0, 85.8);
+    throughBoreEncoder = new DutyCycleEncoder(5, 250.0, 0.0);
     throughBoreEncoder.setInverted(true);
+
+    pidController = new PIDController(1.0, 0.0, 0.0);
   }
 
   private void configureLeader(SparkBase motor, SparkBaseConfig config) {

@@ -85,7 +85,7 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
-      new PathConstraints(2.0, 1.25, Units.degreesToRadians(540), Units.degreesToRadians(720));
+      new PathConstraints(2.25, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -165,6 +165,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+
+    // Constants.Manipulator.Arm.kP1.get();
   }
 
   /**
