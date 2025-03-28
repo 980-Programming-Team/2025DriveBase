@@ -97,9 +97,9 @@ public class Superstructure extends SubsystemBase {
     switch (state) {
       case IDLE:
         elevator.requestHeight(-0.055);
-        arm.requestPosition(2.045); // -0.8
+        arm.requestPosition(2.05); // -0.8
         claw.requestIdle();
-        candle.SetLEDGreen();
+        candle.SetLEDOrange();
 
         // if (!funnel.requestClimb) {
         //   funnel.requestPosition(0.001);
@@ -118,8 +118,8 @@ public class Superstructure extends SubsystemBase {
         break;
       case PRE_FEED:
         elevator.requestHeight(-0.055);
-        arm.requestPosition(2.045); // -0.8
-        candle.SetLEDPurple();
+        arm.requestPosition(2.05); // -0.8
+        candle.SetLEDPurple4();
 
         if (requestIdle) {
           state = Superstates.IDLE;
@@ -142,10 +142,10 @@ public class Superstructure extends SubsystemBase {
       case FEEDING:
         funnel.requestFeed();
         claw.requestFeed();
-        arm.requestPosition(2.045); // -.08
+        arm.requestPosition(2.05); // -.08
         elevator.requestHeight(-0.055);
 
-        candle.SetLEDYellow();
+        candle.SetLEDPurple0();
 
         if (requestIdle) {
           state = Superstates.IDLE;
@@ -176,19 +176,19 @@ public class Superstructure extends SubsystemBase {
         if (level == Level.L1) {
           arm.requestPosition(2.20); // 0.013
           elevator.requestHeight(-.055);
-          candle.SetLEDOrange();
+          candle.SetLEDPurple1();
         } else if (level == Level.L2) {
           arm.requestPosition(2.36); // 0.1193
           elevator.requestHeight(-0.245);
-          candle.SetLEDRed();
+          candle.SetLEDPurple2();
         } else if (level == Level.L3) {
           arm.requestPosition(4.03);
           elevator.requestHeight(-0.08);
-          candle.SetLEDGreen();
+          candle.SetLEDPurple3();
         } else if (level == Level.L4) {
           arm.requestPosition(4.03); // 0.715
           elevator.requestHeight(-0.84);
-          candle.SetLEDYellow();
+          candle.SetLEDPurple4();
         }
         claw.requestIdle();
 
