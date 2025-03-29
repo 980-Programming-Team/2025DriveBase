@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 
 public class Claw extends SubsystemBase {
@@ -54,7 +55,13 @@ public class Claw extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.stop();
+        if (RobotContainer.driver.getDriver().povUp().getAsBoolean()) {
+          io.setClawSpeed(-Constants.Manipulator.Claw.scoreSpeed / 4);
+        } else if (RobotContainer.driver.getDriver().povDown().getAsBoolean()) {
+          io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed / 4);
+        } else {
+          io.stop();
+        }
 
         if (requestFeed && shootTimer.get() <= 0) {
           state = ClawStates.FEED;

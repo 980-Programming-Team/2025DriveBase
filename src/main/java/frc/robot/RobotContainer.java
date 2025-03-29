@@ -85,7 +85,7 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   // Create the constraints to use while pathfinding
   public static PathConstraints constraints =
-      new PathConstraints(2.25, 2.0, Units.degreesToRadians(540), Units.degreesToRadians(720));
+      new PathConstraints(2.25, 2, Units.degreesToRadians(540), Units.degreesToRadians(720));
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -272,7 +272,13 @@ public class RobotContainer {
         "Feed",
         (new InstantCommand(
             () -> {
-              superstructure.intakeCoral(true, 5);
+              superstructure.requestFeed();
+            })));
+
+    NamedCommands.registerCommand(
+        "PreScore",
+        (new InstantCommand(
+            () -> {
               superstructure.requestPreScore();
             })));
   }

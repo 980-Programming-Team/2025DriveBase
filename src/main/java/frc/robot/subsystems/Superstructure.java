@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -32,7 +33,9 @@ public class Superstructure extends SubsystemBase {
 
   private Level level;
 
-  private LaserCan ohtaniLaser;
+  public static LaserCan ohtaniLaser;
+
+  private Timer feedSetTimer;
 
   // pretty sure that both encoders turn counterclockwise
   // if negative turning for positive movement, use setInverted()
@@ -77,6 +80,9 @@ public class Superstructure extends SubsystemBase {
 
     ohtaniLaser = new LaserCan(34);
 
+    feedSetTimer = new Timer();
+    feedSetTimer.stop();
+    feedSetTimer.reset();
     // init is (channel/pin in roborio, max value in range, point which returns 0)
     // need to test to see where the 0 point is
     // elevatorEncoder = new DutyCycleEncoder(0, 1, 0);
@@ -117,7 +123,7 @@ public class Superstructure extends SubsystemBase {
 
         break;
       case PRE_FEED:
-        elevator.requestHeight(-0.055);
+        elevator.requestHeight(-0.045);
         arm.requestPosition(2.05); // -0.8
         candle.SetLEDPurple4();
 
@@ -143,7 +149,7 @@ public class Superstructure extends SubsystemBase {
         funnel.requestFeed();
         claw.requestFeed();
         arm.requestPosition(2.05); // -.08
-        elevator.requestHeight(-0.055);
+        elevator.requestHeight(-0.045);
 
         candle.SetLEDPurple0();
 
@@ -166,8 +172,16 @@ public class Superstructure extends SubsystemBase {
         }
 
         if (ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
-          state = Superstates.IDLE;
-          unsetAllRequests();
+          if (feedSetTimer.get() <= 0) {
+            feedSetTimer.start();
+          }
+
+          if (feedSetTimer.get() >= 0.125) {
+            state = Superstates.IDLE;
+            feedSetTimer.stop();
+            feedSetTimer.reset();
+            unsetAllRequests();
+          }
         } else if (requestPreFeed) {
           state = Superstates.PRE_FEED;
         }
@@ -392,15 +406,15 @@ public class Superstructure extends SubsystemBase {
             }));
   }
 
-  public void intakeCoral(boolean runFeed, double time) {
-    if (runFeed) {
-      new InstantCommand(
-              () -> {
-                if (elevator.getHeight() < .5) {
-                  requestFeed();
-                }
-              })
-          .withTimeout(time);
-    }
-  }
+  // public void intakeCoral(/*boolean runFeed, double time*/) {
+  //   // if (runFeed) {
+  //   //   new InstantCommand(
+  //   //           () -> {
+  //   //             if (elevator.getHeight() < .5) {
+  //                 requestFeed();
+  //         //       }
+  //         //     })
+  //         // .withTimeout(time);
+  //   // }
+  // }
 }

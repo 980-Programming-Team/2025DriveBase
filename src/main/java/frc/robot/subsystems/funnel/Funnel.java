@@ -2,10 +2,11 @@ package frc.robot.subsystems.funnel;
 
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
-import edu.wpi.first.wpilibj.Timer;
 // import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Superstructure;
 
 public class Funnel extends SubsystemBase {
   public FunnelIO io;
@@ -16,14 +17,14 @@ public class Funnel extends SubsystemBase {
   private final Alert pivotMissingAlert;
   private final Alert intakeMissingAlert;
 
-  private double setpoint;
+  // private double setpoint;
   private FunnelStates state;
 
   private boolean requestIdle;
   private boolean requestFeed;
   public boolean requestClimb;
 
-  private Timer feedTimer;
+  // private Timer feedTimer;
 
   public enum FunnelStates {
     IDLE,
@@ -39,15 +40,15 @@ public class Funnel extends SubsystemBase {
     pivotMissingAlert = new Alert("Disconnected Pivot Motor", AlertType.kError);
     intakeMissingAlert = new Alert("Disconnected Intake Motor", AlertType.kError);
 
-    setpoint = 0;
+    // setpoint = 0;
     state = FunnelStates.IDLE;
     requestIdle = true;
     requestFeed = false;
     requestClimb = false;
 
-    feedTimer = new Timer();
-    feedTimer.stop();
-    feedTimer.reset();
+    // feedTimer = new Timer();
+    // feedTimer.stop();
+    // feedTimer.reset();
   }
 
   public void periodic() {
@@ -60,7 +61,6 @@ public class Funnel extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        // io.setPosition(setpoint);
         io.set(0);
 
         if (requestFeed) {
@@ -73,12 +73,14 @@ public class Funnel extends SubsystemBase {
       case FEED:
         io.set(Constants.Funnel.feedSpeed);
 
-        if (feedTimer.get() <= 0) feedTimer.start();
+        // if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (feedTimer.get() >= 0.25 || requestIdle) {
+        if (Superstructure.ohtaniLaser.getMeasurement().distance_mm <= 0.008
+            || requestIdle
+            || !RobotContainer.driver.getDriver().button(5).getAsBoolean()) {
           state = FunnelStates.IDLE;
-          feedTimer.stop();
-          feedTimer.reset();
+          // feedTimer.stop();
+          // feedTimer.reset();
           requestIdle();
         }
         break;

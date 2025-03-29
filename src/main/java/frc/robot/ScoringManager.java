@@ -172,6 +172,7 @@ public class ScoringManager {
         .onTrue(
             new InstantCommand(
                     () -> {
+                      superStructure.candle.clearAllAnims();
                       //   superStructure.funnel.requestPosition(5300);
                     })
                 .ignoringDisable(true));
@@ -182,6 +183,13 @@ public class ScoringManager {
                       //   if (superStructure.funnel.getPosition() > 3000) {
                       //   superStructure.requestClimbReady();
                       //   }
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 5)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.candle.incrementAnimation();
                     })
                 .ignoringDisable(true));
   }

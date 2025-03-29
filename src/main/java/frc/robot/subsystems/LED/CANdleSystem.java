@@ -7,12 +7,38 @@ package frc.robot.subsystems.LED;
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
+import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
+import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
 public class CANdleSystem extends SubsystemBase {
   private final CANdle m_candle = new CANdle(Constants.CANdle.kCANdleID, Constants.kCANivore);
   private int LedCount = Constants.LED_NUM;
+
+  private boolean clearAnimations = false;
+  private boolean m_animDirection = false;
+  private boolean m_setAnim = false;
+  private Animation m_toAnimate = null;
+  private int candleIndex = 0;
+
+  public enum AnimationTypes {
+    ColorFlow,
+    Fire,
+    Larson,
+    Rainbow,
+    RgbFade,
+    SingleFade,
+    Strobe,
+    Twinkle,
+    TwinkleOff,
+    SetAll,
+    Empty
+  }
+
+  private AnimationTypes m_currentAnimation;
 
   public CANdleSystem() {
     CANdleConfiguration configAll = new CANdleConfiguration();
@@ -23,6 +49,169 @@ public class CANdleSystem extends SubsystemBase {
     configAll.vBatOutputMode = VBatOutputMode.Modulated;
     m_candle.clearStickyFaults();
     m_candle.configAllSettings(configAll, 100);
+  }
+
+  public void toggleAnimDirection() {
+    m_animDirection = !m_animDirection;
+  }
+
+  public void incrementAnimation() {
+
+    switch (m_currentAnimation) {
+      case ColorFlow:
+        changeAnimation(AnimationTypes.Fire);
+        break;
+      case Fire:
+        changeAnimation(AnimationTypes.Larson);
+        break;
+      case Larson:
+        changeAnimation(AnimationTypes.Rainbow);
+        break;
+      case Rainbow:
+        changeAnimation(AnimationTypes.RgbFade);
+        break;
+      case RgbFade:
+        changeAnimation(AnimationTypes.SingleFade);
+        break;
+      case SingleFade:
+        changeAnimation(AnimationTypes.Strobe);
+        break;
+      case Strobe:
+        changeAnimation(AnimationTypes.Twinkle);
+        break;
+      case Twinkle:
+        changeAnimation(AnimationTypes.TwinkleOff);
+        break;
+      case TwinkleOff:
+        changeAnimation(AnimationTypes.Empty);
+        break;
+      case Empty:
+        changeAnimation(AnimationTypes.ColorFlow);
+        break;
+      case SetAll:
+        changeAnimation(AnimationTypes.ColorFlow);
+        break;
+    }
+  }
+
+  public void decrementAnimation() {
+    switch (m_currentAnimation) {
+      case ColorFlow:
+        changeAnimation(AnimationTypes.Empty);
+        break;
+      case Fire:
+        changeAnimation(AnimationTypes.ColorFlow);
+        break;
+      case Larson:
+        changeAnimation(AnimationTypes.Fire);
+        break;
+      case Rainbow:
+        changeAnimation(AnimationTypes.Larson);
+        break;
+      case RgbFade:
+        changeAnimation(AnimationTypes.Rainbow);
+        break;
+      case SingleFade:
+        changeAnimation(AnimationTypes.RgbFade);
+        break;
+      case Strobe:
+        changeAnimation(AnimationTypes.SingleFade);
+        break;
+      case Twinkle:
+        changeAnimation(AnimationTypes.Strobe);
+        break;
+      case TwinkleOff:
+        changeAnimation(AnimationTypes.Twinkle);
+        break;
+      case Empty:
+        changeAnimation(AnimationTypes.TwinkleOff);
+        break;
+      case SetAll:
+        changeAnimation(AnimationTypes.ColorFlow);
+        break;
+    }
+  }
+
+  public void setColors() {
+    changeAnimation(AnimationTypes.SetAll);
+  }
+
+  public void changeAnimation(AnimationTypes toChange) {
+    m_currentAnimation = toChange;
+
+    switch (toChange) {
+      default:
+      case ColorFlow:
+        candleIndex = 0;
+        m_toAnimate =
+            new ColorFlowAnimation(
+                128, 20, 70, 0, 0.7, LedCount - 8, Direction.Forward, candleIndex * LedCount);
+        break;
+      case Fire:
+        candleIndex = 1;
+        m_toAnimate =
+            new FireAnimation(
+                0.5, 0.7, LedCount - 8, 0.8, 0.5, m_animDirection, candleIndex * LedCount);
+        break;
+      case Larson:
+        candleIndex = 2;
+        m_toAnimate =
+            new LarsonAnimation(
+                0, 255, 46, 0, 0.1, LedCount - 8, BounceMode.Front, 3, candleIndex * LedCount);
+        break;
+      case Rainbow:
+        candleIndex = 3;
+        m_toAnimate =
+            new RainbowAnimation(0.7, 0.7, LedCount - 8, m_animDirection, candleIndex * LedCount);
+        break;
+      case RgbFade:
+        candleIndex = 4;
+        m_toAnimate = new RgbFadeAnimation(0.7, 0.4, LedCount - 8, candleIndex * LedCount);
+        break;
+      case SingleFade:
+        candleIndex = 5;
+        m_toAnimate =
+            new SingleFadeAnimation(50, 2, 200, 0, 0.5, LedCount - 8, candleIndex * LedCount);
+        break;
+      case Strobe:
+        candleIndex = 6;
+        m_toAnimate =
+            new StrobeAnimation(240, 10, 180, 0, 0.01, LedCount - 8, candleIndex * LedCount);
+        break;
+      case Twinkle:
+        candleIndex = 7;
+        m_toAnimate =
+            new TwinkleAnimation(
+                30, 70, 60, 0, 0.4, LedCount - 8, TwinklePercent.Percent42, candleIndex * LedCount);
+        break;
+      case TwinkleOff:
+        candleIndex = 8;
+        m_toAnimate =
+            new TwinkleOffAnimation(
+                70,
+                90,
+                175,
+                0,
+                0.2,
+                LedCount - 8,
+                TwinkleOffPercent.Percent76,
+                candleIndex * LedCount);
+        break;
+      case Empty:
+        candleIndex = 9;
+        m_toAnimate =
+            new RainbowAnimation(0.7, 0.7, LedCount - 8, m_animDirection, candleIndex * LedCount);
+        break;
+
+      case SetAll:
+        m_toAnimate = null;
+        break;
+    }
+    // System.out.println("Changed to " + m_currentAnimation.toString());
+  }
+
+  public void clearAllAnims() {
+    clearAnimations = true;
   }
 
   public void SetLEDColor(int red, int green, int blue) {

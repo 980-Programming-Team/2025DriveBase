@@ -45,54 +45,7 @@ public class SourceManager {
                     RobotContainer.constraints,
                     0));
 
-    // driver
-    //     .leftBumper()
-    //     .onTrue(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   // superStructure.setDefaultCommand(null);
-    //                   // superStructure.setDefaultCommand(
-    //                   // Commands.run(() -> superStructure.intakeCoral(driver.leftBumper()),
-    //                   // superStructure));
-    //                   superStructure.intakeCoral(driver.leftBumper());
-    //                 })
-    //             .ignoringDisable(true));
-    // driver
-    //     .leftBumper()
-    //     .onFalse(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   // superStructure.setDefaultCommand(null);
     superStructure.setDefaultCommand(
         Commands.run(() -> superStructure.intakeCoral(driver.leftBumper()), superStructure));
-    //                   superStructure.intakeCoral(driver.leftBumper());
-    //                 })
-    //             .ignoringDisable(true));
-    // driver
-    //     .rightBumper()
-    //     .onTrue(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   // superStructure.setDefaultCommand(null);
-    // superStructure.setDefaultCommand(
-    // Commands.run(() -> superStructure.readyIntakeCoral(driver.rightBumper()), superStructure));
-
-    //                   superStructure.readyIntakeCoral(driver.rightBumper());
-    //                 })
-    //             .ignoringDisable(true));
-    // driver
-    //     .rightBumper()
-    //     .onFalse(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   // superStructure.setDefaultCommand(null);
-    //                   // superStructure.setDefaultCommand(
-    //                   //     Commands.run(
-    //                   //         () -> superStructure.readyIntakeCoral(driver.rightBumper()),
-    //                   //         superStructure));
-
-    //                   superStructure.readyIntakeCoral(driver.rightBumper());
-    //                 })
-    //             .ignoringDisable(true));
   }
 }

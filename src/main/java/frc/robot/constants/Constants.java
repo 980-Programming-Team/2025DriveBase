@@ -156,7 +156,7 @@ public final class Constants {
 
   public class Funnel {
 
-    public static final double feedSpeed = .65;
+    public static final double feedSpeed = .25;
 
     // NEO 550
     public static final int kFunnelIntake = 9;
