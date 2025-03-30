@@ -66,13 +66,13 @@ public class FieldConstants {
       // Initialize faces
       centerFaces[0] =
           new Pose2d(
-              Units.inchesToMeters(118.003),
+              Units.inchesToMeters(114.000),
               Units.inchesToMeters(163.500),
               Rotation2d.fromDegrees(0));
       centerFaces[1] =
           new Pose2d(
-              Units.inchesToMeters(118.003),
-              Units.inchesToMeters(154.500),
+              Units.inchesToMeters(114.000),
+              Units.inchesToMeters(150.500),
               Rotation2d.fromDegrees(0));
       centerFaces[2] =
           new Pose2d(
@@ -106,23 +106,23 @@ public class FieldConstants {
               Rotation2d.fromDegrees(180));
       centerFaces[8] =
           new Pose2d(
-              Units.inchesToMeters(200.118),
-              Units.inchesToMeters(107.500),
+              Units.inchesToMeters(203.000),
+              Units.inchesToMeters(104.500),
               Rotation2d.fromDegrees(120));
       centerFaces[9] =
           new Pose2d(
-              Units.inchesToMeters(213.200),
-              Units.inchesToMeters(110.000),
+              Units.inchesToMeters(221.000),
+              Units.inchesToMeters(105.000),
               Rotation2d.fromDegrees(120));
       centerFaces[10] =
           new Pose2d(
-              Units.inchesToMeters(140.375),
-              Units.inchesToMeters(112.144),
+              Units.inchesToMeters(141.375),
+              Units.inchesToMeters(106.144),
               Rotation2d.fromDegrees(60));
       centerFaces[11] =
           new Pose2d(
-              Units.inchesToMeters(153.375),
-              Units.inchesToMeters(107.144),
+              Units.inchesToMeters(149.500),
+              Units.inchesToMeters(100.500),
               Rotation2d.fromDegrees(60));
 
       // Initialize branch positions

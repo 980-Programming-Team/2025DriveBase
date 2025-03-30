@@ -143,7 +143,7 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.15;
+      public static final double feedSpeed = 0.20;
       public static final double scoreL1Speed = .6;
       public static final double scoreL2Speed = 0.75;
       public static final double scoreSpeed = -0.6;
@@ -156,7 +156,7 @@ public final class Constants {
 
   public class Funnel {
 
-    public static final double feedSpeed = .25;
+    public static final double feedSpeed = .30;
 
     // NEO 550
     public static final int kFunnelIntake = 9;

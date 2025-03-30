@@ -43,6 +43,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -130,6 +136,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Shoot"
@@ -206,14 +218,14 @@
                 "data": {
                   "name": "BRL"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "L4"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
