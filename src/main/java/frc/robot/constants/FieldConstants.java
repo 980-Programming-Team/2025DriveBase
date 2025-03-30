@@ -106,18 +106,18 @@ public class FieldConstants {
               Rotation2d.fromDegrees(180));
       centerFaces[8] =
           new Pose2d(
-              Units.inchesToMeters(198.118),
-              Units.inchesToMeters(105.450),
+              Units.inchesToMeters(200.118),
+              Units.inchesToMeters(107.500),
               Rotation2d.fromDegrees(120));
       centerFaces[9] =
           new Pose2d(
-              Units.inchesToMeters(212.118),
-              Units.inchesToMeters(112.5),
+              Units.inchesToMeters(213.200),
+              Units.inchesToMeters(110.000),
               Rotation2d.fromDegrees(120));
       centerFaces[10] =
           new Pose2d(
-              Units.inchesToMeters(141.375),
-              Units.inchesToMeters(113.144),
+              Units.inchesToMeters(140.375),
+              Units.inchesToMeters(112.144),
               Rotation2d.fromDegrees(60));
       centerFaces[11] =
           new Pose2d(

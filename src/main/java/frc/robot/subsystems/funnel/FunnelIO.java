@@ -21,13 +21,9 @@ public interface FunnelIO {
 
   public default void updateInputs(FunnelIOInputs inputs) {}
 
-  public default void setPosition(double targetPosition) {}
-
   public default void setIntakeVoltage(double voltage) {}
 
   public default void set(double speed) {}
-
-  public default void setPivot(double speed) {}
 
   public default void stop() {}
 

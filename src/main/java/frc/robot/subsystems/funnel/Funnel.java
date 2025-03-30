@@ -14,7 +14,6 @@ public class Funnel extends SubsystemBase {
 
   // instead of has coeral check check if were in the range of a pose, robot
 
-  private final Alert pivotMissingAlert;
   private final Alert intakeMissingAlert;
 
   // private double setpoint;
@@ -22,13 +21,15 @@ public class Funnel extends SubsystemBase {
 
   private boolean requestIdle;
   private boolean requestFeed;
+  private boolean requestAutoFeed;
   public boolean requestClimb;
 
   // private Timer feedTimer;
 
   public enum FunnelStates {
     IDLE,
-    FEED // ,
+    FEED,
+    AUTO_FEED // ,
     // CLIMB_READY
   }
 
@@ -36,14 +37,13 @@ public class Funnel extends SubsystemBase {
     this.io = funnelIO;
 
     inputs = new FunnelIOInputsAutoLogged();
-
-    pivotMissingAlert = new Alert("Disconnected Pivot Motor", AlertType.kError);
     intakeMissingAlert = new Alert("Disconnected Intake Motor", AlertType.kError);
 
     // setpoint = 0;
     state = FunnelStates.IDLE;
     requestIdle = true;
     requestFeed = false;
+    requestAutoFeed = false;
     requestClimb = false;
 
     // feedTimer = new Timer();
@@ -67,6 +67,8 @@ public class Funnel extends SubsystemBase {
           state = FunnelStates.FEED;
           // } else if (requestClimb) {
           //   state = FunnelStates.CLIMB_READY;
+        } else if (requestAutoFeed) {
+          state = FunnelStates.AUTO_FEED;
         }
 
         break;
@@ -78,6 +80,18 @@ public class Funnel extends SubsystemBase {
         if (Superstructure.ohtaniLaser.getMeasurement().distance_mm <= 0.008
             || requestIdle
             || !RobotContainer.driver.getDriver().button(5).getAsBoolean()) {
+          state = FunnelStates.IDLE;
+          // feedTimer.stop();
+          // feedTimer.reset();
+          requestIdle();
+        }
+        break;
+      case AUTO_FEED:
+        io.set(Constants.Funnel.feedSpeed * 2);
+
+        // if (feedTimer.get() <= 0) feedTimer.start();
+
+        if (Superstructure.ohtaniLaser.getMeasurement().distance_mm <= 0.008 || requestIdle) {
           state = FunnelStates.IDLE;
           // feedTimer.stop();
           // feedTimer.reset();
@@ -99,11 +113,19 @@ public class Funnel extends SubsystemBase {
 
   public void requestFeed() {
     requestIdle = false;
+    requestAutoFeed = false;
     requestFeed = true;
+  }
+
+  public void requestAutoFeed() {
+    requestIdle = false;
+    requestFeed = false;
+    requestAutoFeed = true;
   }
 
   public void requestIdle() {
     requestFeed = false;
+    requestAutoFeed = false;
     requestClimb = false;
     requestIdle = true;
   }

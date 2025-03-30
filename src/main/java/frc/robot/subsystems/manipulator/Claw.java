@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.Superstructure;
 
 public class Claw extends SubsystemBase {
   public ClawIO io;
@@ -16,6 +17,7 @@ public class Claw extends SubsystemBase {
 
   private boolean requestIdle;
   private boolean requestFeed;
+  private boolean requestAutoFeed;
   private boolean requestShoot;
   private boolean requestShootL1;
   private boolean requestShootL2;
@@ -29,6 +31,7 @@ public class Claw extends SubsystemBase {
   public enum ClawStates {
     IDLE,
     FEED,
+    AUTO_FEED,
     SHOOTL1,
     SHOOTL2,
     SHOOT,
@@ -65,6 +68,8 @@ public class Claw extends SubsystemBase {
 
         if (requestFeed && shootTimer.get() <= 0) {
           state = ClawStates.FEED;
+        } else if (requestAutoFeed && shootTimer.get() <= 0) {
+          state = ClawStates.AUTO_FEED;
         } else if (requestShoot && shootTimer.get() <= 0) {
           state = ClawStates.SHOOT;
         } else if (requestShootL1 && shootTimer.get() <= 0) {
@@ -77,6 +82,18 @@ public class Claw extends SubsystemBase {
         break;
       case FEED:
         io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed);
+
+        if (shootTimer.get() <= 0) shootTimer.start();
+
+        if (shootTimer.get() >= 3 || requestIdle) {
+          state = ClawStates.IDLE;
+          shootTimer.stop();
+          shootTimer.reset();
+          requestIdle();
+        }
+        break;
+      case AUTO_FEED:
+        io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed); // *1
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
@@ -130,8 +147,12 @@ public class Claw extends SubsystemBase {
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
-        if (shootTimer.get() >= 2 || requestIdle) {
+        if (shootTimer.get() >= 0.25
+            || requestIdle) { // || !(Superstructure.ohtaniLaser.getMeasurement().distance_mm <=
+          // 0.008
           state = ClawStates.IDLE;
+
+          Superstructure.arm.requestPosition(4.33);
           shootTimer.stop();
           shootTimer.reset();
           requestIdle();
@@ -172,6 +193,11 @@ public class Claw extends SubsystemBase {
     requestFeed = true;
   }
 
+  public void requestAutoFeed() {
+    unsetAllRequests();
+    requestAutoFeed = true;
+  }
+
   public void requestShoot() {
     unsetAllRequests();
     requestShoot = true;
@@ -199,6 +225,7 @@ public class Claw extends SubsystemBase {
     requestShoot = false;
     requestShootL1 = false;
     requestShootL4 = false;
+    requestAutoFeed = false;
   }
 
   public void enableBrakeMode(boolean enable) {

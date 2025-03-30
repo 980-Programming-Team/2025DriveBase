@@ -232,6 +232,13 @@ public class RobotContainer {
             0)));
 
     NamedCommands.registerCommand(
+        "FRR",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
         "FCR",
         (AutoBuilder.pathfindToPose(
             AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
@@ -242,6 +249,13 @@ public class RobotContainer {
         "BRR",
         (AutoBuilder.pathfindToPose(
             AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BRL",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
             RobotContainer.constraints,
             0)));
 
@@ -272,7 +286,7 @@ public class RobotContainer {
         "Feed",
         (new InstantCommand(
             () -> {
-              superstructure.requestFeed();
+              superstructure.requestAutoFeed();
             })));
 
     NamedCommands.registerCommand(
