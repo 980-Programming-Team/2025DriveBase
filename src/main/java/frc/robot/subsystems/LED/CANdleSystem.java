@@ -238,19 +238,19 @@ public class CANdleSystem extends SubsystemBase {
     SetLEDColor(190, 90, 190);
   }
 
-  public void SetLEDPurple1() {
-    SetLEDColor(100, 0, 70);
+  public void SetLEDL1() {
+    SetLEDColor(222, 109, 214);
   }
 
-  public void SetLEDPurple2() {
-    SetLEDColor(120, 10, 80);
+  public void SetLEDL2() {
+    SetLEDColor(119, 214, 224);
   }
 
-  public void SetLEDPurple3() {
-    SetLEDColor(130, 20, 100);
+  public void SetLEDL3() {
+    SetLEDColor(127, 84, 235);
   }
 
-  public void SetLEDPurple4() {
+  public void SetLEDL4() {
     SetLEDColor(140, 0, 140);
   }
 

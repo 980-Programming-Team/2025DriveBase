@@ -3,18 +3,13 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "LeftCage",
     "MidCage",
     "Reef",
     "Right"
   ],
-  "autoFolders": [
-    "LeftCage",
-    "MidCage",
-    "RightCage"
-  ],
-  "defaultMaxVel": 3.0,
-  "defaultMaxAccel": 1.5,
+  "autoFolders": [],
+  "defaultMaxVel": 3.25,
+  "defaultMaxAccel": 2.85,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,

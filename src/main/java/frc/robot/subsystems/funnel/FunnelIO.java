@@ -9,9 +9,9 @@ public interface FunnelIO {
     public boolean kPivotConnected = false;
     public boolean kIntakeConnected = false;
 
-    public double pivotAppliedVoltage = 0.0;
-    public double pivotSupplyCurrentAmps = 0.0;
-    public double pos = 0.0;
+    // public double pivotAppliedVoltage = 0.0;
+    // public double pivotSupplyCurrentAmps = 0.0;
+    // public double pos = 0.0;
     public double velMetersPerSecond = 0.0;
 
     public double intakeAppliedVoltage = 0.0;

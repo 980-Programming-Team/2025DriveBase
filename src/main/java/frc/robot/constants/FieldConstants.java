@@ -77,7 +77,7 @@ public class FieldConstants {
       centerFaces[2] =
           new Pose2d(
               Units.inchesToMeters(153.116),
-              Units.inchesToMeters(211.858),
+              Units.inchesToMeters(212.000),
               Rotation2d.fromDegrees(-60));
       centerFaces[3] =
           new Pose2d(
@@ -121,8 +121,8 @@ public class FieldConstants {
               Rotation2d.fromDegrees(60));
       centerFaces[11] =
           new Pose2d(
-              Units.inchesToMeters(153.375),
-              Units.inchesToMeters(107.144),
+              Units.inchesToMeters(153.900),
+              Units.inchesToMeters(105.00),
               Rotation2d.fromDegrees(60));
 
       // Initialize branch positions

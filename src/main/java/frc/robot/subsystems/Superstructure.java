@@ -22,6 +22,7 @@ public class Superstructure extends SubsystemBase {
   private boolean requestScore;
   // private boolean requestClimbReady;
   private boolean requestDisable;
+  // private boolean hasCoral;
 
   private Superstates state;
   private Elevator elevator;
@@ -104,7 +105,7 @@ public class Superstructure extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        elevator.requestHeight(-0.055);
+        elevator.requestHeight(-0.048);
         arm.requestPosition(2.05); // -0.8
         claw.requestIdle();
         candle.SetLEDOrange();
@@ -127,9 +128,9 @@ public class Superstructure extends SubsystemBase {
 
         break;
       case PRE_FEED:
-        elevator.requestHeight(-0.045);
-        arm.requestPosition(2.05); // -0.8
-        candle.SetLEDPurple4();
+        elevator.requestHeight(-0.048);
+        arm.requestPosition(2.05);
+        candle.SetLEDL2();
 
         if (requestIdle) {
           state = Superstates.IDLE;
@@ -155,7 +156,7 @@ public class Superstructure extends SubsystemBase {
         funnel.requestFeed();
         claw.requestFeed();
         arm.requestPosition(2.05); // -.08
-        elevator.requestHeight(-0.045);
+        elevator.requestHeight(-0.048);
 
         candle.SetLEDPurple0();
 
@@ -179,19 +180,17 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.AUTO_FEEDING;
         }
 
-        if (ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
+        if (hasCoral()) {
           if (feedSetTimer.get() <= 0) {
             feedSetTimer.start();
           }
 
-          if (feedSetTimer.get() >= 0.125) {
+          if (feedSetTimer.get() >= 0.1) {
             state = Superstates.IDLE;
             feedSetTimer.stop();
             feedSetTimer.reset();
             unsetAllRequests();
           }
-        } else if (requestPreFeed) {
-          state = Superstates.PRE_FEED;
         }
         break;
       case AUTO_FEEDING:
@@ -220,7 +219,7 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.PRE_FEED;
         }
 
-        if (ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
+        if (hasCoral()) {
           if (feedSetTimer.get() <= 0) {
             feedSetTimer.start();
           }
@@ -231,27 +230,25 @@ public class Superstructure extends SubsystemBase {
             feedSetTimer.reset();
             unsetAllRequests();
           }
-        } else if (requestPreFeed) {
-          state = Superstates.PRE_FEED;
         }
         break;
       case PRE_SCORE:
         if (level == Level.L1) {
           arm.requestPosition(2.20); // 0.013
           elevator.requestHeight(-.055);
-          candle.SetLEDPurple1();
+          candle.SetLEDL1();
         } else if (level == Level.L2) {
           arm.requestPosition(2.36); // 0.1193
-          elevator.requestHeight(-0.245);
-          candle.SetLEDPurple2();
+          elevator.requestHeight(-0.252);
+          candle.SetLEDL2();
         } else if (level == Level.L3) {
           arm.requestPosition(4.03);
           elevator.requestHeight(-0.08);
-          candle.SetLEDPurple3();
+          candle.SetLEDL3();
         } else if (level == Level.L4) {
           arm.requestPosition(4.10); // 0.715
           elevator.requestHeight(-0.84);
-          candle.SetLEDPurple4();
+          candle.SetLEDL4();
         }
         claw.requestIdle();
 
@@ -365,6 +362,14 @@ public class Superstructure extends SubsystemBase {
     }
   }
 
+  public static boolean hasCoral() {
+    if (ohtaniLaser.getMeasurement().distance_mm <= 0.008) {
+      return true;
+    }
+
+    return false;
+  }
+
   public Superstates getState() {
     return state;
   }
@@ -458,18 +463,18 @@ public class Superstructure extends SubsystemBase {
             }));
   }
 
-  public void readyIntakeCoral(Trigger action) {
-    action.onTrue(
-        new InstantCommand(
-            () -> {
-              requestPreFeed();
-            }));
-    action.onFalse(
-        new InstantCommand(
-            () -> {
-              requestIdle();
-            }));
-  }
+  // public void readyIntakeCoral(Trigger action) {
+  //   action.onTrue(
+  //       new InstantCommand(
+  //           () -> {
+  //             requestPreFeed();
+  //           }));
+  //   action.onFalse(
+  //       new InstantCommand(
+  //           () -> {
+  //             requestIdle();
+  //           }));
+  // }
 
   // public void intakeCoral(/*boolean runFeed, double time*/) {
   //   // if (runFeed) {

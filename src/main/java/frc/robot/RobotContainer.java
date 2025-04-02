@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.Feed;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
@@ -260,6 +261,20 @@ public class RobotContainer {
             0)));
 
     NamedCommands.registerCommand(
+        "BLL",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BLR",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
         "Shoot",
         (new InstantCommand(
             () -> {
@@ -282,12 +297,23 @@ public class RobotContainer {
               superstructure.requestPreScore();
             })));
 
+    // NamedCommands.registerCommand(
+    //     "Feed",
+    //     (new InstantCommand(
+    //         () -> {
+    //           // while (!superstructure.hasCoral()) {
+    //           superstructure.requestAutoFeed();
+    //           // }
+    //         })));
+
     NamedCommands.registerCommand(
-        "Feed",
+        "PreFeed",
         (new InstantCommand(
             () -> {
-              superstructure.requestAutoFeed();
+              superstructure.requestPreFeed();
             })));
+
+    NamedCommands.registerCommand("Feed", new Feed(superstructure));
 
     NamedCommands.registerCommand(
         "PreScore",

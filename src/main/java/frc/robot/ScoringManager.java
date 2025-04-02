@@ -137,6 +137,13 @@ public class ScoringManager {
                       superStructure.requestPreScore();
                     })
                 .ignoringDisable(true));
+    new JoystickButton(rightController, 9)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestPreFeed();
+                    })
+                .ignoringDisable(true));
     new JoystickButton(rightController, 4)
         .onTrue(
             new InstantCommand(
@@ -176,21 +183,21 @@ public class ScoringManager {
                       //   superStructure.funnel.requestPosition(5300);
                     })
                 .ignoringDisable(true));
-    new JoystickButton(rightController, 10)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      //   if (superStructure.funnel.getPosition() > 3000) {
-                      //   superStructure.requestClimbReady();
-                      //   }
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 5)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.candle.incrementAnimation();
-                    })
-                .ignoringDisable(true));
+    // new JoystickButton(rightController, 10)
+    //     .onTrue(
+    //         new InstantCommand(
+    //                 () -> {
+    //                   //   if (superStructure.funnel.getPosition() > 3000) {
+    //                   //   superStructure.requestClimbReady();
+    //                   //   }
+    //                 })
+    //             .ignoringDisable(true));
+    // new JoystickButton(rightController, 5)
+    //     .onTrue(
+    //         new InstantCommand(
+    //                 () -> {
+    //                   superStructure.candle.incrementAnimation();
+    //                 })
+    //             .ignoringDisable(true));
   }
 }

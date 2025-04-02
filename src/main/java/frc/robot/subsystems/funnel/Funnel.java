@@ -22,7 +22,7 @@ public class Funnel extends SubsystemBase {
   private boolean requestIdle;
   private boolean requestFeed;
   private boolean requestAutoFeed;
-  public boolean requestClimb;
+  // public boolean requestClimb;
 
   // private Timer feedTimer;
 
@@ -44,7 +44,7 @@ public class Funnel extends SubsystemBase {
     requestIdle = true;
     requestFeed = false;
     requestAutoFeed = false;
-    requestClimb = false;
+    // requestClimb = false;
 
     // feedTimer = new Timer();
     // feedTimer.stop();
@@ -61,7 +61,11 @@ public class Funnel extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-        io.set(0);
+        if (RobotContainer.driver.getDriver().rightBumper().getAsBoolean()) {
+          io.set(-Constants.Funnel.feedSpeed / 2.2);
+        } else {
+          io.set(0);
+        }
 
         if (requestFeed) {
           state = FunnelStates.FEED;
@@ -77,7 +81,7 @@ public class Funnel extends SubsystemBase {
 
         // if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (Superstructure.ohtaniLaser.getMeasurement().distance_mm <= 0.008
+        if (Superstructure.hasCoral()
             || requestIdle
             || !RobotContainer.driver.getDriver().button(5).getAsBoolean()) {
           state = FunnelStates.IDLE;
@@ -91,7 +95,7 @@ public class Funnel extends SubsystemBase {
 
         // if (feedTimer.get() <= 0) feedTimer.start();
 
-        if (Superstructure.ohtaniLaser.getMeasurement().distance_mm <= 0.008 || requestIdle) {
+        if (Superstructure.hasCoral() || requestIdle) {
           state = FunnelStates.IDLE;
           // feedTimer.stop();
           // feedTimer.reset();
@@ -126,7 +130,7 @@ public class Funnel extends SubsystemBase {
   public void requestIdle() {
     requestFeed = false;
     requestAutoFeed = false;
-    requestClimb = false;
+    // requestClimb = false;
     requestIdle = true;
   }
 

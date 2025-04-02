@@ -108,11 +108,11 @@ public final class Constants {
       public static final double setpointToleranceMechanismRotations = 0.05;
 
       public static final LoggedTunableNumber kP1 =
-          new LoggedTunableNumber("Manipulator/P Value Arm", 0.7);
+          new LoggedTunableNumber("Manipulator/P Value Arm", 0.7); // 0.7 //0.255
       public static final LoggedTunableNumber kI1 =
-          new LoggedTunableNumber("Manipulator/I Value Arm", 0.0);
+          new LoggedTunableNumber("Manipulator/I Value Arm", 0.0); // 0.07
       public static final LoggedTunableNumber kD1 =
-          new LoggedTunableNumber("Manipulator/D Value Arm", 0.0);
+          new LoggedTunableNumber("Manipulator/D Value Arm", 0.0); // 0.0
 
       public static final double kP = 0.75;
       public static final double kI = 0.1;
@@ -143,9 +143,9 @@ public final class Constants {
 
     public class Claw {
 
-      public static final double feedSpeed = 0.15;
+      public static final double feedSpeed = 0.175;
       public static final double scoreL1Speed = .6;
-      public static final double scoreL2Speed = 0.75;
+      public static final double scoreL2Speed = 0.9;
       public static final double scoreSpeed = -0.6;
       public static final double scoreL4Speed = -0.3;
       public static final int currentLimit = 20;
@@ -156,7 +156,7 @@ public final class Constants {
 
   public class Funnel {
 
-    public static final double feedSpeed = .25;
+    public static final double feedSpeed = .325;
 
     // NEO 550
     public static final int kFunnelIntake = 9;
@@ -164,30 +164,31 @@ public final class Constants {
     // NEO
     public static final int kFunnelPivot = 8;
 
-    public class Pivot {
+    // public class Pivot {
 
-      public static final int EncoderDIO0 = 0;
-      public static final int EncoderDIO1 = 1;
+    //   public static final int EncoderDIO0 = 0;
+    //   public static final int EncoderDIO1 = 1;
 
-      public static final double stowedSetpointMechanismRotations = 0.0; // TODO find real position
-      public static final double climbReadySetpointMechanismRotations =
-          0.0; // TODO find real position
-      public static final double setpointToleranceMechanismRotations = 0.01;
+    //   public static final double stowedSetpointMechanismRotations = 0.0; // TODO find real
+    // position
+    //   public static final double climbReadySetpointMechanismRotations =
+    //       0.0; // TODO find real position
+    //   public static final double setpointToleranceMechanismRotations = 0.01;
 
-      public static final double kP = 3.0;
-      public static final double kI = 0.0;
-      public static final double kD = 0.0;
-      // public static final double kFF = 0.0;
-      public static final double minOutput = -1;
-      public static final double maxOutput = 1;
+    //   public static final double kP = 3.0;
+    //   public static final double kI = 0.0;
+    //   public static final double kD = 0.0;
+    //   // public static final double kFF = 0.0;
+    //   public static final double minOutput = -1;
+    //   public static final double maxOutput = 1;
 
-      public static final double motorGearRatio = 16.0;
+    //   public static final double motorGearRatio = 16.0;
 
-      public static final int supplyCurrentLimit = 40;
+    //   public static final int supplyCurrentLimit = 40;
 
-      // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
-      public static final double absZeroWrapThreshold = 0.95;
-    }
+    //   // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
+    //   public static final double absZeroWrapThreshold = 0.95;
+    // }
 
     public class Intake {
 
@@ -200,30 +201,30 @@ public final class Constants {
     }
   }
 
-  public class Climber {
+  // public class Climber {
 
-    public static final int kClimber = 7; // dd
+  //   public static final int kClimber = 7; // dd
 
-    public static final double gearRatio = 80.0;
-    public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
-    public static final double setpointToleranceMeters = 0.01;
-    public static final int currentLimit = 40;
+  //   public static final double gearRatio = 80.0;
+  //   public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
+  //   public static final double setpointToleranceMeters = 0.01;
+  //   public static final int currentLimit = 40;
 
-    public static final double minOutput = -0.85;
-    public static final double maxOutput = 0.85;
+  //   public static final double minOutput = -0.85;
+  //   public static final double maxOutput = 0.85;
 
-    public static final double stowedPoistion = 0;
-    public static final double climbingPosition = 20; // TODO find real position
-  }
+  //   public static final double stowedPoistion = 0;
+  //   public static final double climbingPosition = 20; // TODO find real position
+  // }
 
-  public class L1Mechanism {
+  // public class L1Mechanism {
 
-    // NEO
-    public static final int kL1Deploy = 25;
+  //   // NEO
+  //   public static final int kL1Deploy = 25;
 
-    // NEO 550
-    public static final int kL1Intake = 26;
-  }
+  //   // NEO 550
+  //   public static final int kL1Intake = 26;
+  // }
 
   public class CANdle {
     public static final int kCANdleID = 31;

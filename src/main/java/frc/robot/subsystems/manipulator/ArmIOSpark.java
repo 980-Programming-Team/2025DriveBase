@@ -53,8 +53,6 @@ public class ArmIOSpark implements ArmIO {
     config.inverted(true);
     config.smartCurrentLimit(Constants.Manipulator.Arm.currentLimit);
     config.idleMode(IdleMode.kBrake);
-    config.closedLoop.pid(
-        Constants.Manipulator.Arm.kP, Constants.Manipulator.Arm.kI, Constants.Manipulator.Arm.kD);
 
     config.closedLoop.outputRange(
         Constants.Manipulator.Arm.minOutput, Constants.Manipulator.Arm.maxOutput);

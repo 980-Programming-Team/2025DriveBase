@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Right"
+                  "pathName": "Left"
                 }
               },
               {
@@ -30,13 +30,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FRR"
+                  "name": "L4"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L4"
+                  "name": "FLR"
                 }
               }
             ]
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RightToSource"
+                  "pathName": "LeftToSource"
                 }
               },
               {
@@ -99,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceToBR"
+                  "pathName": "SourceLToBL"
                 }
               },
               {
@@ -118,13 +118,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "BRR"
+                  "name": "L4"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L4"
+                  "name": "BLL"
                 }
               }
             ]
@@ -149,7 +149,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BRToSource"
+                  "pathName": "BLToSourceL"
                 }
               },
               {
@@ -187,7 +187,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceToBR"
+                  "pathName": "SourceLToBL"
                 }
               },
               {
@@ -206,13 +206,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "BRL"
+                  "name": "L4"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "L4"
+                  "name": "BLR"
                 }
               }
             ]
