@@ -47,7 +47,7 @@ public final class Constants {
 
   public static final double NEO_FREE_SPEED = 6000.0; // TODO find the real free speed
   // LED Constants
-  public static final int LED_NUM = 105; // TODO: Determine number of leds
+  public static final int LED_NUM = 133; // TODO: Determine number of leds
   public static final int LED_BRIGHTNESS = 140;
 
   public class Elevator {

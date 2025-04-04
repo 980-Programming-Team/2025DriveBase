@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,90 +47,157 @@ public class ScoringManager {
   }
 
   public void configScoringPosButtons() {
-    new JoystickButton(leftController, 8)
-        .whileTrue(
-            pathFindToBCL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 7)
-        .whileTrue(
-            pathFindToBCR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[1]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 9)
-        .whileTrue(
-            pathFindToBLL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 10)
-        .whileTrue(
-            pathFindToBLR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 12)
-        .whileTrue(
-            pathFindToFLL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 11)
-        .whileTrue(
-            pathFindToFLR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[4]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 5)
-        .whileTrue(
-            pathFindToFCL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[6]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 6)
-        .whileTrue(
-            pathFindToFCR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 3)
-        .whileTrue(
-            pathFindToFRL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 4)
-        .whileTrue(
-            pathFindToFRR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 1)
-        .whileTrue(
-            pathFindToBRL =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
-                    RobotContainer.constraints,
-                    0));
-    new JoystickButton(leftController, 2)
-        .whileTrue(
-            pathFindToBRR =
-                AutoBuilder.pathfindToPose(
-                    AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
-                    RobotContainer.constraints,
-                    0));
+
+    if (DriverStation.getAlliance().isPresent() /*&& DriverStation.getAlliance().get() != null*/) {
+      if (DriverStation.getAlliance().get() == Alliance.Red) {
+        new JoystickButton(leftController, 8)
+            .whileTrue(
+                pathFindToBCL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 7)
+            .whileTrue(
+                pathFindToBCR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[1]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 9)
+            .whileTrue(
+                pathFindToBLL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 10)
+            .whileTrue(
+                pathFindToBLR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 12)
+            .whileTrue(
+                pathFindToFLL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 11)
+            .whileTrue(
+                pathFindToFLR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[4]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 5)
+            .whileTrue(
+                pathFindToFCL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[6]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 6)
+            .whileTrue(
+                pathFindToFCR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 3)
+            .whileTrue(
+                pathFindToFRL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 4)
+            .whileTrue(
+                pathFindToFRR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 1)
+            .whileTrue(
+                pathFindToBRL =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
+                        RobotContainer.constraints,
+                        0));
+        new JoystickButton(leftController, 2)
+            .whileTrue(
+                pathFindToBRR =
+                    AutoBuilder.pathfindToPose(
+                        AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
+                        RobotContainer.constraints,
+                        0));
+      } else {
+        new JoystickButton(leftController, 8)
+            .whileTrue(
+                pathFindToBCL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[0]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 7)
+            .whileTrue(
+                pathFindToBCR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[1]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 9)
+            .whileTrue(
+                pathFindToBLL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[2]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 10)
+            .whileTrue(
+                pathFindToBLR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[3]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 12)
+            .whileTrue(
+                pathFindToFLL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[5]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 11)
+            .whileTrue(
+                pathFindToFLR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[4]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 5)
+            .whileTrue(
+                pathFindToFCL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[6]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 6)
+            .whileTrue(
+                pathFindToFCR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[7]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 3)
+            .whileTrue(
+                pathFindToFRL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[8]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 4)
+            .whileTrue(
+                pathFindToFRR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[9]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 1)
+            .whileTrue(
+                pathFindToBRL =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[10]), RobotContainer.constraints, 0));
+        new JoystickButton(leftController, 2)
+            .whileTrue(
+                pathFindToBRR =
+                    AutoBuilder.pathfindToPose(
+                        (FieldConstants.Reef.centerFaces[11]), RobotContainer.constraints, 0));
+      }
+    }
+
     new JoystickButton(rightController, 7)
         .onTrue(
             new InstantCommand(
@@ -183,21 +252,5 @@ public class ScoringManager {
                       //   superStructure.funnel.requestPosition(5300);
                     })
                 .ignoringDisable(true));
-    // new JoystickButton(rightController, 10)
-    //     .onTrue(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   //   if (superStructure.funnel.getPosition() > 3000) {
-    //                   //   superStructure.requestClimbReady();
-    //                   //   }
-    //                 })
-    //             .ignoringDisable(true));
-    // new JoystickButton(rightController, 5)
-    //     .onTrue(
-    //         new InstantCommand(
-    //                 () -> {
-    //                   superStructure.candle.incrementAnimation();
-    //                 })
-    //             .ignoringDisable(true));
   }
 }

@@ -173,7 +173,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    robotContainer.autonomousPeriodic();
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
@@ -185,6 +187,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    // RobotContainer.operatorBoard.configScoringPosButtons();
   }
 
   /** This function is called periodically during operator control. */

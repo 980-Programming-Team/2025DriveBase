@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Feed;
 import frc.robot.constants.Constants;
-import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.subsystems.LED.CANdleSystem;
 import frc.robot.subsystems.Superstructure;
@@ -28,6 +26,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
+import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.elevator.ElevatorIO;
@@ -48,7 +47,6 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -107,15 +105,17 @@ public class RobotContainer {
                 new VisionIOLimelight(VisionConstants.limelightRio, drive::getRotation));
         break;
 
-        // case SIM:
-        //   // Sim robot, instantiate physics sim IO implementations
-        //   drive =
-        //       new Drive(
-        //           new GyroIO() {},
-        //           new ModuleIOSim(TunerConstants.FrontLeft),
-        //           new ModuleIOSim(TunerConstants.FrontRight),
-        //           new ModuleIOSim(TunerConstants.BackLeft),
-        //           new ModuleIOSim(TunerConstants.BackRight));
+      case SIM:
+        // Sim robot, instantiate physics sim IO implementations
+        drive =
+            new Drive(
+                new GyroIO() {},
+                new ModuleIOSim(TunerConstants.FrontLeft),
+                new ModuleIOSim(TunerConstants.FrontRight),
+                new ModuleIOSim(TunerConstants.BackLeft),
+                new ModuleIOSim(TunerConstants.BackRight));
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         //   vision =
         //       new Vision(
@@ -127,7 +127,7 @@ public class RobotContainer {
         //               VisionConstants.limelightRio,
         //               VisionConstants.robotToCamera1,
         //               drive::getPose));
-        //   break;
+        break;
 
       default:
         // Replayed robot, disable IO implementations
@@ -198,7 +198,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     driver.configScoringPosButtons();
-    operatorBoard.configScoringPosButtons();
+    // operatorBoard.configScoringPosButtons();
   }
 
   public void registerNamedCommands() {
@@ -211,68 +211,68 @@ public class RobotContainer {
               superstructure.requestPreScore();
             })));
 
-    NamedCommands.registerCommand(
-        "FLR",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "FLR",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "BCL",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "BCL",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "FRL",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "FRL",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "FRR",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "FRR",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "FCR",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "FCR",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "BRR",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "BRR",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "BRL",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "BRL",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "BLL",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "BLL",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
+    //         RobotContainer.constraints,
+    //         0)));
 
-    NamedCommands.registerCommand(
-        "BLR",
-        (AutoBuilder.pathfindToPose(
-            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
-            RobotContainer.constraints,
-            0)));
+    // NamedCommands.registerCommand(
+    //     "BLR",
+    //     (AutoBuilder.pathfindToPose(
+    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
+    //         RobotContainer.constraints,
+    //         0)));
 
     NamedCommands.registerCommand(
         "Shoot",
@@ -338,21 +338,35 @@ public class RobotContainer {
 
   public void disabledInit() {}
 
-  DriverStation.Alliance allianceColor = Alliance.Red;
+  public void autonomousPeriodic() {
+
+    // for (int i = 0; i < 12; i++)
+    // {
+    //   AutoBuilder.pathfindToPose(
+    //       AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[i]),
+    //       RobotContainer.constraints,
+    //       0);
+    // }
+
+  }
+
+  // DriverStation.Alliance allianceColor = Alliance.Red;
   boolean isInMatch;
 
   public void disabledPeriodic() {
-    if (!isInMatch) {
-      DriverStation.getAlliance()
-          .ifPresent(
-              a -> {
-                if (a != allianceColor) {
-                  allianceColor = a;
-                  operatorBoard.configScoringPosButtons();
-                  System.out.println("Buttons configured for " + a.name() + " Alliance");
-                }
-              });
-    }
-    // System.out.println("Buttons configured for " + allianceColor.name() + " Alliance");
+    //   if (isInMatch) {
+    //     DriverStation.getAlliance()
+    //         .ifPresent(
+    //             a -> {
+    //               if (a != allianceColor) {
+    //                 allianceColor = a;
+    //                 operatorBoard.configScoringPosButtons();
+    //                 // System.out.println("Buttons configured for " + a.name() + " Alliance");
+    //               }
+    //             });
+    //   }
+    //   // System.out.println("Buttons configured for " + allianceColor.name() + " Alliance");
+
+    operatorBoard.configScoringPosButtons();
   }
 }

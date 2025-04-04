@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Left"
+                  "pathName": "Right"
                 }
               },
               {
@@ -36,7 +36,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FLR"
+                  "name": "FRR-RED"
                 }
               }
             ]
@@ -61,7 +61,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftToSource"
+                  "pathName": "RightToSource"
                 }
               },
               {
@@ -71,7 +71,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.4
                       }
                     },
                     {
@@ -99,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceLToBL"
+                  "pathName": "SourceToBR"
                 }
               },
               {
@@ -124,7 +124,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "BLL"
+                  "name": "BRR-RED"
                 }
               }
             ]
@@ -149,7 +149,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BLToSourceL"
+                  "pathName": "BRToSource"
                 }
               },
               {
@@ -159,7 +159,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.3
+                        "waitTime": 0.4
                       }
                     },
                     {
@@ -187,7 +187,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SourceLToBL"
+                  "pathName": "SourceToBR"
                 }
               },
               {
@@ -212,7 +212,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "BLR"
+                  "name": "BRL-RED"
                 }
               }
             ]

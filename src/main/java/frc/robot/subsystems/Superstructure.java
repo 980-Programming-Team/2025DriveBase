@@ -185,7 +185,7 @@ public class Superstructure extends SubsystemBase {
             feedSetTimer.start();
           }
 
-          if (feedSetTimer.get() >= 0.1) {
+          if (feedSetTimer.get() >= 0.085) {
             state = Superstates.IDLE;
             feedSetTimer.stop();
             feedSetTimer.reset();
@@ -224,7 +224,7 @@ public class Superstructure extends SubsystemBase {
             feedSetTimer.start();
           }
 
-          if (feedSetTimer.get() >= 0.125) {
+          if (feedSetTimer.get() >= 0.105) {
             state = Superstates.IDLE;
             feedSetTimer.stop();
             feedSetTimer.reset();

@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.CANBus;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -32,9 +33,12 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -43,6 +47,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   // TunerConstants doesn't include these constants, so they are declared locally
+
   static final double ODOMETRY_FREQUENCY =
       new CANBus(TunerConstants.DrivetrainConstants.CANBusName).isNetworkFD() ? 250.0 : 100.0;
   public static final double DRIVE_BASE_RADIUS =
@@ -132,6 +137,8 @@ public class Drive extends SubsystemBase {
           // Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
+    registerNamedCommands();
+
     // Configure SysId
     sysId =
         new SysIdRoutine(
@@ -142,6 +149,117 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+  }
+
+  public void registerNamedCommands() {
+
+    NamedCommands.registerCommand(
+        "FLR",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[5]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "BCL",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[0]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "FRL",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[8]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "FRR",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[9]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "FCR",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[7]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "BRR",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[11]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "BRL",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[10]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "BLL",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[2]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "BLR",
+        (AutoBuilder.pathfindToPose(
+            (FieldConstants.Reef.centerFaces[3]), RobotContainer.constraints, 0)));
+
+    NamedCommands.registerCommand(
+        "FLR-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BCL-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "FRL-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "FRR-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "FCR-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BRR-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BRL-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BLL-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
+            RobotContainer.constraints,
+            0)));
+
+    NamedCommands.registerCommand(
+        "BLR-RED",
+        (AutoBuilder.pathfindToPose(
+            AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
+            RobotContainer.constraints,
+            0)));
   }
 
   @Override
