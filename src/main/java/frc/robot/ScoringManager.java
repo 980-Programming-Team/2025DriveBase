@@ -45,6 +45,7 @@ public class ScoringManager {
   public GenericHID getRightController() {
     return rightController;
   }
+  //^^ operator console uses two microcontrollers (each has 10 digital buttons)
 
   public void configureScoringButtons() {
     new JoystickButton(rightController, 7)
@@ -93,20 +94,15 @@ public class ScoringManager {
                       superStructure.requestScore();
                     })
                 .ignoringDisable(true));
-    new JoystickButton(rightController, 12)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.candle.clearAllAnims();
-                      //   superStructure.funnel.requestPosition(5300);
-                    })
-                .ignoringDisable(true));
   }
 
   public void configScoringPosButtons() {
 
-    if (DriverStation.getAlliance().isPresent() /*&& DriverStation.getAlliance().get() != null*/) {
+    if (DriverStation.getAlliance().isPresent()) {
       if (DriverStation.getAlliance().get() == Alliance.Red) {
+
+        // Creates positions for the operator console to work with red reef if driver station exists
+
         new JoystickButton(leftController, 8)
             .whileTrue(
                 pathFindToBCL =
@@ -192,6 +188,9 @@ public class ScoringManager {
                         RobotContainer.constraints,
                         0));
       } else {
+
+        // Creates positions for the operator console to work with blue reef if driver station exists    
+
         new JoystickButton(leftController, 8)
             .whileTrue(
                 pathFindToBCL =

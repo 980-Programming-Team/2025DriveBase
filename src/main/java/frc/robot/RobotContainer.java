@@ -56,14 +56,17 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
+  
+  //// Subsystems
   private final Drive drive;
   private final Vision vision;
 
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
-  public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
-  public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
+  public static ArmIO armIO = 
+      Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
+  public static ClawIO clawIO = 
+      Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
 
@@ -72,19 +75,26 @@ public class RobotContainer {
   public static Claw claw = new Claw(clawIO);
   public static Funnel funnel = new Funnel(funnelIO);
   private static CANdleSystem candle = new CANdleSystem();
+
   public static Superstructure superstructure =
       new Superstructure(elevator, arm, claw, funnel, candle);
+//        ^^^^^^^^^^^^^^ <- whole robot works in Superstructure object 
+//                           -> right click and click "Go To Defintion" to read 
+//                              or through vscode explorer in subsystems folder
 
-  // Controllers
+  //// Controllers
   public static SourceManager driver = new SourceManager(0, superstructure);
 
   public static ScoringManager operatorBoard = new ScoringManager(1, 2, superstructure);
 
-  // Dashboard inputs
+  //// Dashboard inputs (for debugging with Elastic)
   private final LoggedDashboardChooser<Command> autoChooser;
-  // Create the constraints to use while pathfinding
+
+  //// Create the constraints to use while pathfinding (Max Velocity, Max Acceleration, ...)
   public static PathConstraints constraints =
       new PathConstraints(2.25, 2, Units.degreesToRadians(540), Units.degreesToRadians(720));
+  
+  
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -116,17 +126,6 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackRight));
 
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
-
-        //   vision =
-        //       new Vision(
-        //           drive::addVisionMeasurement,
-        //           new VisionIOPhotonVisionSim(
-        //               VisionConstants.limelightPDP, VisionConstants.robotToCamera0,
-        // drive::getPose),
-        //           new VisionIOPhotonVisionSim(
-        //               VisionConstants.limelightRio,
-        //               VisionConstants.robotToCamera1,
-        //               drive::getPose));
         break;
 
       default:
@@ -166,8 +165,6 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-
-    // Constants.Manipulator.Arm.kP1.get();
   }
 
   /**
@@ -185,7 +182,7 @@ public class RobotContainer {
             () -> -driver.getDriver().getLeftX(),
             () -> -driver.getDriver().getRightX()));
 
-    // Reset gyro to 0° when A button is pressed
+    // Reset gyro to 0° when A button is pressed (Rezero)
     driver
         .getDriver()
         .a()
@@ -197,83 +194,24 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    driver.configScoringPosButtons();
+    //Xbox Controller:
+    driver.configScoringPosButtons(); 
+    //Custom Panel:
     operatorBoard.configureScoringButtons();
-    // operatorBoard.configScoringPosButtons();
   }
 
+  //Commands for auto to run
   public void registerNamedCommands() {
 
     NamedCommands.registerCommand(
         "L4",
-        (new InstantCommand(
+        (new InstantCommand( 
             () -> {
+              //Instant Command creates short command with body to call any existing function without needing to create command class
               superstructure.requestLevel(4);
               superstructure.requestPreScore();
             })));
 
-    // NamedCommands.registerCommand(
-    //     "FLR",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[5]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "BCL",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "FRL",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[8]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "FRR",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[9]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "FCR",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[7]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "BRR",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[11]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "BRL",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[10]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "BLL",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[2]),
-    //         RobotContainer.constraints,
-    //         0)));
-
-    // NamedCommands.registerCommand(
-    //     "BLR",
-    //     (AutoBuilder.pathfindToPose(
-    //         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[3]),
-    //         RobotContainer.constraints,
-    //         0)));
 
     NamedCommands.registerCommand(
         "Shoot",
@@ -297,15 +235,6 @@ public class RobotContainer {
               superstructure.requestLevel(1);
               superstructure.requestPreScore();
             })));
-
-    // NamedCommands.registerCommand(
-    //     "Feed",
-    //     (new InstantCommand(
-    //         () -> {
-    //           // while (!superstructure.hasCoral()) {
-    //           superstructure.requestAutoFeed();
-    //           // }
-    //         })));
 
     NamedCommands.registerCommand(
         "PreFeed",
@@ -334,46 +263,25 @@ public class RobotContainer {
   }
 
   boolean isInMatch;
-
   public void autoInit() {
     isInMatch = true;
+    //tells robot match has started
   }
 
   public void disabledInit() {}
 
-  public void autonomousPeriodic() {
+  public void autonomousPeriodic() {}
 
-    // for (int i = 0; i < 12; i++)
-    // {
-    //   AutoBuilder.pathfindToPose(
-    //       AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[i]),
-    //       RobotContainer.constraints,
-    //       0);
-    // }
-
-  }
-
-  // DriverStation.Alliance allianceColor = Alliance.Red;
-
-  int count = 0;
-
+  //works within real match:
+  boolean AllianceColorSelected = false;
   public void disabledPeriodic() {
-    //   if (isInMatch) {
-    //     DriverStation.getAlliance()
-    //         .ifPresent(
-    //             a -> {
-    //               if (a != allianceColor) {
-    //                 allianceColor = a;
-    //                 operatorBoard.configScoringPosButtons();
-    //                 // System.out.println("Buttons configured for " + a.name() + " Alliance");
-    //               }
-    //             });
-    //   }
-    //   // System.out.println("Buttons configured for " + allianceColor.name() + " Alliance");
-
-    if (isInMatch && count >= 0) {
+    if (isInMatch && AllianceColorSelected) {
+      //now that robot is in match we get our actual alliance color and configure operator once more for teleop
+      // -> gets the right color to change the positions the robot tracks to for the reef
       operatorBoard.configScoringPosButtons();
-      count++;
+      AllianceColorSelected = true;
+      //checks only once so it doesn't run infinitely and use too much battery/memory 
+      // -> works if venue runs competition properly !!
     }
   }
 }

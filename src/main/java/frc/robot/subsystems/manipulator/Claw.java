@@ -58,11 +58,13 @@ public class Claw extends SubsystemBase {
 
     switch (state) {
       case IDLE:
+      //how to get a button press to do an action without default command:
         if (RobotContainer.driver.getDriver().povUp().getAsBoolean()) {
           io.setClawSpeed(-Constants.Manipulator.Claw.scoreSpeed / 4);
         } else if (RobotContainer.driver.getDriver().povDown().getAsBoolean()) {
           io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed / 4);
         } else {
+          //otherwise return to default state
           io.stop();
         }
 
@@ -86,6 +88,7 @@ public class Claw extends SubsystemBase {
         if (shootTimer.get() <= 0) shootTimer.start();
 
         if (shootTimer.get() >= 3 || requestIdle) {
+          //uses timeout so motors don't run infinitely or on toggle when inaccessible
           state = ClawStates.IDLE;
           shootTimer.stop();
           shootTimer.reset();
@@ -93,7 +96,7 @@ public class Claw extends SubsystemBase {
         }
         break;
       case AUTO_FEED:
-        io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed); // *1
+        io.setClawSpeed(Constants.Manipulator.Claw.feedSpeed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
@@ -105,7 +108,6 @@ public class Claw extends SubsystemBase {
         }
         break;
       case SHOOTL1:
-        SmartDashboard.putString("ScoreTest", "SHOOTL1");
         io.setClawSpeed(Constants.Manipulator.Claw.scoreL1Speed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
@@ -118,7 +120,6 @@ public class Claw extends SubsystemBase {
         }
         break;
       case SHOOTL2:
-        SmartDashboard.putString("ScoreTest", "SHOOTL2");
         io.setClawSpeed(Constants.Manipulator.Claw.scoreL2Speed);
 
         if (shootTimer.get() <= 0) shootTimer.start();
@@ -148,8 +149,7 @@ public class Claw extends SubsystemBase {
         if (shootTimer.get() <= 0) shootTimer.start();
 
         if (shootTimer.get() >= 0.25
-            || requestIdle) { // || !(Superstructure.ohtaniLaser.getMeasurement().distance_mm <=
-          // 0.008
+            || requestIdle) {
           state = ClawStates.IDLE;
 
           Superstructure.arm.requestPosition(4.33);
@@ -162,20 +162,6 @@ public class Claw extends SubsystemBase {
 
     // clawMissingAlert.set(!inputs.kClawConnected && Constants.currentMode != Mode.SIM);
   }
-
-  // public boolean hasCoral() {
-  //   // Assuming resistance can be inferred from the current draw
-  //   double currentDraw = inputs.clawVel;
-  //   return currentDraw < Constants.Manipulator.Claw.coralDetectionCurrentThreshold
-  //       && currentDraw > 100;
-
-  //   //    return inputs.frontBeamBreakTriggered || inputs.backBeamBreakTriggered;
-  // }
-
-  // public boolean coralSecured() {
-  //   coralSecured = hasCoral();
-  //   return coralSecured;
-  // }
 
   // Use method only to reset state when robot is disabled
   public void forceIdle() {

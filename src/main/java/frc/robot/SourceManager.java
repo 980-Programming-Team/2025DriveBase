@@ -45,6 +45,8 @@ public class SourceManager {
                     RobotContainer.constraints,
                     0));
 
+    //default command allows multiple objects to be reached and checked periodically
+    // -> can only have one per class
     superStructure.setDefaultCommand(
         Commands.run(() -> superStructure.intakeCoral(driver.leftBumper()), superStructure));
   }
