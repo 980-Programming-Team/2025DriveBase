@@ -67,12 +67,12 @@ public class FieldConstants {
       centerFaces[0] =
           new Pose2d(
               Units.inchesToMeters(118.003),
-              Units.inchesToMeters(163.500),
+              Units.inchesToMeters(164.000),
               Rotation2d.fromDegrees(0));
       centerFaces[1] =
           new Pose2d(
               Units.inchesToMeters(118.003),
-              Units.inchesToMeters(154.500),
+              Units.inchesToMeters(151.850),
               Rotation2d.fromDegrees(0));
       centerFaces[2] =
           new Pose2d(
@@ -91,13 +91,14 @@ public class FieldConstants {
               Rotation2d.fromDegrees(-120));
       centerFaces[5] =
           new Pose2d(
-              Units.inchesToMeters(209.118),
-              Units.inchesToMeters(204.145),
+              Units.inchesToMeters(210.300),
+              Units.inchesToMeters(205.300),
               Rotation2d.fromDegrees(-120));
+
       centerFaces[6] =
           new Pose2d(
-              Units.inchesToMeters(232.000),
-              Units.inchesToMeters(154.144),
+              Units.inchesToMeters(234.250),
+              Units.inchesToMeters(152.250),
               Rotation2d.fromDegrees(180));
       centerFaces[7] =
           new Pose2d(
@@ -106,13 +107,13 @@ public class FieldConstants {
               Rotation2d.fromDegrees(180));
       centerFaces[8] =
           new Pose2d(
-              Units.inchesToMeters(200.118),
-              Units.inchesToMeters(107.500),
+              Units.inchesToMeters(201.500),
+              Units.inchesToMeters(106.000),
               Rotation2d.fromDegrees(120));
       centerFaces[9] =
           new Pose2d(
-              Units.inchesToMeters(213.600),
-              Units.inchesToMeters(110.750),
+              Units.inchesToMeters(214.000),
+              Units.inchesToMeters(111.300),
               Rotation2d.fromDegrees(120));
       centerFaces[10] =
           new Pose2d(

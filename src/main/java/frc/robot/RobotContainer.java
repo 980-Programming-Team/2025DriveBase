@@ -198,6 +198,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     driver.configScoringPosButtons();
+    operatorBoard.configureScoringButtons();
     // operatorBoard.configScoringPosButtons();
   }
 
@@ -332,6 +333,8 @@ public class RobotContainer {
     return autoChooser.get();
   }
 
+  boolean isInMatch;
+
   public void autoInit() {
     isInMatch = true;
   }
@@ -351,7 +354,8 @@ public class RobotContainer {
   }
 
   // DriverStation.Alliance allianceColor = Alliance.Red;
-  boolean isInMatch;
+
+  int count = 0;
 
   public void disabledPeriodic() {
     //   if (isInMatch) {
@@ -367,6 +371,9 @@ public class RobotContainer {
     //   }
     //   // System.out.println("Buttons configured for " + allianceColor.name() + " Alliance");
 
-    operatorBoard.configScoringPosButtons();
+    if (isInMatch && count >= 0) {
+      operatorBoard.configScoringPosButtons();
+      count++;
+    }
   }
 }

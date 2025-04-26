@@ -46,6 +46,63 @@ public class ScoringManager {
     return rightController;
   }
 
+  public void configureScoringButtons() {
+    new JoystickButton(rightController, 7)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(1);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 9)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestPreFeed();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 4)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(2);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 3)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(3);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 2)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestLevel(4);
+                      superStructure.requestPreScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 8)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.requestScore();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 12)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.candle.clearAllAnims();
+                      //   superStructure.funnel.requestPosition(5300);
+                    })
+                .ignoringDisable(true));
+  }
+
   public void configScoringPosButtons() {
 
     if (DriverStation.getAlliance().isPresent() /*&& DriverStation.getAlliance().get() != null*/) {
@@ -197,60 +254,5 @@ public class ScoringManager {
                         (FieldConstants.Reef.centerFaces[11]), RobotContainer.constraints, 0));
       }
     }
-
-    new JoystickButton(rightController, 7)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestLevel(1);
-                      superStructure.requestPreScore();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 9)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestPreFeed();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 4)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestLevel(2);
-                      superStructure.requestPreScore();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 3)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestLevel(3);
-                      superStructure.requestPreScore();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 2)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestLevel(4);
-                      superStructure.requestPreScore();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 8)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.requestScore();
-                    })
-                .ignoringDisable(true));
-    new JoystickButton(rightController, 12)
-        .onTrue(
-            new InstantCommand(
-                    () -> {
-                      superStructure.candle.clearAllAnims();
-                      //   superStructure.funnel.requestPosition(5300);
-                    })
-                .ignoringDisable(true));
   }
 }
