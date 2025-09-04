@@ -15,7 +15,7 @@ import frc.robot.subsystems.manipulator.Claw;
 
 public class Superstructure extends SubsystemBase {
 
-  //requests
+  // requests
   private boolean requestIdle;
   private boolean requestPreFeed;
   private boolean requestFeed;
@@ -25,7 +25,7 @@ public class Superstructure extends SubsystemBase {
   // private boolean requestClimbReady;
   private boolean requestDisable;
 
-  //subsystems
+  // subsystems
   private Superstates state;
   private Elevator elevator;
   public static Arm arm;
@@ -33,16 +33,16 @@ public class Superstructure extends SubsystemBase {
   private Claw claw;
   // private Climber climber;
 
-  //LEDs
+  // LEDs
   public CANdleSystem candle;
 
-  //Elevator Height
+  // Elevator Height
   private Level level;
 
-  //Coral Detection
+  // Coral Detection
   public static LaserCan ohtaniLaser;
 
-  //Coral auto feed into position timer
+  // Coral auto feed into position timer
   private Timer feedSetTimer;
 
   // pretty sure that both encoders turn counterclockwise
@@ -50,7 +50,7 @@ public class Superstructure extends SubsystemBase {
   private DutyCycleEncoder elevatorEncoder;
   private DutyCycleEncoder armEncoder;
 
-  //States of the Superstructure
+  // States of the Superstructure
   // -> tells robot what to do at current moment so actions don't conflict
   public static enum Superstates {
     IDLE,
@@ -102,9 +102,9 @@ public class Superstructure extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ////Debugging commented out but can be reentered whenever
+    //// Debugging commented out but can be reentered whenever
     //// -> Issue is it uses a lot of memory, use only if needed:
-    
+
     // Logger.recordOutput("Superstructure/State", state.toString());
     // Logger.recordOutput("Superstructure/Level", level.toString());
 
@@ -116,16 +116,18 @@ public class Superstructure extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-      //   ^^^^ if robot is idle then
-      //   vvvv <- right click any request____ of a subsystem and click "Go To Definiton" 
-      //           then scroll up to their "periodic" function to see how each is activated through their own state machine
-      //           works just like this one with requests to call actions to be done
+        //   ^^^^ if robot is idle then
+        //   vvvv <- right click any request____ of a subsystem and click "Go To Definiton"
+        //           then scroll up to their "periodic" function to see how each is activated
+        // through their own state machine
+        //           works just like this one with requests to call actions to be done
         elevator.requestHeight(-0.048);
         arm.requestPosition(2.05); // -0.8
         claw.requestIdle();
         candle.SetLEDOrange();
 
-        // vvvvvvvvvvvv <- each case needs to check for if any other request is initiated to leave its current action and avoid conflict
+        // vvvvvvvvvvvv <- each case needs to check for if any other request is initiated to leave
+        // its current action and avoid conflict
         if (requestFeed) {
           state = Superstates.FEEDING;
         } else if (requestAutoFeed) {
@@ -140,7 +142,8 @@ public class Superstructure extends SubsystemBase {
 
         break;
       case PRE_FEED:
-      //   ^^^^^^^^ if operator pressess button for arm to be ready to be fed, then vvvv (and so on for each case) 
+        //   ^^^^^^^^ if operator pressess button for arm to be ready to be fed, then vvvv (and so
+        // on for each case)
         elevator.requestHeight(-0.048);
         arm.requestPosition(2.05);
         candle.SetLEDL2();
@@ -193,13 +196,13 @@ public class Superstructure extends SubsystemBase {
           state = Superstates.AUTO_FEEDING;
         }
 
-        //detects that we have coral through laserCan
+        // detects that we have coral through laserCan
         if (hasCoral()) {
           if (feedSetTimer.get() <= 0) {
             feedSetTimer.start();
           }
 
-          //sets coral to good position in claw
+          // sets coral to good position in claw
           if (feedSetTimer.get() >= 0.085) {
             state = Superstates.IDLE;
             feedSetTimer.stop();
@@ -208,7 +211,8 @@ public class Superstructure extends SubsystemBase {
           }
         }
         break;
-      case AUTO_FEEDING: // auto feed time is slower due to max accel on other motos, had to increase
+      case AUTO_FEEDING: // auto feed time is slower due to max accel on other motos, had to
+        // increase
         funnel.requestAutoFeed();
         claw.requestAutoFeed();
         arm.requestPosition(2.05); // -.08
@@ -464,7 +468,7 @@ public class Superstructure extends SubsystemBase {
     }
   }
 
-  //gets default command using driver controller
+  // gets default command using driver controller
   public void intakeCoral(Trigger action) {
     action.onTrue(
         new InstantCommand(

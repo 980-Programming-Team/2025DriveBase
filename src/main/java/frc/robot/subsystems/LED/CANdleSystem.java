@@ -7,10 +7,6 @@ package frc.robot.subsystems.LED;
 import com.ctre.phoenix.led.*;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdle.VBatOutputMode;
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
-import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
-import com.ctre.phoenix.led.TwinkleAnimation.TwinklePercent;
-import com.ctre.phoenix.led.TwinkleOffAnimation.TwinkleOffPercent;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -22,7 +18,7 @@ public class CANdleSystem extends SubsystemBase {
   private boolean m_animDirection = false;
   private boolean m_setAnim = false;
   private Animation m_toAnimate = null;
-  private int candleIndex = 0;
+  // private int candleIndex = 0;
 
   public enum AnimationTypes {
     ColorFlow,
@@ -51,12 +47,13 @@ public class CANdleSystem extends SubsystemBase {
     m_candle.configAllSettings(configAll, 100);
   }
 
-  public void toggleAnimDirection() {
+  /*  public void toggleAnimDirection() {
     m_animDirection = !m_animDirection;
   }
 
   public void incrementAnimation() {
 
+    if (!m_setAnim) return;
     switch (m_currentAnimation) {
       case ColorFlow:
         changeAnimation(AnimationTypes.Fire);
@@ -95,6 +92,7 @@ public class CANdleSystem extends SubsystemBase {
   }
 
   public void decrementAnimation() {
+    if (!m_setAnim) return;
     switch (m_currentAnimation) {
       case ColorFlow:
         changeAnimation(AnimationTypes.Empty);
@@ -138,81 +136,65 @@ public class CANdleSystem extends SubsystemBase {
 
   public void changeAnimation(AnimationTypes toChange) {
     m_currentAnimation = toChange;
-
+    // github code had candle index multiplied by led count to seperate portions of led for
+    // animation
     switch (toChange) {
       default:
       case ColorFlow:
-        candleIndex = 0;
         m_toAnimate =
-            new ColorFlowAnimation(
-                128, 20, 70, 0, 0.7, LedCount - 8, Direction.Forward, candleIndex * LedCount);
+            new ColorFlowAnimation(128, 20, 70, 0, 0.7, LedCount - 8, Direction.Forward, LedCount);
         break;
       case Fire:
-        candleIndex = 1;
         m_toAnimate =
-            new FireAnimation(
-                0.5, 0.7, LedCount - 8, 0.8, 0.5, m_animDirection, candleIndex * LedCount);
+            new FireAnimation(0.5, 0.7, LedCount - 8, 0.8, 0.5, m_animDirection, LedCount);
         break;
       case Larson:
-        candleIndex = 2;
         m_toAnimate =
-            new LarsonAnimation(
-                0, 255, 46, 0, 0.1, LedCount - 8, BounceMode.Front, 3, candleIndex * LedCount);
+            new LarsonAnimation(0, 255, 46, 0, 0.1, LedCount - 8, BounceMode.Front, 3, LedCount);
         break;
       case Rainbow:
-        candleIndex = 3;
-        m_toAnimate =
-            new RainbowAnimation(0.7, 0.7, LedCount - 8, m_animDirection, candleIndex * LedCount);
+        m_toAnimate = new RainbowAnimation(0.5, 0.7, LedCount - 8, m_animDirection, LedCount);
         break;
       case RgbFade:
-        candleIndex = 4;
-        m_toAnimate = new RgbFadeAnimation(0.7, 0.4, LedCount - 8, candleIndex * LedCount);
+        m_toAnimate = new RgbFadeAnimation(0.5, 0.4, LedCount - 8, LedCount);
         break;
       case SingleFade:
-        candleIndex = 5;
-        m_toAnimate =
-            new SingleFadeAnimation(50, 2, 200, 0, 0.5, LedCount - 8, candleIndex * LedCount);
+        m_toAnimate = new SingleFadeAnimation(50, 2, 200, 0, 0.5, LedCount - 8, LedCount);
         break;
       case Strobe:
-        candleIndex = 6;
-        m_toAnimate =
-            new StrobeAnimation(240, 10, 180, 0, 0.01, LedCount - 8, candleIndex * LedCount);
+        m_toAnimate = new StrobeAnimation(240, 10, 180, 0, 0.01, LedCount - 8, LedCount);
         break;
       case Twinkle:
-        candleIndex = 7;
         m_toAnimate =
             new TwinkleAnimation(
-                30, 70, 60, 0, 0.4, LedCount - 8, TwinklePercent.Percent42, candleIndex * LedCount);
+                30, 70, 60, 0, 0.4, LedCount - 8, TwinklePercent.Percent42, LedCount);
         break;
       case TwinkleOff:
-        candleIndex = 8;
         m_toAnimate =
             new TwinkleOffAnimation(
-                70,
-                90,
-                175,
-                0,
-                0.2,
-                LedCount - 8,
-                TwinkleOffPercent.Percent76,
-                candleIndex * LedCount);
+                70, 90, 175, 0, 0.2, LedCount - 8, TwinkleOffPercent.Percent76, LedCount);
         break;
       case Empty:
-        candleIndex = 9;
-        m_toAnimate =
-            new RainbowAnimation(0.7, 0.7, LedCount - 8, m_animDirection, candleIndex * LedCount);
+        m_toAnimate = new RainbowAnimation(0.7, 0.7, LedCount - 8, m_animDirection, LedCount);
         break;
 
       case SetAll:
         m_toAnimate = null;
         break;
     }
-    // System.out.println("Changed to " + m_currentAnimation.toString());
+    System.out.println("Changed to " + m_currentAnimation.toString());
+  }
+
+  public void AnimationControl() {
+    m_setAnim = !m_setAnim;
+    if (m_setAnim) {
+      m_candle.animate(m_toAnimate);
+    }
   }
 
   public void clearAllAnims() {
     clearAnimations = true;
-  }
+  }*/
 
   public void SetLEDColor(int red, int green, int blue) {
     m_candle.setLEDs(red, green, blue, 0, 0, LedCount);

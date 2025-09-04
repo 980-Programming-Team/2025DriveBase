@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
 import frc.robot.util.AllianceFlipUtil;
+import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public class ScoringManager {
   private GenericHID leftController;
   private GenericHID rightController;
-
+  private LoggableInputs leftCLoggableInputs;
   // Pathfinding commands
   private Command pathFindToBCL;
   private Command pathFindToBCR;
@@ -45,7 +46,7 @@ public class ScoringManager {
   public GenericHID getRightController() {
     return rightController;
   }
-  //^^ operator console uses two microcontrollers (each has 10 digital buttons)
+  // ^^ operator console uses two microcontrollers (each has 10 digital buttons)
 
   public void configureScoringButtons() {
     new JoystickButton(rightController, 7)
@@ -94,7 +95,30 @@ public class ScoringManager {
                       superStructure.requestScore();
                     })
                 .ignoringDisable(true));
+    /*   new JoystickButton(rightController, 5)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.candle.incrementAnimation();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 6)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.candle.decrementAnimation();
+                    })
+                .ignoringDisable(true));
+    new JoystickButton(rightController, 12)
+        .onTrue(
+            new InstantCommand(
+                    () -> {
+                      superStructure.candle.AnimationControl();
+                    })
+                .ignoringDisable(true));*/
   }
+
+  int index = 0;
 
   public void configScoringPosButtons() {
 
@@ -110,6 +134,7 @@ public class ScoringManager {
                         AllianceFlipUtil.apply(FieldConstants.Reef.centerFaces[0]),
                         RobotContainer.constraints,
                         0));
+
         new JoystickButton(leftController, 7)
             .whileTrue(
                 pathFindToBCR =
@@ -189,7 +214,8 @@ public class ScoringManager {
                         0));
       } else {
 
-        // Creates positions for the operator console to work with blue reef if driver station exists    
+        // Creates positions for the operator console to work with blue reef if driver station
+        // exists
 
         new JoystickButton(leftController, 8)
             .whileTrue(

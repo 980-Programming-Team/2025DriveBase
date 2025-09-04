@@ -3,7 +3,6 @@ package frc.robot.subsystems.manipulator;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
@@ -58,13 +57,13 @@ public class Claw extends SubsystemBase {
 
     switch (state) {
       case IDLE:
-      //how to get a button press to do an action without default command:
+        // how to get a button press to do an action without default command:
         if (RobotContainer.driver.getDriver().povUp().getAsBoolean()) {
           io.setClawSpeed(-Constants.Manipulator.Claw.scoreSpeed / 4);
         } else if (RobotContainer.driver.getDriver().povDown().getAsBoolean()) {
           io.setClawSpeed(Constants.Manipulator.Claw.scoreSpeed / 4);
         } else {
-          //otherwise return to default state
+          // otherwise return to default state
           io.stop();
         }
 
@@ -88,7 +87,7 @@ public class Claw extends SubsystemBase {
         if (shootTimer.get() <= 0) shootTimer.start();
 
         if (shootTimer.get() >= 3 || requestIdle) {
-          //uses timeout so motors don't run infinitely or on toggle when inaccessible
+          // uses timeout so motors don't run infinitely or on toggle when inaccessible
           state = ClawStates.IDLE;
           shootTimer.stop();
           shootTimer.reset();
@@ -148,8 +147,7 @@ public class Claw extends SubsystemBase {
 
         if (shootTimer.get() <= 0) shootTimer.start();
 
-        if (shootTimer.get() >= 0.25
-            || requestIdle) {
+        if (shootTimer.get() >= 0.25 || requestIdle) {
           state = ClawStates.IDLE;
 
           Superstructure.arm.requestPosition(4.33);

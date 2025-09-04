@@ -56,17 +56,15 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  
+
   //// Subsystems
   private final Drive drive;
   private final Vision vision;
 
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
-  public static ArmIO armIO = 
-      Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
-  public static ClawIO clawIO = 
-      Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
+  public static ArmIO armIO = Constants.armEnabled ? new ArmIOSpark() : new ArmIO() {};
+  public static ClawIO clawIO = Constants.armEnabled ? new ClawIOSpark() : new ClawIO() {};
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
 
@@ -78,9 +76,9 @@ public class RobotContainer {
 
   public static Superstructure superstructure =
       new Superstructure(elevator, arm, claw, funnel, candle);
-//        ^^^^^^^^^^^^^^ <- whole robot works in Superstructure object 
-//                           -> right click and click "Go To Defintion" to read 
-//                              or through vscode explorer in subsystems folder
+  //        ^^^^^^^^^^^^^^ <- whole robot works in Superstructure object
+  //                           -> right click and click "Go To Defintion" to read
+  //                              or through vscode explorer in subsystems folder
 
   //// Controllers
   public static SourceManager driver = new SourceManager(0, superstructure);
@@ -93,8 +91,7 @@ public class RobotContainer {
   //// Create the constraints to use while pathfinding (Max Velocity, Max Acceleration, ...)
   public static PathConstraints constraints =
       new PathConstraints(2.25, 2, Units.degreesToRadians(540), Units.degreesToRadians(720));
-  
-  
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     switch (Constants.currentMode) {
@@ -194,24 +191,25 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    //Xbox Controller:
-    driver.configScoringPosButtons(); 
-    //Custom Panel:
+    // Xbox Controller:
+    driver.configScoringPosButtons();
+    // Custom Panel:
     operatorBoard.configureScoringButtons();
+    operatorBoard.configScoringPosButtons();
   }
 
-  //Commands for auto to run
+  // Commands for auto to run
   public void registerNamedCommands() {
 
     NamedCommands.registerCommand(
         "L4",
-        (new InstantCommand( 
+        (new InstantCommand(
             () -> {
-              //Instant Command creates short command with body to call any existing function without needing to create command class
+              // Instant Command creates short command with body to call any existing function
+              // without needing to create command class
               superstructure.requestLevel(4);
               superstructure.requestPreScore();
             })));
-
 
     NamedCommands.registerCommand(
         "Shoot",
@@ -263,24 +261,27 @@ public class RobotContainer {
   }
 
   boolean isInMatch;
+
   public void autoInit() {
     isInMatch = true;
-    //tells robot match has started
+    // tells robot match has started
   }
 
   public void disabledInit() {}
 
   public void autonomousPeriodic() {}
 
-  //works within real match:
+  // works within real match:
   boolean AllianceColorSelected = false;
+
   public void disabledPeriodic() {
-    if (isInMatch && AllianceColorSelected) {
-      //now that robot is in match we get our actual alliance color and configure operator once more for teleop
+    if (true) {
+      // now that robot is in match we get our actual alliance color and configure operator once
+      // more for teleop
       // -> gets the right color to change the positions the robot tracks to for the reef
       operatorBoard.configScoringPosButtons();
       AllianceColorSelected = true;
-      //checks only once so it doesn't run infinitely and use too much battery/memory 
+      // checks only once so it doesn't run infinitely and use too much battery/memory
       // -> works if venue runs competition properly !!
     }
   }
