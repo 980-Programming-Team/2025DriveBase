@@ -115,15 +115,16 @@ public final class Constants {
           new LoggedTunableNumber("Manipulator/D Value Arm", 0.0); // 0.0
 
       public static final double kP = 0.75;
-      public static final double kI = 0.1;
-      public static final double kD = 0.0;
+      public static final double kI = 0.0; // 0.1
+      public static final double kD = 0.1; // 0.0
       public static final double minOutput = -0.7;
       public static final double maxOutput = 0.7;
 
       // Wrap to 0 at threshold assuming pivot is pushed back hard against zero point hardstop
       public static final double absZeroWrapThreshold = 0.95;
 
-      public static final int currentLimit = 40;
+      // recently changed
+      public static final int currentLimit = 10;
 
       public static final double mechanismMaxAccel = 3.3274;
       public static final double mechanismMaxCruiseVel = 1.597152;
