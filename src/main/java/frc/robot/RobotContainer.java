@@ -58,8 +58,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   //// Subsystems
-  private final Drive drive;
-  private final Vision vision;
+  public static Drive drive;
+  public static Vision vision;
 
   public static ElevatorIO elevatorIO =
       Constants.elevatorEnabled ? new ElevatorIOSpark() : new ElevatorIO() {};
@@ -81,9 +81,8 @@ public class RobotContainer {
   //                              or through vscode explorer in subsystems folder
 
   //// Controllers
-  public static SourceManager driver = new SourceManager(0, superstructure);
-
-  public static ScoringManager operatorBoard = new ScoringManager(1, 2, superstructure);
+  public static SourceManager driver;
+  public static ScoringManager operatorBoard;
 
   //// Dashboard inputs (for debugging with Elastic)
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -138,6 +137,9 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
+
+    driver = new SourceManager(0, superstructure);
+    operatorBoard = new ScoringManager(1, 2, superstructure, drive);
 
     // Set up auto routines
     registerNamedCommands();
@@ -275,12 +277,15 @@ public class RobotContainer {
   boolean AllianceColorSelected = false;
 
   public void disabledPeriodic() {
-    if (true) {
+    if (!AllianceColorSelected) {
       // now that robot is in match we get our actual alliance color and configure operator once
       // more for teleop
       // -> gets the right color to change the positions the robot tracks to for the reef
+
+      /* moved to disabledInit() because it was causing scheudler loop overruns */
       operatorBoard.configScoringPosButtons();
       AllianceColorSelected = true;
+
       // checks only once so it doesn't run infinitely and use too much battery/memory
       // -> works if venue runs competition properly !!
     }

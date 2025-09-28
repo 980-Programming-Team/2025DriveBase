@@ -171,7 +171,7 @@ public class Superstructure extends SubsystemBase {
       case FEEDING:
         funnel.requestFeed();
         claw.requestFeed();
-        arm.requestPosition(2.09); // -.08 was 2.05z
+        arm.requestPosition(2.05); // -.08 changed to 2.09 for arm wheel destruction
         elevator.requestHeight(-0.048);
 
         candle.SetLEDPurple0();

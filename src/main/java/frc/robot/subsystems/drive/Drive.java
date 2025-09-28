@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.RobotContainer;
@@ -40,8 +41,10 @@ import frc.robot.constants.FieldConstants;
 import frc.robot.constants.TunerConstants;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.LocalADStarAK;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -96,6 +99,20 @@ public class Drive extends SubsystemBase {
       };
   private SwerveDrivePoseEstimator poseEstimator =
       new SwerveDrivePoseEstimator(kinematics, rawGyroRotation, lastModulePositions, new Pose2d());
+
+  public Command pathfindToPose(Supplier<Pose2d> pose, Alliance currentAlliance) {
+    if (currentAlliance == Alliance.Red) {
+      return new DeferredCommand(
+          () ->
+              AutoBuilder.pathfindToPose(
+                  AllianceFlipUtil.apply(pose.get()), RobotContainer.constraints, 0),
+          Set.of(this));
+    } else {
+      return new DeferredCommand(
+          () -> AutoBuilder.pathfindToPose(pose.get(), RobotContainer.constraints, 0),
+          Set.of(this));
+    }
+  }
 
   public Drive(
       GyroIO gyroIO,

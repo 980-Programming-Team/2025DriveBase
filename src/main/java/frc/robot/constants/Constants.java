@@ -115,8 +115,8 @@ public final class Constants {
           new LoggedTunableNumber("Manipulator/D Value Arm", 0.0); // 0.0
 
       public static final double kP = 0.75;
-      public static final double kI = 0.0; // 0.1
-      public static final double kD = 0.1; // 0.0
+      public static final double kI = 0.0; // 0.1 was Jake/Michael
+      public static final double kD = 0.1; // 0.0 was Jake/Michael
       public static final double minOutput = -0.7;
       public static final double maxOutput = 0.7;
 
@@ -124,6 +124,7 @@ public final class Constants {
       public static final double absZeroWrapThreshold = 0.95;
 
       // recently changed
+      // public static final int currentLimit = 10; previous change
       public static final int currentLimit = 10;
 
       public static final double mechanismMaxAccel = 3.3274;

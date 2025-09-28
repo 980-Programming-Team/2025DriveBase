@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.Superstructure;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.AllianceFlipUtil;
 import org.littletonrobotics.junction.inputs.LoggableInputs;
 
@@ -32,11 +33,13 @@ public class ScoringManager {
   private Command pathFindToBRR;
 
   private Superstructure superStructure;
+  private Drive drive;
 
-  public ScoringManager(int leftPort, int rightPort, Superstructure superstructure) {
+  public ScoringManager(int leftPort, int rightPort, Superstructure superstructure, Drive drive) {
     leftController = new Joystick(leftPort);
     rightController = new Joystick(rightPort);
     superStructure = superstructure;
+    this.drive = drive;
   }
 
   public GenericHID getLeftController() {
