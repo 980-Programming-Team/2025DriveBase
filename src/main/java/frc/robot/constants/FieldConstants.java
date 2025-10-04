@@ -64,6 +64,10 @@ public class FieldConstants {
 
     static {
       // Initialize faces
+      // (first value is y, second value is x) field is seen from side view
+      // from drive station view:
+      //  right decreases x
+      // up increases y
       centerFaces[0] =
           new Pose2d(
               Units.inchesToMeters(118.003),

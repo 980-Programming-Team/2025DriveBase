@@ -277,6 +277,8 @@ public class RobotContainer {
   boolean AllianceColorSelected = false;
 
   public void disabledPeriodic() {
+    // !AllianceColorSelected original
+
     if (!AllianceColorSelected) {
       // now that robot is in match we get our actual alliance color and configure operator once
       // more for teleop

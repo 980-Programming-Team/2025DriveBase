@@ -135,7 +135,7 @@ public class Robot extends LoggedRobot {
     }
 
     // Return to normal thread priority
-    Threads.setCurrentThreadPriority(false, 10);
+    Threads.setCurrentThreadPriority(true, 10); // was false
 
     Logger.recordOutput("ZeroedExteriorPoses", new Pose3d[] {new Pose3d()});
     Logger.recordOutput("ZeroedInteriorPoses", new Pose3d[] {new Pose3d()});
