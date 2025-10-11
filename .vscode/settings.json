@@ -123,5 +123,6 @@
     "wpilibj",
     "WPILOG",
     "wpired"
-  ]
+  ],
+  "java.debug.settings.onBuildFailureProceed": true
 }

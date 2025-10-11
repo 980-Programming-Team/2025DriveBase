@@ -12,6 +12,7 @@ import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Arm;
 import frc.robot.subsystems.manipulator.Claw;
+import frc.robot.subsystems.manipulator.Climber;
 
 public class Superstructure extends SubsystemBase {
 
@@ -31,6 +32,7 @@ public class Superstructure extends SubsystemBase {
   public static Arm arm;
   public Funnel funnel;
   private Claw claw;
+  public Climber climber;
   // private Climber climber;
 
   // LEDs
@@ -78,13 +80,15 @@ public class Superstructure extends SubsystemBase {
       Arm arm,
       Claw claw,
       Funnel funnel, /*Climber climber,*/
-      CANdleSystem candle) {
+      CANdleSystem candle,
+      Climber climber) {
     this.elevator = elevator;
     this.arm = arm;
     this.funnel = funnel;
     this.claw = claw;
     // this.climber = climber;
     this.candle = candle;
+    this.climber = climber;
 
     state = Superstates.IDLE;
     level = Level.L1;
@@ -421,6 +425,18 @@ public class Superstructure extends SubsystemBase {
   public void requestScore() {
     unsetAllRequests();
     requestScore = true;
+  }
+
+  public void requestExtend() {
+    climber.extendClimber();
+  }
+
+  public void requestRetract() {
+    climber.retractClimber();
+  }
+
+  public void requestStopClimb() {
+    climber.stop();
   }
 
   // public void requestClimbReady() {

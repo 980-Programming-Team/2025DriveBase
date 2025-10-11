@@ -93,7 +93,7 @@ public class Funnel extends SubsystemBase {
       case AUTO_FEED:
         io.set(Constants.Funnel.feedSpeed * 2);
 
-        // if (feedTimer.get() <= 0) feedTimer.start();
+        // if (feedTimer.get() <= 0) feedTimereedSpeed .start();
 
         if (Superstructure.hasCoral() || requestIdle) {
           state = FunnelStates.IDLE;

@@ -203,21 +203,21 @@ public final class Constants {
     }
   }
 
-  // public class Climber {
+  /*public class Climber {
 
-  //   public static final int kClimber = 7; // dd
+    public static final int kClimber = 7; // dd
 
-  //   public static final double gearRatio = 80.0;
-  //   public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
-  //   public static final double setpointToleranceMeters = 0.01;
-  //   public static final int currentLimit = 40;
+    public static final double gearRatio = 80.0;
+    public static final double splineXLDiameter = Units.inchesToMeters(1.37795);
+    public static final double setpointToleranceMeters = 0.01;
+    public static final int currentLimit = 40;
 
-  //   public static final double minOutput = -0.85;
-  //   public static final double maxOutput = 0.85;
+    public static final double minOutput = -0.85;
+    public static final double maxOutput = 0.85;
 
-  //   public static final double stowedPoistion = 0;
-  //   public static final double climbingPosition = 20; // TODO find real position
-  // }
+    public static final double stowedPoistion = 0;
+    public static final double climbingPosition = 20; // TODO find real position
+  }*/
 
   // public class L1Mechanism {
 
