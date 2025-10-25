@@ -7,12 +7,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LED.CANdleSystem;
-// import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.funnel.Funnel;
 import frc.robot.subsystems.manipulator.Arm;
 import frc.robot.subsystems.manipulator.Claw;
-import frc.robot.subsystems.manipulator.Climber;
+// import frc.robot.subsystems.manipulator.Climber;
 
 public class Superstructure extends SubsystemBase {
 
@@ -32,7 +31,7 @@ public class Superstructure extends SubsystemBase {
   public static Arm arm;
   public Funnel funnel;
   private Claw claw;
-  public Climber climber;
+  // public Climber climber;
   // private Climber climber;
 
   // LEDs
@@ -80,15 +79,15 @@ public class Superstructure extends SubsystemBase {
       Arm arm,
       Claw claw,
       Funnel funnel, /*Climber climber,*/
-      CANdleSystem candle,
-      Climber climber) {
+      CANdleSystem candle) {
+    // Climber climber) {
     this.elevator = elevator;
     this.arm = arm;
     this.funnel = funnel;
     this.claw = claw;
     // this.climber = climber;
     this.candle = candle;
-    this.climber = climber;
+    // this.climber = climber;
 
     state = Superstates.IDLE;
     level = Level.L1;
@@ -203,16 +202,19 @@ public class Superstructure extends SubsystemBase {
         // detects that we have coral through laserCan
         if (hasCoral()) {
           if (feedSetTimer.get() <= 0) {
-            feedSetTimer.start();
+            // feedSetTimer.start();
+            state = Superstates.IDLE;
+            unsetAllRequests();
           }
 
           // sets coral to good position in claw
-          if (feedSetTimer.get() >= 0.085) {
+          // was 0.085 changed to 0.03 for ball
+          /*if (feedSetTimer.get() >= 0.01) {
             state = Superstates.IDLE;
-            feedSetTimer.stop();
+            //feedSetTimer.stop();
             feedSetTimer.reset();
             unsetAllRequests();
-          }
+          }*/
         }
         break;
       case AUTO_FEEDING: // auto feed time is slower due to max accel on other motos, had to
@@ -427,7 +429,7 @@ public class Superstructure extends SubsystemBase {
     requestScore = true;
   }
 
-  public void requestExtend() {
+  /*public void requestExtend() {
     climber.extendClimber();
   }
 
@@ -437,7 +439,7 @@ public class Superstructure extends SubsystemBase {
 
   public void requestStopClimb() {
     climber.stop();
-  }
+  }*/
 
   // public void requestClimbReady() {
   //   unsetAllRequests();

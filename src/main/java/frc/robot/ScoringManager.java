@@ -52,7 +52,7 @@ public class ScoringManager {
   // ^^ operator console uses two microcontrollers (each has 10 digital buttons)
 
   public void configureScoringButtons() {
-    new JoystickButton(rightController, 10)
+    /*new JoystickButton(rightController, 10)
         .onTrue(
             new InstantCommand(
                 () -> {
@@ -63,28 +63,18 @@ public class ScoringManager {
                 () -> {
                   superStructure.requestRetract();
                 }));
-    new JoystickButton(rightController, 5)
+      new JoystickButton(rightController, 5)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superStructure.requestExtend();
                 }))
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superStructure.requestStopClimb();
-                }));
     new JoystickButton(rightController, 6)
         .onTrue(
             new InstantCommand(
                 () -> {
                   superStructure.requestRetract();
-                }))
-        .onFalse(
-            new InstantCommand(
-                () -> {
-                  superStructure.requestStopClimb();
-                }));
+                }))*/
     new JoystickButton(rightController, 7)
         .onTrue(
             new InstantCommand(

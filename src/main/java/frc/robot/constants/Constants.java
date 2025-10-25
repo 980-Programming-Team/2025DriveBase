@@ -144,8 +144,8 @@ public final class Constants {
     }
 
     public class Claw {
-
-      public static final double feedSpeed = 0.175;
+      // game was 0.175, ball 0.05
+      public static final double feedSpeed = 0.05;
       public static final double scoreL1Speed = .6;
       public static final double scoreL2Speed = 0.9;
       public static final double scoreSpeed = -0.6;
@@ -157,8 +157,8 @@ public final class Constants {
   }
 
   public class Funnel {
-
-    public static final double feedSpeed = .325;
+    // game was 0.325, ball 0.1
+    public static final double feedSpeed = .1;
 
     // NEO 550
     public static final int kFunnelIntake = 9;

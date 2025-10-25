@@ -40,8 +40,8 @@ import frc.robot.subsystems.manipulator.ClawIO;
 import frc.robot.subsystems.manipulator.ClawIOSpark;
 // import frc.robot.subsystems.manipulator.Manipulator;
 // import frc.robot.subsystems.manipulator.ManipulatorIOSpark;
-import frc.robot.subsystems.manipulator.Climber;
-import frc.robot.subsystems.manipulator.ClimberIOTalonFX;
+// import frc.robot.subsystems.manipulator.Climber;
+// import frc.robot.subsystems.manipulator.ClimberIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.subsystems.vision.VisionIO;
@@ -67,7 +67,7 @@ public class RobotContainer {
   public static FunnelIO funnelIO =
       Constants.funnelEnabled ? new FunnelIOSpark() : new FunnelIO() {};
 
-  public static Climber climber = new Climber(new ClimberIOTalonFX());
+  // public static Climber climber = new Climber(new ClimberIOTalonFX());
 
   public static Elevator elevator = new Elevator(elevatorIO);
   public static Arm arm = new Arm(armIO);
@@ -76,7 +76,7 @@ public class RobotContainer {
   private static CANdleSystem candle = new CANdleSystem();
 
   public static Superstructure superstructure =
-      new Superstructure(elevator, arm, claw, funnel, candle, climber);
+      new Superstructure(elevator, arm, claw, funnel, candle); // , climber);
   //        ^^^^^^^^^^^^^^ <- whole robot works in Superstructure object
   //                           -> right click and click "Go To Defintion" to read
   //                              or through vscode explorer in subsystems folder

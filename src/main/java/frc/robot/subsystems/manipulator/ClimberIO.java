@@ -1,4 +1,4 @@
-package frc.robot.subsystems.manipulator;
+/*package frc.robot.subsystems.manipulator;
 
 import org.littletonrobotics.junction.AutoLog;
 
@@ -23,4 +23,4 @@ public interface ClimberIO {
   public default void zeroPosition() {}
 
   public default void setPosition(double position) {}
-}
+}*/

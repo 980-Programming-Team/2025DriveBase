@@ -1,4 +1,4 @@
-package frc.robot.subsystems.manipulator;
+/*package frc.robot.subsystems.manipulator;
 
 import edu.wpi.first.math.util.Units;
 
@@ -39,4 +39,4 @@ public class ClimberConstants {
   public static final double KV_EXPO = 0.0;
   public static final double KA_EXPO = 0.0;
   public static final double KG = 0.0; // FIXME: Update all K values
-}
+}*/
